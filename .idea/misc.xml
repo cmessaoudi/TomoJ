@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/Utility/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Align/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_GPU/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/pom.xml" />
+        <option value="$PROJECT_DIR$/src/Filters/pom.xml" />
+        <option value="$PROJECT_DIR$/src/PlotJ/pom.xml" />
+        <option value="$PROJECT_DIR$/src/Inpainting/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Features/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

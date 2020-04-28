@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Filters" />
+        <module name="Inpainting" />
+        <module name="PlotJ" />
+        <module name="TomoJ_AdvancedAlign" />
+        <module name="TomoJ_AdvancedReconstruction" />
+        <module name="TomoJ_Applications" />
+        <module name="TomoJ_Base" />
+        <module name="TomoJ_Features" />
+        <module name="TomoJ_GPU" />
+        <module name="Utility" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>

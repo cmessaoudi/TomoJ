@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>TomoJ_v3</artifactId>
+        <groupId>TomoJ</groupId>
+        <version>2.7</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>TomoJ_GPU</artifactId>
+
+    <packaging>jar</packaging>
+    <properties>
+        <parentBasedir>../../</parentBasedir>
+    </properties>
+
+
+    <dependencies>
+        <!--Jocl-->
+        <dependency>
+            <groupId>org.jocl</groupId>
+            <artifactId>jocl</artifactId>
+            <version>2.0.0</version>
+            <scope>compile</scope>
+            <!--optional>true</optional-->
+        </dependency>
+        
+        <!--IMAGEJ function-->
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--Jtransform for FFT-->
+        <dependency>
+            <groupId>net.sourceforge.parallelcolt</groupId>
+            <artifactId>parallelcolt</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.version}</version>
+            <artifactId>Utility</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.version}</version>
+            <artifactId>Filters</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>TomoJ</groupId>
+            <artifactId>TomoJ_Base</artifactId>
+            <version>2.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>TomoJ</groupId>
+            <artifactId>TomoJ_AdvancedAlign</artifactId>
+            <version>2.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jar.epfl</groupId>
+            <artifactId>Fractional_Splines_Wavelets</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>TomoJ</groupId>
+            <artifactId>TomoJ_AdvancedReconstruction</artifactId>
+            <version>2.7</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+    
+
+
+</project>

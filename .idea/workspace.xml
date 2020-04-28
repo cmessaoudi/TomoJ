@@ -1,0 +1,1252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f4426a52-0bbf-414c-bc82-68096161658a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/ApplySymmetry_Filter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/BandPass_Filter2D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Blur_Borders.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Box3D_Extractor.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Box3D_Extractor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Elongation_Correction_Tomography.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/FFTFilter_TomoJ.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Focus_Series_Simulation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/HarrisCornerDetection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/HotSpot_Detection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/MSD_Filter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Simulate_Sparsity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/TV_ICE_Denoising.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/TotalVariationDenoising_3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Total_Variation_Denoising.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/UpscaleX2_DCCI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/entropy_test.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/upscaleX2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/AMLE_Inpaint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/AMLE_InpaintParallelColt.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/Basic_InPainting.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/Basic_InPainting3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/Blind_Inpainting_l0TV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/Inpainting_DGarcia.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/Inpainting_OpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/java/fr/curie/inpainting/Test_Inpaint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Inpainting/src/main/resources/plugins.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/AboutWindow.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/AboutWindow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/Plot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotJ_.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/Trace.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/TraceChooser.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/TraceChooser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/TraceColorChooser.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/TraceColorChooser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/plotJ2.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/plugins/GoldBead_QualityAssessment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/plugins/Measure_SimilarityMetricsBetween2Images.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/plugins/newModelTester.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/SuperTiltSeries.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/SuperTomoJPoints.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkDualImproved.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkImproved.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarksOptions.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/ChainGeneratorNew.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/ChainsGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DAlign.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DDualAlign.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/LandmarksChain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/LandmarksGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/SeedDetector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/SeedsToChainTracker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/alignmentLandmark.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/workflow/CommandWorkflow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/AdvancedReconstructionParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/AnglesForTiltSeries.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/projectors/BayesianVoxelProjector3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/projectors/BgARTVoxelProjector3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/projectors/CompressedSensingProjector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/projectors/DARTVoxelProjector3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/tomoj/tomography/projectors/TVMProjector3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/src/main/java/fr/curie/wavelets/WaveletProcessing.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ADOSSARTApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ADOSSARTApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/AlignDualZeroTiltManual.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/AlignDualZeroTiltManual.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/AlignWithLandmarks.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/AlignWithLandmarks.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/Application.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/CenterImagesApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/CenterImagesApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/CriticalLandmarksGenerator.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/CriticalLandmarksGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/CrossCorrelationParameters.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/CrossCorrelationParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/DualAlignWithLandmarks.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/DualAlignWithLandmarks.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/FeatureTrackingGenerator.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/FeatureTrackingGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GenerateLandmarksDialog.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GenerateLandmarksDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GoldBeadChainGenerator.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GoldBeadChainGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GoldBeadDetector_Filter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GridLandmarksGenerator.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GridLandmarksGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/IterativeReconstructionApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/IterativeReconstructionApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ManualAlignmentApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ManualAlignmentApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionCompressedSensingApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionCompressedSensingApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionTVMApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionTVMApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/WBPReconstructionApplication.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/WBPReconstructionApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/GPUDevicesTableModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/TomoJ_color_small.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/TomoJ_color_small.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/TomoJ_color_small75.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/arrow_down.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/arrow_left.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/arrow_right.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/arrow_rotate_anticlockwise.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/arrow_rotate_clockwise.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/arrow_up.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/options.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/options.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/plugins.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/FSC_.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/Project_Volume.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/SingleImageFRC.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/AffineAlignment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/AffineFitness.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/Alignment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/CenterLandmarks.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/SingleTiltAlign.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ReconstructionParameters.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ReconstructionThreadManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ResolutionEstimation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TiltSeries.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TomoJPoints.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TomoReconstruction2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/filters/FFTWeighting.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/projectors/Projector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/projectors/VoxelProjector3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/workflow/UserAction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/AkazeListFeaturesOpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/BriskListFeaturesOpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/Chain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/Feature.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/FeaturePoint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/FeatureTrackingChaining.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/FiducialMarkerListFeature.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/KazeListFeaturesOpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/ListFeature.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/ListFeaturesOpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/OrbListFeaturesOpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/SIFTListFeaturesOpenCV.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/plugins/FFT_OCL.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/plugins/TotalVariationDenoising_3D.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/ReconstructionThreadManagerGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/ResolutionEstimationGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/filters/FFTWeightingGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/projectors/BayesianVoxelProjector3DGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/projectors/BgARTVoxelProjector3DGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/projectors/CompressedSensingProjector3DGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/projectors/ProjectorGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/projectors/TVMVoxelProjector3DGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/tomoj/tomography/projectors/VoxelProjector3DGPU.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/utils/GPUDevice.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/TomoJ_GPU/src/main/java/fr/curie/gpu/utils/JOCLDeviceInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/Chrono.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/HighPrecisionDisplaySpinner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/MatrixUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/OutputStreamCapturer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/StudentStatisitics.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/align/AlignImages.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/powell/BracketMin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/powell/Brent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/powell/Function.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/powell/Matrix.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/powell/Powell.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/src/main/java/fr/curie/utils/powell/Vector.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/src/Utility/target/" />
+    <ignored path="$PROJECT_DIR$/src/TomoJ_Base/target/" />
+    <ignored path="$PROJECT_DIR$/src/TomoJ_Align/target/" />
+    <ignored path="$PROJECT_DIR$/src/TomoJ_GPU/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <splitter split-orientation="horizontal" split-proportion="0.50206953">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ReconstructionThreadManager.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="296">
+                  <caret line="224" column="23" selection-start-line="224" selection-start-column="23" selection-end-line="224" selection-end-column="23" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1656">
+                  <caret line="192" column="70" selection-start-line="192" selection-start-column="70" selection-end-line="192" selection-end-column="70" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#43636#43637#0" expanded="true" />
+                    <element signature="e#43668#43669#0" expanded="true" />
+                    <element signature="e#49718#49719#0" expanded="true" />
+                    <element signature="e#49763#49764#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.form">
+              <provider selected="true" editor-type-id="ui-designer" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2499">
+                  <caret line="144" column="86" selection-start-line="144" selection-start-column="86" selection-end-line="144" selection-end-column="86" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/projectors/VoxelProjector3D.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="338">
+                  <caret line="113" column="43" selection-start-line="113" selection-start-column="43" selection-end-line="113" selection-end-column="43" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TiltSeries.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="27195">
+                  <caret line="1408" column="67" selection-start-line="1408" selection-start-column="67" selection-end-line="1408" selection-end-column="67" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkDualImproved.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="519">
+                  <caret line="2010" column="5" selection-start-line="2010" selection-start-column="5" selection-end-line="2010" selection-end-column="5" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/AffineAlignment.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="294">
+                  <caret line="123" column="29" selection-start-line="123" selection-start-column="29" selection-end-line="123" selection-end-column="29" />
+                  <folding>
+                    <element signature="e#1211#1212#0" expanded="true" />
+                    <element signature="e#1261#1262#0" expanded="true" />
+                    <element signature="e#20723#20724#0" expanded="true" />
+                    <element signature="e#20779#20780#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.form">
+              <provider selected="true" editor-type-id="ui-designer" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="545">
+                  <caret line="557" column="25" selection-start-line="557" selection-start-column="25" selection-end-line="557" selection-end-column="25" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.form">
+              <provider selected="true" editor-type-id="ui-designer" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionApplication.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="399">
+                  <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ResolutionEstimation.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="473">
+                  <caret line="90" column="39" selection-start-line="90" selection-start-column="39" selection-end-line="90" selection-end-column="39" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/plugins.config">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="105">
+                  <caret line="5" column="57" selection-start-line="5" selection-start-column="57" selection-end-line="5" selection-end-column="57" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TomoReconstruction2.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="359">
+                  <caret line="479" column="31" selection-start-line="479" selection-start-column="31" selection-end-line="479" selection-end-column="31" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/SingleImageFRC.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2751">
+                  <caret line="142" column="15" selection-start-line="142" selection-start-column="15" selection-end-line="142" selection-end-column="15" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/SingleTiltAlign.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="12369">
+                  <caret line="625" column="17" selection-start-line="625" selection-start-column="17" selection-end-line="625" selection-end-column="17" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/entropy_test.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="4137">
+                  <caret line="213" column="23" selection-start-line="213" selection-start-column="23" selection-end-line="213" selection-end-column="23" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/Plot.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="672">
+                  <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkImproved.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="441">
+                  <caret line="2039" column="69" selection-start-line="2039" selection-start-column="69" selection-end-line="2039" selection-end-column="69" />
+                  <folding>
+                    <element signature="e#95539#95540#0" expanded="true" />
+                    <element signature="e#95583#95584#0" expanded="true" />
+                    <element signature="e#106310#106311#0" expanded="true" />
+                    <element signature="e#106380#106381#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow2.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="608">
+                  <caret line="681" selection-start-line="681" selection-end-line="681" />
+                  <folding>
+                    <element signature="initializer##0;class#PlotWindow2#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/plotJ2.form">
+              <provider selected="true" editor-type-id="ui-designer" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/pom.xml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="9">
+                  <caret line="149" column="32" selection-start-line="149" selection-start-column="32" selection-end-line="149" selection-end-column="32" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/alignmentLandmark.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="18459">
+                  <caret line="940" column="35" selection-start-line="940" selection-start-column="35" selection-end-line="940" selection-end-column="35" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/workflow/CommandWorkflow.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="5481">
+                  <caret line="296" column="75" selection-start-line="296" selection-start-column="75" selection-end-line="296" selection-end-column="75" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/FSC_.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="987">
+                  <caret line="56" column="13" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DDualAlign.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="8652">
+                  <caret line="431" column="14" selection-start-line="431" selection-start-column="14" selection-end-line="431" selection-end-column="14" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DAlign.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="6552">
+                  <caret line="332" column="8" selection-start-line="332" selection-start-column="8" selection-end-line="332" selection-end-column="8" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>AlignImages</find>
+      <find>zero</find>
+      <find>weigh</find>
+      <find>ProjectorGPU</find>
+      <find>z0</find>
+      <find>scalei</find>
+      <find>psiD</find>
+      <find>eulerDirection</find>
+      <find>bestPreviousAlignmentDeform</find>
+      <find>Ait</find>
+      <find>getAl</find>
+      <find>expand</find>
+      <find>expa</find>
+      <find>norm</find>
+      <find>niterations</find>
+      <find>prevImgA</find>
+      <find>costes'</find>
+      <find>van</find>
+      <find>frame</find>
+      <find>eulerMatrices</find>
+      <find>invTransforms</find>
+      <find>\</find>
+      <find>show c</find>
+      <find>alignator</find>
+      <find>TiltSeriesP</find>
+      <find>tableGPU</find>
+      <find>TiltSeriesPanel2</find>
+      <find>offs</find>
+      <find>imgpix</find>
+      <find>tiltAxisVertical</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>TiltSeriesPanel</replace>
+      <replace>unaligned</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/FeatureTrackingGenerator.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GenerateLandmarksDialog.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GoldBeadChainGenerator.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/GridLandmarksGenerator.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/IterativeReconstructionApplication.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ManualAlignmentApplication.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionCompressedSensingApplication.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionTVMApplication.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/WBPReconstructionApplication.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/DualAlignWithLandmarks.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/DualAlignWithLandmarks.java" />
+        <option value="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/Box3D_Extractor.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/plugins.config" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel2.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel2.form" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ADOSSARTApplication.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/AlignDualZeroTiltManual.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionApplication.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionTVMApplication.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionCompressedSensingApplication.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Features/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_GPU/pom.xml" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.form" />
+        <option value="$PROJECT_DIR$/src/PlotJ/src/main/java/plotJ2.form" />
+        <option value="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow.form" />
+        <option value="$PROJECT_DIR$/src/PlotJ/src/main/java/plotj/plotJ2.form" />
+        <option value="$PROJECT_DIR$/src/PlotJ/src/main/java/plotj/PlotWindow2.java" />
+        <option value="$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/entropy_test.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ReconstructionThreadManager.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/SingleImageFRC.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/SingleTiltAlign.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/FSC_.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DDualAlign.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DAlign.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/IterativeReconstructionApplication.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/WBPReconstructionApplication.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/workflow/CommandWorkflow.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/projectors/VoxelProjector3D.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/Alignment.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/alignmentLandmark.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkDualImproved.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TiltSeries.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/AffineAlignment.java" />
+        <option value="$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkImproved.java" />
+        <option value="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/plotJ2.form" />
+        <option value="$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow2.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="excludeTargetFolder" value="false" />
+      </MavenImportingSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="test" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="Profiles" type="6783ec58:MavenProjectsStructure$ProfilesNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="TomoJ_v3" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="TomoJ_v3" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2094" />
+    <option name="y" value="-1577" />
+    <option name="width" value="1935" />
+    <option name="height" value="1038" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Utility" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Utility" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Utility" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Utility" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TomoJ_v3" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TomoJ_v3" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Utility" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="374" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1588078649748" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/TomoJ_Features" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="project.propGUI" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\fr\curie\plotj" />
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\plotj" />
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java" />
+      <recent name="C:\progs\TomoJ_v3\src\TomoJ_GPU\src\main\resources" />
+      <recent name="C:\progs\TomoJ_v3\src\Inpainting\src\main\java\fr\curie\inpainting" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="fr.curie.inpainting" />
+      <recent name="fr.curie.tomoj.tomography" />
+      <recent name="fr.curie.gpu.utils" />
+      <recent name="fr.curie.gpu.plugins" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\fr\curie\plotj" />
+      <recent name="C:\progs\TomoJ_v3\src\TomoJ_Applications\src\main\resources" />
+      <recent name="C:\progs\TomoJ_v3\src\TomoJ_Applications\src\main\java\fr\curie\tomoj\application" />
+      <recent name="C:\progs\TomoJ_v3\src\TomoJ_Features\src\main\java\fr\curie\tomoj" />
+      <recent name="C:\progs\TomoJ_v3\src\TomoJ_GPU\src\main\java\fr\curie\gpu\tomoj\tomography" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f4426a52-0bbf-414c-bc82-68096161658a" name="Default Changelist" comment="" />
+      <created>1585054690485</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585054690485</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="1911" y="-1567" width="3218" height="1768" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.5520505" visible="true" weight="0.14440204" />
+      <window_info id="Structure" order="1" sideWeight="0.44794953" side_tool="true" visible="true" weight="0.14440204" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32908976" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.39465308" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.32908976" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Maven" order="4" visible="true" weight="0.09033079" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+    </layout>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/TraceColorChooser.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/AboutWindow.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Inpainting/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1323">
+          <caret line="63" column="12" selection-start-line="57" selection-start-column="4" selection-end-line="63" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel2.java" />
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel2.form" />
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/Application.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Features/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1071">
+          <caret line="51" column="12" selection-start-line="45" selection-start-column="4" selection-end-line="51" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Features/src/main/java/fr/curie/tomoj/features/FiducialMarkerListFeature.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12747">
+          <caret line="640" column="8" selection-start-line="640" selection-start-column="8" selection-end-line="640" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionCompressedSensingApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3108">
+          <caret line="166" column="60" selection-start-line="166" selection-start-column="60" selection-end-line="166" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/AlignDualZeroTiltManual.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1071">
+          <caret line="70" column="51" selection-start-line="70" selection-start-column="51" selection-end-line="70" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ADOSSARTApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="34" column="36" selection-start-line="34" selection-start-column="36" selection-end-line="34" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1407">
+          <caret line="67" column="12" selection-start-line="61" selection-start-column="4" selection-end-line="67" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow.java" />
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow.form" />
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotJ_.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="38" column="8" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/WBPReconstructionApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="651">
+          <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_GPU/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1995">
+          <caret line="95" column="4" selection-start-line="95" selection-start-column="4" selection-end-line="95" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2499">
+          <caret line="144" column="86" selection-start-line="144" selection-start-column="86" selection-end-line="144" selection-end-column="86" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_V3.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/ReconstructionTVMApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1743">
+          <caret line="112" column="60" selection-start-line="112" selection-start-column="60" selection-end-line="112" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/application/IterativeReconstructionApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3696">
+          <caret line="218" column="49" selection-start-line="218" selection-start-column="49" selection-end-line="218" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/resources/plugins.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="5" column="57" selection-start-line="5" selection-start-column="57" selection-end-line="5" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/SingleImageFRC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2751">
+          <caret line="142" column="15" selection-start-line="142" selection-start-column="15" selection-end-line="142" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/SingleTiltAlign.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12369">
+          <caret line="625" column="17" selection-start-line="625" selection-start-column="17" selection-end-line="625" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Filters/src/main/java/fr/curie/filters/entropy_test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4137">
+          <caret line="213" column="23" selection-start-line="213" selection-start-column="23" selection-end-line="213" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/Plot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="672">
+          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/alignmentLandmark.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18459">
+          <caret line="940" column="35" selection-start-line="940" selection-start-column="35" selection-end-line="940" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/workflow/CommandWorkflow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5481">
+          <caret line="296" column="75" selection-start-line="296" selection-start-column="75" selection-end-line="296" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/plugins/FSC_.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="987">
+          <caret line="56" column="13" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DDualAlign.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8652">
+          <caret line="431" column="14" selection-start-line="431" selection-start-column="14" selection-end-line="431" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/Landmarks3DAlign.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6552">
+          <caret line="332" column="8" selection-start-line="332" selection-start-column="8" selection-end-line="332" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1656">
+          <caret line="192" column="70" selection-start-line="192" selection-start-column="70" selection-end-line="192" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#43636#43637#0" expanded="true" />
+            <element signature="e#43668#43669#0" expanded="true" />
+            <element signature="e#49718#49719#0" expanded="true" />
+            <element signature="e#49763#49764#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TomoJ_v3_Dual.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Applications/src/main/java/fr/curie/tomoj/gui/TiltSeriesPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="545">
+          <caret line="557" column="25" selection-start-line="557" selection-start-column="25" selection-end-line="557" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/TomoJ/utility/2.7/utility-2.7.jar!/fr/curie/tomoj/tomography/TiltSeries.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="580" column="19" selection-start-line="580" selection-start-column="19" selection-end-line="580" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ResolutionEstimation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="473">
+          <caret line="90" column="39" selection-start-line="90" selection-start-column="39" selection-end-line="90" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/ReconstructionThreadManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="224" column="23" selection-start-line="224" selection-start-column="23" selection-end-line="224" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/projectors/Projector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="118" column="25" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TomoReconstruction2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="479" column="31" selection-start-line="479" selection-start-column="31" selection-end-line="479" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/Alignment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkDualImproved.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="2010" column="5" selection-start-line="2010" selection-start-column="5" selection-end-line="2010" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/projectors/VoxelProjector3D.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="113" column="43" selection-start-line="113" selection-start-column="43" selection-end-line="113" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/tomography/TiltSeries.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27195">
+          <caret line="1408" column="67" selection-start-line="1408" selection-start-column="67" selection-end-line="1408" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_Base/src/main/java/fr/curie/tomoj/align/AffineAlignment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="123" column="29" selection-start-line="123" selection-start-column="29" selection-end-line="123" selection-end-column="29" />
+          <folding>
+            <element signature="e#1211#1212#0" expanded="true" />
+            <element signature="e#1261#1262#0" expanded="true" />
+            <element signature="e#20723#20724#0" expanded="true" />
+            <element signature="e#20779#20780#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TomoJ_AdvancedAlign/src/main/java/fr/curie/tomoj/landmarks/AlignmentLandmarkImproved.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="2039" column="69" selection-start-line="2039" selection-start-column="69" selection-end-line="2039" selection-end-column="69" />
+          <folding>
+            <element signature="e#95539#95540#0" expanded="true" />
+            <element signature="e#95583#95584#0" expanded="true" />
+            <element signature="e#106310#106311#0" expanded="true" />
+            <element signature="e#106380#106381#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Utility/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-252" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/PlotWindow2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="681" selection-start-line="681" selection-end-line="681" />
+          <folding>
+            <element signature="initializer##0;class#PlotWindow2#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/PlotJ/src/main/java/fr/curie/plotj/plotJ2.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9">
+          <caret line="149" column="32" selection-start-line="149" selection-start-column="32" selection-end-line="149" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>TomoJ_Applications</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: asm:asm-commons:3.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

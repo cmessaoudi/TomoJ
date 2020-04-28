@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>TomoJ</groupId>
+    <artifactId>TomoJ_v3</artifactId>
+    <version>2.7</version>
+    <dependencies>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+        </dependency>
+    </dependencies>
+    <packaging>pom</packaging>
+
+    <repositories>
+        <!-- NB: for project parent -->
+        <repository>
+            <id>imagej.public</id>
+            <url>http://maven.imagej.net/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>maven</id>
+            <url>https://mvnrepository.com/artifact</url>
+        </repository>
+    </repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--IMAGEJ function-->
+            <dependency>
+                <groupId>net.imagej</groupId>
+                <artifactId>ij</artifactId>
+                <version>1.52q</version>
+            </dependency>
+
+            <!--Jtransform for FFT-->
+            <dependency>
+                <groupId>net.sourceforge.parallelcolt</groupId>
+                <artifactId>parallelcolt</artifactId>
+                <version>0.10.1</version>
+            </dependency>
+
+            <!--Jocl-->
+            <dependency>
+                <groupId>org.jocl</groupId>
+                <artifactId>jocl</artifactId>
+                <version>2.0.0</version>
+            </dependency>
+
+            <!--JDom-->
+            <dependency>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom2</artifactId>
+                <version>2.0.6</version>
+            </dependency>
+
+            <!--Intellij gui-->
+            <dependency>
+                <groupId>com.intellij</groupId>
+                <artifactId>forms_rt</artifactId>
+                <version>7.0.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>TomoJ</groupId>
+                <artifactId>utility</artifactId>
+                <version>2.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>TomoJ</groupId>
+                <artifactId>PlotJ</artifactId>
+                <version>2.7</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bytedeco.javacpp-presets</groupId>
+                <artifactId>opencv-platform</artifactId>
+                <version>3.4.0-1.4</version>
+                <scope>compile</scope>
+                <optional>true</optional>
+            </dependency>
+            
+            <dependency>
+                <groupId>sc.fiji</groupId>
+                <artifactId>VIB-lib</artifactId>
+                <version>2.2.0</version>
+                <scope>compile</scope>
+                <!--optional>true</optional-->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+    <profiles>
+        <profile>
+            <id>test</id>
+            <modules>
+                <module>src/Utility</module>
+                <module>src/PlotJ</module>
+                <module>src/Filters</module>
+                <module>src/TomoJ_Base</module>
+                <module>src/TomoJ_AdvancedReconstruction</module>
+                <module>src/TomoJ_AdvancedAlign</module>
+                <module>src/TomoJ_GPU</module>
+                <module>src/TomoJ_Features</module>
+                <module>src/TomoJ_Applications</module>
+            </modules>
+            <build>
+                <directory>D:\tmp\compile</directory>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <configuration>
+                                <source>1.8</source>
+                                <target>1.8</target>
+                            </configuration>
+                            <version>3.8.1</version>
+                        </plugin>
+
+                        <plugin>
+                            <artifactId>maven-assembly-plugin</artifactId>
+                            <version>2.4</version>
+                            <configuration>
+                                <descriptorRefs>
+                                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                                </descriptorRefs>
+                                <!--outputDirectory>C:\ImageJ\plugins</outputDirectory-->
+                                <archive>
+                                    <manifest>
+                                        <addClasspath>true</addClasspath>
+                                        
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>make-assembly</id>
+                                    <phase>package</phase> 
+                                    <configuration></configuration>
+                                    <goals>
+                                        <goal>single</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>inpainting</id>
+            <modules>
+                <module>src/Utility</module>
+                <module>src/TomoJ_AdvancedReconstruction</module>
+                <module>src/Inpainting</module>
+            </modules>
+            <build>
+                <directory>D:\ImageJ_test_installations\ij152\ImageJ\plugins</directory>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <configuration>
+                                <source>1.8</source>
+                                <target>1.8</target>
+                            </configuration>
+                            <version>3.8.1</version>
+                        </plugin>
+                        <plugin>
+                            <artifactId>maven-assembly-plugin</artifactId>
+                            <version>2.4</version>
+                            <configuration>
+                                <descriptorRefs>
+                                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                                </descriptorRefs>
+                                <!--outputDirectory>C:\ImageJ\plugins</outputDirectory-->
+                                <archive>
+                                    <manifest>
+                                        <addClasspath>true</addClasspath>
+                                        <!--mainClass>tomoj.gui.TomoJ_</mainClass>  -->
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                                    <phase>package</phase> <!-- bind to the packaging phase -->
+                                    <configuration></configuration>
+                                    <goals>
+                                        <goal>single</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>TomoJ_base_TubuleJ</id>
+            <modules>
+                <module>src/Utility</module>
+                <module>src/PlotJ</module>
+                <module>src/Filters</module>
+                <module>src/TomoJ_Base</module>
+            </modules>
+            <build>
+                <directory>D:\ImageJ_test_installations\ij152\ImageJ\plugins</directory>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <configuration>
+                                <source>1.8</source>
+                                <target>1.8</target>
+                            </configuration>
+                            <version>3.8.1</version>
+                        </plugin>
+                        <plugin>
+                            <artifactId>maven-assembly-plugin</artifactId>
+                            <version>2.4</version>
+                            <configuration>
+                                <descriptorRefs>
+                                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                                </descriptorRefs>
+                                <outputDirectory>C:\progs\TubuleJ_\TubuleJ_folder</outputDirectory>
+                                <archive>
+                                    <manifest>
+                                        <addClasspath>true</addClasspath>
+                                        <!--mainClass>tomoj.gui.TomoJ_</mainClass>  -->
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                                    <phase>package</phase> <!-- bind to the packaging phase -->
+                                    <configuration></configuration>
+                                    <goals>
+                                        <goal>single</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+            
+        </profile>
+        
+    </profiles>
+
+    
+</project>

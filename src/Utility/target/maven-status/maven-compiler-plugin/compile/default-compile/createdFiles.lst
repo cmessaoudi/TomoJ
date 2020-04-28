@@ -1,0 +1,7 @@
+fr\curie\utils\MatrixUtils.class
+fr\curie\utils\OutputStreamCapturer.class
+fr\curie\utils\OutputStreamCapturer$MyOutputStream.class
+fr\curie\utils\MatrixUtils$1.class
+fr\curie\utils\StudentStatisitics.class
+fr\curie\utils\Chrono.class
+fr\curie\utils\HighPrecisionDisplaySpinner.class
