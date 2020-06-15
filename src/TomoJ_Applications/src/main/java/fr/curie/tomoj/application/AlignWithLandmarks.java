@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class AlignWithLandmarks implements Application {
     protected boolean firstDisplay = true;
-    protected boolean oldAlgo = true;
+    protected boolean oldAlgo = false;
 
     protected Landmarks3DAlign alignator;
     protected TiltSeries ts;
@@ -260,6 +260,43 @@ public class AlignWithLandmarks implements Application {
     }
 
     public void setParameters(Object... parameters) {
+        for (int index = 0; index < parameters.length; index++) {
+            if (((String) parameters[index]).toLowerCase().equals("noexhaustivesearch")) {
+                newExhaustiveSearch = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("mahalanobisweight")) {
+                if (parameters[index + 1] instanceof String)
+                    newMahalanobisWeight = Double.parseDouble((String) parameters[index + 1]);
+                else newMahalanobisWeight = (Double) parameters[index + 1];
+            } else if (((String) parameters[index]).toLowerCase().equals("noshift")) {
+                newShift=false;
+            }else if (((String) parameters[index]).toLowerCase().equals("shrink")) {
+                newShrink=true;
+            }else if (((String) parameters[index]).toLowerCase().equals("magnification")) {
+                newMag=true;
+            }else if (((String) parameters[index]).toLowerCase().equals("scalex")) {
+                newScaleX=true;
+            }else if (((String) parameters[index]).toLowerCase().equals("shear")) {
+                newShear=true;
+            }else if (((String) parameters[index]).toLowerCase().equals("rotation")) {
+                newRotation=true;
+            }else if (((String) parameters[index]).toLowerCase().equals("all")) {
+                newShift=true;
+                newMag=true;
+                newShrink=true;
+                newScaleX=true;
+                newShear=true;
+                newRotation=true;
+            }else if (((String) parameters[index]).toLowerCase().equals("nbcycles")) {
+                if (parameters[index + 1] instanceof String)
+                    newCycleNumber = Integer.parseInt((String) parameters[index + 1]);
+                else newCycleNumber = (Integer) parameters[index + 1];
+            }else if (((String) parameters[index]).toLowerCase().equals("selectionthreshold")) {
+                if (parameters[index + 1] instanceof String)
+                    newSelectionThreshold = Double.parseDouble((String) parameters[index + 1]);
+                else newSelectionThreshold = (Double) parameters[index + 1];
+            }
+        }
+
 
     }
 
@@ -267,8 +304,22 @@ public class AlignWithLandmarks implements Application {
         return "Align using landmarks";
     }
 
-    public String help() {
-        return "Critical Landmarks Generator --> should be some help!!!";
+    public static String help() {
+        return "align landmarks using modelisation of 3D location\n" +
+                "perform a first search on -90° to +90° every 5° for tilt axis estimation before refinement with gradient descent with cycles of removal of landmarks\n" +
+                "parameters that can be given\n" +
+                "noexhaustivesearch : remove the first exhaustive search\n" +
+                "mahalanobisweight value : will use mahalanobis weighting for computation (default 0)\n" +
+                "noshift : remove search of shift\n" +
+                "magnification : add search of magnification parameter\n" +
+                "shrink : add search of shrink parameter\n" +
+                "scalex : add search of scalex parameter\n" +
+                "shear : add search of shearing parameter\n" +
+                "rotation : add search of rotation parameter\n" +
+                "all : add search of all parameters (shift,rotation,magnification,shrinkage,scalex,shearing)\n" +
+                "nbcycles value : number of removing landmarks cycles (-1 is automatic stop, default value)\n" +
+                "selectionthreshold value : threshold to use for selecting landmarks to remove (default value 8)\n" +
+                "";
     }
 
     public ArrayList<Object> getResults() {

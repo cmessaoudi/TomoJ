@@ -399,62 +399,65 @@ public class CriticalLandmarksGenerator implements Application {
 
     public void setParameters(Object... parameters) {
         for (int index = 0; index < parameters.length; index++) {
-            if (((String) parameters[index]).toLowerCase().equals("localminima")) {
-                localMinima = true;
-            } else if (((String) parameters[index]).toLowerCase().equals("localmaxima")) {
-                localMinima = false;
-            } else if (((String) parameters[index]).toLowerCase().equals("exclude")) {
-                if (parameters[index + 1] instanceof String)
-                    percentageToExcludeX = Double.parseDouble((String) parameters[index + 1]);
-                else percentageToExcludeX = (Double) parameters[index + 1];
-                if (parameters[index + 2] instanceof String)
-                    percentageToExcludeY = Double.parseDouble((String) parameters[index + 2]);
-                else percentageToExcludeY = (Double) parameters[index + 2];
-                index += 2;
+            //System.out.println("#"+index+parameters[index]);
+            if(parameters[index]instanceof String) {
+                if (((String) parameters[index]).toLowerCase().equals("localminima")) {
+                    localMinima = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("localmaxima")) {
+                    localMinima = false;
+                } else if (((String) parameters[index]).toLowerCase().equals("exclude")) {
+                    if (parameters[index + 1] instanceof String)
+                        percentageToExcludeX = Double.parseDouble((String) parameters[index + 1]);
+                    else percentageToExcludeX = (Double) parameters[index + 1];
+                    if (parameters[index + 2] instanceof String)
+                        percentageToExcludeY = Double.parseDouble((String) parameters[index + 2]);
+                    else percentageToExcludeY = (Double) parameters[index + 2];
+                    index += 2;
 
-            } else if (((String) parameters[index]).toLowerCase().equals("filter")) {
-                if (parameters[index + 1] instanceof String)
-                    filterSmall = Integer.parseInt((String) parameters[index + 1]);
-                else filterSmall = (Integer) parameters[index + 1];
-                if (parameters[index + 2] instanceof String)
-                    filterLarge = Integer.parseInt((String) parameters[index + 2]);
-                else filterLarge = (Integer) parameters[index + 2];
-                index += 2;
+                } else if (((String) parameters[index]).toLowerCase().equals("filter")) {
+                    if (parameters[index + 1] instanceof String)
+                        filterSmall = Integer.parseInt((String) parameters[index + 1]);
+                    else filterSmall = (Integer) parameters[index + 1];
+                    if (parameters[index + 2] instanceof String)
+                        filterLarge = Integer.parseInt((String) parameters[index + 2]);
+                    else filterLarge = (Integer) parameters[index + 2];
+                    index += 2;
 
-            } else if (((String) parameters[index]).toLowerCase().equals("extremaradius")) {
-                if (parameters[index + 1] instanceof String)
-                    extremaNeighborhoodRadius = Integer.parseInt((String) parameters[index + 1]);
-                else extremaNeighborhoodRadius = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("nbseeds")) {
-                if (parameters[index + 1] instanceof String)
-                    nbSeeds = Integer.parseInt((String) parameters[index + 1]);
-                else nbSeeds = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("chainlength")) {
-                if (parameters[index + 1] instanceof String)
-                    chainLength = Integer.parseInt((String) parameters[index + 1]);
-                else chainLength = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("patchsize")) {
-                if (parameters[index + 1] instanceof String)
-                    patchSize = Integer.parseInt((String) parameters[index + 1]);
-                else patchSize = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("mincorrelationthreshold")) {
-                if (parameters[index + 1] instanceof String)
-                    correlationThreshold = Double.parseDouble((String) parameters[index + 1]);
-                else correlationThreshold = (Double) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("fuselandmarks")) {
-                fuseLandmarks = true;
-            } else if (((String) parameters[index]).toLowerCase().equals("nbchainskept")) {
-                if (parameters[index + 1] instanceof String)
-                    nbChainsKept = Integer.parseInt((String) parameters[index + 1]);
-                else nbChainsKept = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("fiducials")) {
-                fiducialMarkers = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("extremaradius")) {
+                    if (parameters[index + 1] instanceof String)
+                        extremaNeighborhoodRadius = Integer.parseInt((String) parameters[index + 1]);
+                    else extremaNeighborhoodRadius = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("nbseeds")) {
+                    if (parameters[index + 1] instanceof String)
+                        nbSeeds = Integer.parseInt((String) parameters[index + 1]);
+                    else nbSeeds = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("chainlength")) {
+                    if (parameters[index + 1] instanceof String)
+                        chainLength = Integer.parseInt((String) parameters[index + 1]);
+                    else chainLength = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("patchsize")) {
+                    if (parameters[index + 1] instanceof String)
+                        patchSize = Integer.parseInt((String) parameters[index + 1]);
+                    else patchSize = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("mincorrelationthreshold")) {
+                    if (parameters[index + 1] instanceof String)
+                        correlationThreshold = Double.parseDouble((String) parameters[index + 1]);
+                    else correlationThreshold = (Double) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("fuselandmarks")) {
+                    fuseLandmarks = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("nbchainskept")) {
+                    if (parameters[index + 1] instanceof String)
+                        nbChainsKept = Integer.parseInt((String) parameters[index + 1]);
+                    else nbChainsKept = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("fiducials")) {
+                    fiducialMarkers = true;
+                }
             }
         }
     }
@@ -463,7 +466,7 @@ public class CriticalLandmarksGenerator implements Application {
         return "Landmarks generation using local extrema as seeds";
     }
 
-    public String help() {
+    public static String help() {
         return "generates landmarks using local extrema as seeds\n" +
                 "parameters that can be given\n" +
                 "fiducialmarkers : will use specific selection of seeds prior to tracking and symmetrization while tracking to optimize tracking of spherical features\n" +

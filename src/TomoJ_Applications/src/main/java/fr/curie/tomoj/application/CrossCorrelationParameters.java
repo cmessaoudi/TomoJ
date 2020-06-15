@@ -33,7 +33,7 @@ public class CrossCorrelationParameters implements Application {
     boolean cumulativeReference;
     boolean expandImage;
     boolean loop;
-    boolean integerTranslation;
+    boolean integerTranslation = false;
     boolean variance;
     int varianceRadius;
     int downSampling;
@@ -441,55 +441,57 @@ public class CrossCorrelationParameters implements Application {
      */
     public void setParameters(Object... parameters) {
         for (int index = 0; index < parameters.length; index++) {
-            if (((String) parameters[index]).toLowerCase().equals("integertranslation")) {
-                integerTranslation = true;
-            } else if (((String) parameters[index]).toLowerCase().equals("roi")) {
-                roi = true;
-                if (parameters[index + 1] instanceof String) roiX = Integer.parseInt((String) parameters[index + 1]);
-                else roiX = (Integer) parameters[index + 1];
-                if (parameters[index + 2] instanceof String) roiY = Integer.parseInt((String) parameters[index + 2]);
-                else roiY = (Integer) parameters[index + 2];
-                index += 2;
+            if(parameters[index]instanceof String) {
+                if (((String) parameters[index]).toLowerCase().equals("integertranslation")) {
+                    integerTranslation = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("roi")) {
+                    roi = true;
+                    if (parameters[index + 1] instanceof String) roiX = Integer.parseInt((String) parameters[index + 1]);
+                    else roiX = (Integer) parameters[index + 1];
+                    if (parameters[index + 2] instanceof String) roiY = Integer.parseInt((String) parameters[index + 2]);
+                    else roiY = (Integer) parameters[index + 2];
+                    index += 2;
 
-            } else if (((String) parameters[index]).toLowerCase().equals("downsampling") || ((String) parameters[index]).toLowerCase().equals("binning")) {
-                if (parameters[index + 1] instanceof String)
-                    downSampling = Integer.parseInt((String) parameters[index + 1]);
-                else downSampling = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("bandpassfilter")) {
-                bandpassFilter = true;
-                if (parameters[index + 1] instanceof String)
-                    bandpassFilterMin = Double.parseDouble((String) parameters[index + 1]);
-                else bandpassFilterMin = (Double) parameters[index + 1];
-                if (parameters[index + 2] instanceof String)
-                    bandpassFilterMax = Double.parseDouble((String) parameters[index + 2]);
-                else bandpassFilterMax = (Double) parameters[index + 2];
-                if (parameters[index + 3] instanceof String)
-                    bandpassFilterDecrease = Double.parseDouble((String) parameters[index + 3]);
-                else bandpassFilterDecrease = (Double) parameters[index + 3];
-                index += 3;
-            } else if (((String) parameters[index]).toLowerCase().equals("variancefilter")) {
-                variance = true;
-                if (parameters[index + 1] instanceof String)
-                    varianceRadius = Integer.parseInt((String) parameters[index + 1]);
-                else varianceRadius = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("expandimage")) {
-                expandImage = true;
-                if (parameters[index + 1] instanceof String)
-                    tiltAxis = Double.parseDouble((String) parameters[index + 1]);
-                else tiltAxis = (Double) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("multiscale")) {
-                multiScale = true;
-                if (parameters[index + 1] instanceof String)
-                    multiScaleLevels = Integer.parseInt((String) parameters[index + 1]);
-                else multiScaleLevels = (Integer) parameters[index + 1];
-                index += 1;
-            } else if (((String) parameters[index]).toLowerCase().equals("cumulativereference")) {
-                cumulativeReference = true;
-            } else if (((String) parameters[index]).toLowerCase().equals("loop")) {
-                loop = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("downsampling") || ((String) parameters[index]).toLowerCase().equals("binning")) {
+                    if (parameters[index + 1] instanceof String)
+                        downSampling = Integer.parseInt((String) parameters[index + 1]);
+                    else downSampling = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("bandpassfilter")) {
+                    bandpassFilter = true;
+                    if (parameters[index + 1] instanceof String)
+                        bandpassFilterMin = Double.parseDouble((String) parameters[index + 1]);
+                    else bandpassFilterMin = (Double) parameters[index + 1];
+                    if (parameters[index + 2] instanceof String)
+                        bandpassFilterMax = Double.parseDouble((String) parameters[index + 2]);
+                    else bandpassFilterMax = (Double) parameters[index + 2];
+                    if (parameters[index + 3] instanceof String)
+                        bandpassFilterDecrease = Double.parseDouble((String) parameters[index + 3]);
+                    else bandpassFilterDecrease = (Double) parameters[index + 3];
+                    index += 3;
+                } else if (((String) parameters[index]).toLowerCase().equals("variancefilter")) {
+                    variance = true;
+                    if (parameters[index + 1] instanceof String)
+                        varianceRadius = Integer.parseInt((String) parameters[index + 1]);
+                    else varianceRadius = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("expandimage")) {
+                    expandImage = true;
+                    if (parameters[index + 1] instanceof String)
+                        tiltAxis = Double.parseDouble((String) parameters[index + 1]);
+                    else tiltAxis = (Double) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("multiscale")) {
+                    multiScale = true;
+                    if (parameters[index + 1] instanceof String)
+                        multiScaleLevels = Integer.parseInt((String) parameters[index + 1]);
+                    else multiScaleLevels = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("cumulativereference")) {
+                    cumulativeReference = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("loop")) {
+                    loop = true;
+                }
             }
         }
     }
@@ -499,7 +501,7 @@ public class CrossCorrelationParameters implements Application {
      *
      * @return a String containing the help of the application
      */
-    public String help() {
+    public static String help() {
         //@TODO
         return "automatic alignment by cross-correlation\n" +
                 "parameters that can be given\n" +
