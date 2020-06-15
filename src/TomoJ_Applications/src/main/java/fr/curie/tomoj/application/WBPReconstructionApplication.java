@@ -30,7 +30,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     private JSpinner spinnerWeighting;
     private JCheckBox elongationCorrectionCheckBox;
     private JPanel panelRoot;
-    boolean weighting = false;
+    boolean weighting = true;
     boolean elongationCorrection = false;
     double weightinDiameter = 0.5;
     TiltSeries ts;
@@ -42,6 +42,9 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     }
 
     public boolean run() {
+        if(width==0) width=ts.getWidth();
+        if(height==0) height=ts.getHeight();
+        if(depth==0) depth=ts.getWidth();
 
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         final int fillingType = ts.getFillType();
@@ -112,7 +115,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
             recthman.reconstruct(recParams);
             rec2 = recthman.getRec2();*/
             resolutionComputation.doSignalReconstruction();
-            resolutionComputation.getReconstructionSignal();
+            rec=resolutionComputation.getReconstructionSignal();
         }
         if (computeFSC) {
             System.out.println("compute FSC");
@@ -160,7 +163,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
         ts.setThresholdHisteresis(Double.MIN_VALUE, Double.MIN_VALUE, false);
         ts.setFillType(fillingType);
 
-        return false;
+        return true;
     }
 
     public void addListeners() {
@@ -203,6 +206,33 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
         if (elongationCorrection) text += "\nelongation correction activated";
 
         return text;
+    }
+
+    public void setParameters(Object... parameters) {
+        super.setParameters(parameters);
+        for (int index = 0; index < parameters.length; index++) {
+            if(parameters[index]instanceof String) {
+                if (((String) parameters[index]).toLowerCase().equals("noweighting")) {
+                    weighting = false;
+                } else if (((String) parameters[index]).toLowerCase().equals("weightdiameter")) {
+                    weighting = true;
+                    if (parameters[index + 1] instanceof String)
+                        weightinDiameter = Double.parseDouble((String) parameters[index + 1]);
+                    else weightinDiameter = (Double) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("elongationcorrection")) {
+                    elongationCorrection = true;
+                }
+            }
+        }
+    }
+
+    public static String help() {
+        return ReconstructionApplication.help()+"### weighted backprojection algorithm  ###\n" +
+                "noweighting: removes the weighting part of algorithm\n" +
+                "weightdiameter value: diameter used for weighting\n" +
+                "elongationcorrection: attempts to correct the elongation due to missing-wedge\n" +
+                "";
     }
 
     public JPanel getJPanel() {

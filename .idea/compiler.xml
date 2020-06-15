@@ -6,8 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="deconvolution" />
         <module name="Filters" />
         <module name="Inpainting" />
+        <module name="InputOutput" />
         <module name="PlotJ" />
         <module name="TomoJ_AdvancedAlign" />
         <module name="TomoJ_AdvancedReconstruction" />

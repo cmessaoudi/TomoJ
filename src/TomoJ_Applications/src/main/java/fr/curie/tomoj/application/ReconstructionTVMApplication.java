@@ -97,6 +97,10 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
     }
 
     public boolean run() {
+        if(width==0) width=ts.getWidth();
+        if(height==0) height=ts.getHeight();
+        if(depth==0) depth=ts.getWidth();
+
         final Chrono time = new Chrono();
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         final ReconstructionParameters params = AdvancedReconstructionParameters.createTVMParameters(width, height, depth, nbiterations, relaxationCoefficient, theta, g, dt, tvmiterations);
@@ -130,7 +134,7 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
 
     }
 
-    public String help() {
+    public static String help() {
         return null;
     }
 

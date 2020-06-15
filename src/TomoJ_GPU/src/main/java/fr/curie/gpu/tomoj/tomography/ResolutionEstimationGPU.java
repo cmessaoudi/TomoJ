@@ -110,6 +110,22 @@ public class ResolutionEstimationGPU extends ResolutionEstimation {
     public void generateFSCData(){
         tsFSCeven=tsSignal;
         tsFSCodd=tsSignal;
+        System.out.println("FSCodd");
+        if(recThManSignal!=null) {
+            if (recManFSCodd == null) recManFSCodd = new ReconstructionThreadManagerGPU(recThManSignal, tsFSCodd);
+            else recManFSCodd.setTiltSeries(tsFSCodd);
+        }else{
+            if (recManFSCodd == null) recManFSCodd = new ReconstructionThreadManagerGPU(tsFSCodd.getWindow(), tsFSCodd);
+            else recManFSCodd.setTiltSeries(tsFSCodd);
+        }
+        recManFSCodd.setUse(use);
+        if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
+        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
+
+        currentRecThreadManager=recManFSCodd;
+        recFSCodd=recManFSCodd.reconstruct(recParameters,false);
+        recFSCodd.setTitle("FSCodd");
+
         if(recThManSignal!=null) {
             if(recManFSCeven==null){
                 recManFSCeven=new ReconstructionThreadManagerGPU(recThManSignal,tsFSCeven);
@@ -133,15 +149,7 @@ public class ResolutionEstimationGPU extends ResolutionEstimation {
         recFSCeven=recManFSCeven.reconstruct(recParameters,false);
         recFSCeven.setTitle("FSCeven");
 
-        if(recManFSCodd==null)recManFSCodd=new ReconstructionThreadManagerGPU(recManFSCeven,tsFSCodd);
-        else recManFSCodd.setTiltSeries(tsFSCodd);
-        recManFSCodd.setUse(use);
-        if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
-        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
 
-        currentRecThreadManager=recManFSCodd;
-        recFSCodd=recManFSCodd.reconstruct(recParameters,false);
-        recFSCodd.setTitle("FSCodd");
         recParameters.setFscType(TomoReconstruction2.ALL_PROJECTIONS);
 
     }

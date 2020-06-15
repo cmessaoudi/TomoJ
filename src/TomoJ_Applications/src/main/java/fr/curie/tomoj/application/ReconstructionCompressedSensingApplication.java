@@ -153,6 +153,10 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
     }
 
     public boolean run() {
+        if(width==0) width=ts.getWidth();
+        if(height==0) height=ts.getHeight();
+        if(depth==0) depth=ts.getWidth();
+
         final Chrono time = new Chrono();
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         final ReconstructionParameters params = AdvancedReconstructionParameters.createCompressedSensingParameters(width, height, depth, nbiterations, relaxationCoefficient, CSThreshold, waveletType, waveletDegree, waveletShift);
@@ -187,7 +191,7 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
 
     }
 
-    public String help() {
+    public static String help() {
         return null;
     }
 

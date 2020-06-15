@@ -218,7 +218,7 @@ public class ReconstructionParameters {
                 result+="OSSART : NbIterations:"+nbIterations+", relaxationCoefficient:"+relaxationCoefficient+", updateNb:"+updateNb+"\n";
                 break;
             case WBP:
-                result+="WBP : weighting radius:"+weightingRadius+", elongationCorrection"+isElongationCorrection()+"\n";
+                result+="WBP : weighting radius:"+weightingRadius+", elongationCorrection:"+isElongationCorrection()+"\n";
                 break;
             case BP:
                 result+="BP : elongationCorrection"+isElongationCorrection()+"\n";

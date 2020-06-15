@@ -1339,8 +1339,8 @@ public class FeatureTrackingGenerator implements Application {
         spinnerSIFTEdgeThreshold = new JSpinner(new SpinnerNumberModel(10.0, 0.1, 10000, 0.1));
         spinnerSIFTSigma = new JSpinner(new SpinnerNumberModel(1.6, 0.1, 100000, 0.1));
         spinnerSIFTValidationThreshold = new JSpinner(new SpinnerNumberModel(0.75, 0.01, 1, 0.01));
-        spinnerKAZEThreshold = new HighPrecisionDisplaySpinner(0.001, 0.00001, 1.0, 0.00001, 5);
-        spinnerAKAZEThreshold = new HighPrecisionDisplaySpinner(0.001, 0.00001, 1.0, 0.00001, 5);
+        spinnerKAZEThreshold = new HighPrecisionDisplaySpinner(0.001, 0.00001, 1.0, 0.0001, 4);
+        spinnerAKAZEThreshold = new HighPrecisionDisplaySpinner(0.001, 0.00001, 1.0, 0.00001, 4);
         displayOptionPanel = new JPanel();
         displayOptionPanel.setLayout(new BoxLayout(displayOptionPanel, BoxLayout.Y_AXIS));
 

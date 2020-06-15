@@ -16,6 +16,8 @@
         <option value="$PROJECT_DIR$/src/TomoJ_AdvancedReconstruction/pom.xml" />
         <option value="$PROJECT_DIR$/src/TomoJ_Applications/pom.xml" />
         <option value="$PROJECT_DIR$/src/TomoJ_Features/pom.xml" />
+        <option value="$PROJECT_DIR$/src/InputOutput/pom.xml" />
+        <option value="$PROJECT_DIR$/src/deconvolution/pom.xml" />
       </list>
     </option>
   </component>

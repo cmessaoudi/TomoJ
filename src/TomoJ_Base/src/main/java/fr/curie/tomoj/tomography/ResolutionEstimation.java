@@ -116,6 +116,21 @@ public class ResolutionEstimation {
     public void generateFSCData(){
         tsFSCeven=tsSignal;
         tsFSCodd=tsSignal;
+
+        System.out.println("FSCodd");
+        if(recThManSignal!=null) {
+            if(recManFSCodd==null)recManFSCodd=new ReconstructionThreadManager(recThManSignal,tsFSCodd);
+            else recManFSCodd.setTiltSeries(tsFSCodd);
+        }else{
+            if(recManFSCodd==null)recManFSCodd=new ReconstructionThreadManager(tsFSCodd.getWindow(),tsFSCodd);
+            else recManFSCodd.setTiltSeries(tsFSCodd);
+        }
+        if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
+        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
+        currentRecThreadManager=recManFSCodd;
+        recFSCodd=recManFSCodd.reconstruct(recParameters,false);
+        recFSCodd.setTitle("FSCodd");
+
         if(recThManSignal!=null) {
             if(recManFSCeven==null){
                 recManFSCeven=new ReconstructionThreadManager(recThManSignal,tsFSCeven);
@@ -138,14 +153,15 @@ public class ResolutionEstimation {
         recFSCeven=recManFSCeven.reconstruct(recParameters,false);
         recFSCeven.setTitle("FSCeven");
 
-        if(recManFSCodd==null)recManFSCodd=new ReconstructionThreadManager(recManFSCeven,tsFSCodd);
-        else recManFSCodd.setTiltSeries(tsFSCodd);
-        if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
-        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
+//        if(recManFSCodd==null)recManFSCodd=new ReconstructionThreadManager(recManFSCeven,tsFSCodd);
+//        else recManFSCodd.setTiltSeries(tsFSCodd);
+//        if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
+//        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
+//
+//        currentRecThreadManager=recManFSCodd;
+//        recFSCodd=recManFSCodd.reconstruct(recParameters,false);
+//        recFSCodd.setTitle("FSCodd");
 
-        currentRecThreadManager=recManFSCodd;
-        recFSCodd=recManFSCodd.reconstruct(recParameters,false);
-        recFSCodd.setTitle("FSCodd");
         recParameters.setFscType(TomoReconstruction2.ALL_PROJECTIONS);
 
     }

@@ -42,7 +42,6 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     final static int REC_SIRT = 1;
     final static int REC_OSSART = 2;
     //protected boolean computeOnGPU;
-    String resultString = "iterative reconstruction";
     //ResolutionEstimation resolutionComputation;
 
 
@@ -61,6 +60,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     public IterativeReconstructionApplication(TiltSeries series) {
         this.ts = series;
         firstDisplay = true;
+        resultString = "iterative reconstruction";
     }
 
     public void initValues() {
@@ -167,6 +167,12 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     }
 
     public boolean run() {
+        if(width==0) width=ts.getWidth();
+        if(height==0) height=ts.getHeight();
+        if(depth==0) depth=ts.getWidth();
+        if(centerx==0) centerx=(width-1.0)/2.0;
+        if(centery==0) centery=(height-1.0)/2.0;
+        if(centerz==0) centerz=(depth-1.0)/2.0;
 
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         if (relaxationCoefficient == 0) {
@@ -327,11 +333,44 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     }
 
     public void setParameters(Object... parameters) {
+        super.setParameters(parameters);
+        for (int index = 0; index < parameters.length; index++) {
+            if(parameters[index]instanceof String) {
+                if (((String) parameters[index]).toLowerCase().equals("compensation")) {
+                    longObjectCompensation = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("nbiteration")) {
+                    if (parameters[index + 1] instanceof String)
+                        nbIteration = Integer.parseInt((String) parameters[index + 1]);
+                    else nbIteration = (Integer) parameters[index + 1];
+                    index += 1;
 
+                } else if (((String) parameters[index]).toLowerCase().equals("relaxationcoeff")) {
+                    if (parameters[index + 1] instanceof String)
+                        relaxationCoefficient = Double.parseDouble((String) parameters[index + 1]);
+                    else relaxationCoefficient = (Double) parameters[index + 1];
+                    index += 1;
+
+                } else if (((String) parameters[index]).toLowerCase().equals("update")) {
+                    if (parameters[index + 1] instanceof String)
+                        update = Integer.parseInt((String) parameters[index + 1]);
+                    else update = (Integer) parameters[index + 1];
+                    index += 1;
+
+                } else if (((String) parameters[index]).toLowerCase().equals("positivity")) {
+                    positivityConstraint = true;
+                }
+            }
+        }
     }
 
-    public String help() {
-        return null;
+    public static String help() {
+        return ReconstructionApplication.help()+"### os-sart algorithm (ART/SIRT...) ###\n" +
+                "nbiteration value: number of iterations\n" +
+                "relaxationcoeff value: relaxation coefficient (1 for SIRT)\n" +
+                "update value: updates volume every updatevalue projection comparison (1 for ART, nbImagesInTiltSeries for SIRT)\n" +
+                "compensation: activates long object compensation (cryo/resin samples)\n" +
+                "positivity: forces the values in reconstruction to be positive\n" +
+                "";
     }
 
     public String name() {
