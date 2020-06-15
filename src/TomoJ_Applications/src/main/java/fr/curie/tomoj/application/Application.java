@@ -25,7 +25,9 @@ public interface Application {
      * text to display the help / man of the application
      * @return   a String containing the help of the application
      */
-    public String help();
+    public static String help(){
+        return "no help defined";
+    }
 
     /**
      * text to get the name of application
