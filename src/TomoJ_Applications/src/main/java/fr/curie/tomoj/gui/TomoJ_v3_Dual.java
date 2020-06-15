@@ -467,6 +467,22 @@ public class TomoJ_v3_Dual implements PlugIn {
             }
         });
         tiltMenu.add(removeImage);
+
+
+        MenuItem updateStats = new MenuItem("update statistics");
+        updateStats.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TiltSeries ts = currentDisplay.getTiltSeries();
+                ts.threadStats();
+                ts.setSlice(ts.getCurrentSlice());
+                ts.updateAndDraw();
+                //UserAction ua = new UserAction("remove image", "slice" + ts.getCurrentSlice() + "merge" + merge, "removeImage", false);
+                //currentDisplay.getLog().add(ua);
+
+            }
+        });
+        tiltMenu.add(updateStats);
+
         MenuItem normalizationType = new MenuItem("normalization type");
         normalizationType.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -560,7 +576,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         saveTFunction.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 TiltSeries ts = currentDisplay.getTiltSeries();
-                String title = ts.getTitle();
+                String title = ts.getShortTitle();
                 boolean finalT = false;
                 if ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) {
                     title += "_final ";
@@ -722,6 +738,26 @@ public class TomoJ_v3_Dual implements PlugIn {
             }
         });
 
+        MenuItem resetLFunction = new MenuItem("remove landmarks");
+        landmarksMenu.add(resetLFunction);
+        resetLFunction.addActionListener(new ActionListener() {
+            /** Invoked when an action occurs. */
+            public void actionPerformed(ActionEvent e) {
+                TiltSeries ts = currentDisplay.getTiltSeries();
+                ts.getTomoJPoints().removeAllSetsOfPoints();
+
+                currentDisplay.updatePointSpinner();
+                IJ.showStatus("loading finished");
+                ts.getTomoJPoints().setCurrentIndex(ts.getTomoJPoints().getNumberOfPoints() - 1);
+                ts.setSlice(ts.getCurrentSlice());
+                ts.updateAndDraw();
+                UserAction ua = new UserAction("reset landmarks",
+                        "",
+                        null, false);
+                currentDisplay.getLog().add(ua);
+            }
+        });
+
         Menu logMenu = new Menu("log");
         menuBar.add(logMenu);
         MenuItem saveLogFunction = new MenuItem("save...");
@@ -732,7 +768,7 @@ public class TomoJ_v3_Dual implements PlugIn {
                 TiltSeries ts = currentDisplay.getTiltSeries();
                 Date theDate = new Date();
                 String d = "" + (new SimpleDateFormat("yyMMdd_HHmmss").format(theDate));
-                SaveDialog sd = new SaveDialog("save log as...", ts.getShortTitle() + d + "_log", ".txt");
+                SaveDialog sd = new SaveDialog("save log as...", ts.getShortTitle() + "_" + d + "_log", ".txt");
                 String dir = sd.getDirectory();
                 String name = sd.getFileName();
                 if (dir == null || name == null) {
@@ -790,7 +826,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         window.pack();
     }
 
-    public TiltSeries convertToTiltSeries(ImagePlus imp) {
+    public static TiltSeries convertToTiltSeries(ImagePlus imp) {
         if (imp.getType() != ImagePlus.GRAY32) new StackConverter(imp).convertToGray32();
         double[] tiltangles = AnglesForTiltSeries.getAngles(imp);
         if (tiltangles == null) {
