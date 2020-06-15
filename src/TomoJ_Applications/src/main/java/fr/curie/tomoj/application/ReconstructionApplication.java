@@ -7,6 +7,7 @@ import fr.curie.gpu.utils.GPUDevice;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by cedric on 14/03/2017.
@@ -15,7 +16,7 @@ public class ReconstructionApplication implements Application{
     protected int width, height, depth;
     protected double centerx,centery,centerz;
     protected boolean computeOnGPU=false;
-    protected boolean rescaleData=true;
+    protected boolean rescaleData=false;
     protected boolean computeSSNR=false;
     protected boolean computeVSSNR=false;
     protected boolean computeFSC=false;
@@ -66,11 +67,81 @@ public class ReconstructionApplication implements Application{
     }
 
     public void setParameters(Object... parameters) {
-
+        for (int index = 0; index < parameters.length; index++) {
+            if(parameters[index]instanceof String) {
+                if (((String) parameters[index]).toLowerCase().equals("width")) {
+                    if (parameters[index + 1] instanceof String)
+                        width = Integer.parseInt((String) parameters[index + 1]);
+                    else width = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("height")) {
+                    if (parameters[index + 1] instanceof String)
+                        height = Integer.parseInt((String) parameters[index + 1]);
+                    else height = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("depth")) {
+                    if (parameters[index + 1] instanceof String)
+                        depth = Integer.parseInt((String) parameters[index + 1]);
+                    else depth = (Integer) parameters[index + 1];
+                    index += 1;
+                } else if (((String) parameters[index]).toLowerCase().equals("size")) {
+                    if (parameters[index + 1] instanceof String)
+                        width = Integer.parseInt((String) parameters[index + 1]);
+                    else width = (Integer) parameters[index + 1];
+                    if (parameters[index + 1] instanceof String)
+                        height = Integer.parseInt((String) parameters[index + 2]);
+                    else height = (Integer) parameters[index + 2];
+                    if (parameters[index + 1] instanceof String)
+                        depth = Integer.parseInt((String) parameters[index + 3]);
+                    else depth = (Integer) parameters[index + 3];
+                    index += 3;
+                } else if (((String) parameters[index]).toLowerCase().equals("center")) {
+                    if (parameters[index + 1] instanceof String)
+                        centerx = Integer.parseInt((String) parameters[index + 1]);
+                    else centerx = (Integer) parameters[index + 1];
+                    if (parameters[index + 1] instanceof String)
+                        centery = Integer.parseInt((String) parameters[index + 2]);
+                    else centery = (Integer) parameters[index + 2];
+                    if (parameters[index + 1] instanceof String)
+                        centerz = Integer.parseInt((String) parameters[index + 3]);
+                    else centerz = (Integer) parameters[index + 3];
+                    index += 3;
+                } else if (((String) parameters[index]).toLowerCase().equals("rescale")) {
+                    rescaleData = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("ssnr")) {
+                    computeSSNR = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("fsc")) {
+                    computeFSC = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("gpu")) {
+                    computeOnGPU = true;
+                    if(gpuDevices==null){
+                        gpuDevices=GPUDevice.getGPUDevices();
+                        use=new Boolean[gpuDevices.length];
+                        Arrays.fill(use,false);
+                    }
+                    int useIndex=0;
+                    if (parameters[index + 1] instanceof String)
+                        useIndex = Integer.parseInt((String) parameters[index + 1]);
+                    else useIndex = (Integer) parameters[index + 1];
+                    use[useIndex]=true;
+                    index+=1;
+                }
+            }
+        }
     }
 
-    public String help() {
-        return null;
+    public static String help() {
+        return "reconstruction \n" +
+                "parameters that can be given\n" +
+                "width value: width of reconstruction\n" +
+                "height value: height of reconstruction\n" +
+                "depth value: depth of reconstruction\n" +
+                "size value value value: give the size of reconstruction in the order (x, y, z)\n" +
+                "center value value value: give the centers of reconstruction in the order (x, y, z) by default the value corresponds to (size-1)/2" +
+                "rescale: if width or height of reconstruction is different from tilt series, rescales projection images\n" +
+                "gpu index: use gpu for computation. index corresponds to gpu number (use graphical version to see what is detected and order). Sets this options many times to use several gpus\n" +
+                "ssnr: computes ssnr\n" +
+                "fsc: computes fsc" ;
     }
 
     public String name() {
