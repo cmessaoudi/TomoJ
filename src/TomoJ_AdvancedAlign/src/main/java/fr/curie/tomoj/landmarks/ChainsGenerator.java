@@ -861,6 +861,7 @@ public class ChainsGenerator {
                     completion = nbfinished[0] * 100.0 / Q.size();
                     IJ.showProgress(qq, Q.size());
                     IJ.showStatus("follow seeds " + (nbfinished[0] * 100 / Q.size()) + "%");
+                    if(completion%10<0.1) System.out.print("\r                                        \r"+"follow seeds " + (nbfinished[0] * 100 / Q.size()) + "%");
 
                 }
 
