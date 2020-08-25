@@ -36,6 +36,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import static java.lang.Double.MAX_VALUE;
 
@@ -65,6 +69,7 @@ public class TomoJ_v3_Dual implements PlugIn {
     ADOSSARTApplication dualReconstruction;
     protected ArrayList<UserAction> log;
     GridConstraints constraints;
+    AffineTransform T12=new AffineTransform();
 
     public TomoJ_v3_Dual() {
         log = new ArrayList<UserAction>();
@@ -75,15 +80,18 @@ public class TomoJ_v3_Dual implements PlugIn {
         alignZeroTiltImagesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                T12=performPreAlignDual();
+                System.out.println(T12);
+
                 //tsList.get(0).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
                 //tsList.get(1).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
-                TomoJPoints tp1 = tsList.get(0).getTiltSeries().getTomoJPoints();
-                TomoJPoints tp2 = tsList.get(1).getTiltSeries().getTomoJPoints();
+                //TomoJPoints tp1 = tsList.get(0).getTiltSeries().getTomoJPoints();
+                //TomoJPoints tp2 = tsList.get(1).getTiltSeries().getTomoJPoints();
 
                 //loadLandmarks("Z:\\images_test\\Data_test_Dual\\", "K1_MTs_1a_points.txt", tp1, 1.0);
                 //loadLandmarks("Z:\\images_test\\Data_test_Dual\\", "K1_MTs_1b_points2.txt", tp2, 1.0);
                 if (stp == null) initSuperTomoJPoints();
-                CommandWorkflow.loadTransformsDual("Z:\\images_test\\Data_test_Dual\\", new String[]{"K1_MTs_1a_var_transf.csv", "K1_MTs_1b_var_transf.csv"}, stp, 1, false, true);
+                //CommandWorkflow.loadTransformsDual("Z:\\images_test\\Data_test_Dual\\", new String[]{"K1_MTs_1a_var_transf.csv", "K1_MTs_1b_var_transf.csv"}, stp, 1, false, true);
 
             }
         });
@@ -92,7 +100,7 @@ public class TomoJ_v3_Dual implements PlugIn {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (stp == null) initSuperTomoJPoints();
-                computeCommonLandmarks0degree(0, 1, 5);
+                computeCommonLandmarks0degree(0, 1, 5,T12);
                 currentDisplay.getTiltSeries().setSlice(currentDisplay.getTiltSeries().getCurrentSlice());
                 currentDisplay.getTiltSeries().updateAndDraw();
             }
@@ -226,14 +234,57 @@ public class TomoJ_v3_Dual implements PlugIn {
         return stp;
     }
 
-    public void computeCommonLandmarks0degree(int firstTs, int secondTs, double threshold) {
+    AffineTransform performPreAlignDual() {
+        TiltSeries ts1= tsList.get(0).getTiltSeries();
+        TiltSeries ts2= tsList.get(1).getTiltSeries();
+        ts1.setSlice(ts1.getZeroIndex() + 1);
+        ts2.setSlice(ts2.getZeroIndex() + 1);
+        AffineTransform zeroTbkp = new AffineTransform(ts2.getAlignment().getZeroTransform());
+        System.out.println("zero T before prealign :" + zeroTbkp);
+
+
+        final Align2ImagesDialog dialog = new Align2ImagesDialog(new ImagePlus("ts1", ts1.getProcessor().duplicate()), new ImagePlus("ts2", ts2.getProcessor().duplicate()));
+        dialog.pack();
+        dialog.setTitle("prealign");
+        dialog.setVisible(true);
+
+        T12=new AffineTransform();
+        Thread T= new Thread() {
+            public void run() {
+                while (dialog.isActive()) {
+                    try {
+                        this.sleep(1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (dialog.wasCanceled()) {
+                    System.out.println("canceled");
+                    return;
+                }
+                System.out.println("alignment found");
+
+                T12.translate(dialog.getTranslationX(), dialog.getTranslationY());
+                T12.rotate(Math.toRadians(dialog.getRotation()));
+                System.out.println("after:"+T12);
+
+            }
+        };
+        T.start();
+
+        return T12;
+
+
+    }
+
+    public void computeCommonLandmarks0degree(int firstTs, int secondTs, double threshold, AffineTransform T) {
         Point2D[] points1, points2;
         TiltSeries ts1 = tsList.get(firstTs).getTiltSeries();
         TiltSeries ts2 = tsList.get(secondTs).getTiltSeries();
-        computeCommonLandmarks0degree(ts1, ts2, threshold);
+        computeCommonLandmarks0degree(ts1, ts2, threshold,T);
     }
 
-    public void computeCommonLandmarks0degree(TiltSeries ts1, TiltSeries ts2, double threshold) {
+    public void computeCommonLandmarks0degree(TiltSeries ts1, TiltSeries ts2, double threshold, AffineTransform T) {
         Point2D[] points1, points2;
         for (TiltSeriesPanel tsp : tsList) tsp.getTiltSeries().getTomoJPoints().removeEmptyChains();
 
@@ -261,6 +312,10 @@ public class TomoJ_v3_Dual implements PlugIn {
         AffineTransform tr2 = new AffineTransform();
         AffineTransform T2 = ts2.getAlignment().getZeroTransform();
         tr2.concatenate(T2);
+        tr2.concatenate(T);
+        System.out.println("T2="+T2);
+        System.out.println("T12="+T);
+        System.out.println("final="+tr2);
 
         // Transform all points2t
         Point2D[] points2t = new Point2D[points2.length];
@@ -446,6 +501,7 @@ public class TomoJ_v3_Dual implements PlugIn {
             public void actionPerformed(ActionEvent e) {
                 TiltSeries ts = currentDisplay.getTiltSeries();
                 AnglesForTiltSeries.ask4Angles(ts);
+                ts.sortImages();
             }
         });
         tiltMenu.add(setTiltAngles);
@@ -834,6 +890,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         }
         System.out.println("get angles done");
         TiltSeries ts = new TiltSeries(imp, tiltangles);
+        ts.sortImages();
         System.out.println("create tilt series done");
         TomoJPoints tp = new TomoJPoints(ts);
         System.out.println("create points done");
