@@ -2597,4 +2597,13 @@ public class AlignmentLandmarkImproved implements Alignment {
 
     }
 
+    public AffineAlignment convertToAffine(){
+        AffineAlignment result=new AffineAlignment(tp.getTiltSeries());
+        for(int i=0;i<tp.getTiltSeries().getImageStackSize();i++){
+            result.setTransform(i, getTransform(i));
+        }
+        result.convertTolocalTransform();
+        return result;
+    }
+
 }
