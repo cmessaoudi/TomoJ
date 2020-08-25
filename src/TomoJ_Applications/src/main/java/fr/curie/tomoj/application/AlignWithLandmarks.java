@@ -268,29 +268,29 @@ public class AlignWithLandmarks implements Application {
                     newMahalanobisWeight = Double.parseDouble((String) parameters[index + 1]);
                 else newMahalanobisWeight = (Double) parameters[index + 1];
             } else if (((String) parameters[index]).toLowerCase().equals("noshift")) {
-                newShift=false;
-            }else if (((String) parameters[index]).toLowerCase().equals("shrink")) {
-                newShrink=true;
-            }else if (((String) parameters[index]).toLowerCase().equals("magnification")) {
-                newMag=true;
-            }else if (((String) parameters[index]).toLowerCase().equals("scalex")) {
-                newScaleX=true;
-            }else if (((String) parameters[index]).toLowerCase().equals("shear")) {
-                newShear=true;
-            }else if (((String) parameters[index]).toLowerCase().equals("rotation")) {
-                newRotation=true;
-            }else if (((String) parameters[index]).toLowerCase().equals("all")) {
-                newShift=true;
-                newMag=true;
-                newShrink=true;
-                newScaleX=true;
-                newShear=true;
-                newRotation=true;
-            }else if (((String) parameters[index]).toLowerCase().equals("nbcycles")) {
+                newShift = false;
+            } else if (((String) parameters[index]).toLowerCase().equals("shrink")) {
+                newShrink = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("magnification")) {
+                newMag = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("scalex")) {
+                newScaleX = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("shear")) {
+                newShear = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("rotation")) {
+                newRotation = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("all")) {
+                newShift = true;
+                newMag = true;
+                newShrink = true;
+                newScaleX = true;
+                newShear = true;
+                newRotation = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("nbcycles")) {
                 if (parameters[index + 1] instanceof String)
                     newCycleNumber = Integer.parseInt((String) parameters[index + 1]);
                 else newCycleNumber = (Integer) parameters[index + 1];
-            }else if (((String) parameters[index]).toLowerCase().equals("selectionthreshold")) {
+            } else if (((String) parameters[index]).toLowerCase().equals("selectionthreshold")) {
                 if (parameters[index + 1] instanceof String)
                     newSelectionThreshold = Double.parseDouble((String) parameters[index + 1]);
                 else newSelectionThreshold = (Double) parameters[index + 1];
