@@ -97,9 +97,9 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
     }
 
     public boolean run() {
-        if(width==0) width=ts.getWidth();
-        if(height==0) height=ts.getHeight();
-        if(depth==0) depth=ts.getWidth();
+        if (width == 0) width = ts.getWidth();
+        if (height == 0) height = ts.getHeight();
+        if (depth == 0) depth = ts.getWidth();
 
         final Chrono time = new Chrono();
         final OutputStreamCapturer capture = new OutputStreamCapturer();
