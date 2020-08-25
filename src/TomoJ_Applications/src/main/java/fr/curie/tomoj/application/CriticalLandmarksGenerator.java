@@ -3,6 +3,7 @@ package fr.curie.tomoj.application;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import fr.curie.tomoj.landmarks.*;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
@@ -11,11 +12,8 @@ import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import fr.curie.tomoj.tomography.TiltSeries;
 import fr.curie.tomoj.tomography.TomoJPoints;
-import fr.curie.tomoj.landmarks.LandmarksChain;
 import fr.curie.utils.Chrono;
 import fr.curie.utils.OutputStreamCapturer;
-import fr.curie.tomoj.landmarks.ChainsGenerator;
-import fr.curie.tomoj.landmarks.SeedDetector;
 import fr.curie.tomoj.application.Application;
 
 import javax.swing.*;
@@ -312,6 +310,15 @@ public class CriticalLandmarksGenerator implements Application {
         OutputStreamCapturer capture = new OutputStreamCapturer();
         Chrono time = new Chrono();
         time.start();
+        if(ts.getAlignment()instanceof alignmentLandmark){
+            System.out.println("convert alignmentLandmark to affine");
+            ts.setAlignment( ((alignmentLandmark) ts.getAlignment()).convertToAffine());
+        }  else if(ts.getAlignment()instanceof AlignmentLandmarkImproved){
+            System.out.println("convert alignmentLandmarkImproved to affine");
+            ts.setAlignment( ((AlignmentLandmarkImproved) ts.getAlignment()).convertToAffine());
+        } else {
+            System.out.println("affine alignment!");
+        }
 //        generator.setGoldBead(fiducialMarkers);
 //        generator.setCriticalSeed(nbSeeds);
 //        generator.setCriticalFilter(filterLarge, filterSmall);
@@ -400,7 +407,7 @@ public class CriticalLandmarksGenerator implements Application {
     public void setParameters(Object... parameters) {
         for (int index = 0; index < parameters.length; index++) {
             //System.out.println("#"+index+parameters[index]);
-            if(parameters[index]instanceof String) {
+            if (parameters[index] instanceof String) {
                 if (((String) parameters[index]).toLowerCase().equals("localminima")) {
                     localMinima = true;
                 } else if (((String) parameters[index]).toLowerCase().equals("localmaxima")) {
@@ -673,7 +680,7 @@ public class CriticalLandmarksGenerator implements Application {
                 ts.setSlice(previewIndex + 1);
             }
             seedDetector.resetCompletion();
-            ImageProcessor ip = new FloatProcessor(ts.getWidth(), ts.getHeight(), ts.getOriginalPixels(previewIndex), null);
+            ImageProcessor ip = new FloatProcessor(ts.getWidth(), ts.getHeight(), ts.getOriginalPixelsCopy(previewIndex), null);
 //            generator.setGoldBead(fiducialMarkers);
 //            generator.setCriticalSeed(nbSeeds);
 //            generator.setCriticalFilter(filterLarge, filterSmall);
