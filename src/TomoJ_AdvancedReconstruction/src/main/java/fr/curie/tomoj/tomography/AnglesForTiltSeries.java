@@ -12,6 +12,7 @@ import fr.curie.tomoj.tomography.TiltSeries;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AnglesForTiltSeries {
 
@@ -166,7 +167,11 @@ public class AnglesForTiltSeries {
             } else if (filename.endsWith("RecParam.txt")) {
                 System.out.println("Jeol angle file");
                 angles = readFromJeol(bf, ts);
-            } else {
+            } else if(filename.endsWith("mdoc")){
+                System.out.println("mdoc file");
+                angles=readFromMdoc(bf,ts);
+
+            }else {
                 System.out.println("rawtlt angle file");
                 angles = readFromRawtlt(bf, ts);
 
@@ -224,6 +229,39 @@ public class AnglesForTiltSeries {
                 }
             }
         } while ((line = bf.readLine()) != null);
+        return angles;
+    }
+
+    /**
+     * reads angles from a mdoc parameter file
+     *
+     * @param bf the already opened file
+     * @param ts the TiltSeries where Tilt Axis will be updated (not Tilt Angles)
+     * @return the angles inside the file
+     * @throws IOException if errors occur while parsing
+     */
+    protected static double[] readFromMdoc(BufferedReader bf, ImagePlus ts) throws IOException {
+        double[] angles = null;
+        String line = bf.readLine();
+        ArrayList<Double> anglesList=new ArrayList<>(ts.getImageStackSize());
+        do {
+            if (line.contains("Tilt axis angle")) {
+                System.out.println("tilt axis detected");
+                String[] words=line.split(",")[0].split(" ");
+                double tiltaxis = Double.parseDouble(words[words.length-1]);
+                if(ts instanceof TiltSeries) ((TiltSeries)ts).setTiltAxis(tiltaxis);
+            }
+            if (line.startsWith("TiltAngle")) {
+                //System.out.println("tilt angles detected");
+                String[] split = line.split("=");
+                anglesList.add(Double.parseDouble(split[1]));
+
+            }
+        } while ((line = bf.readLine()) != null);
+        angles=new double[anglesList.size()];
+        for(int i=0;i<angles.length;i++){
+            angles[i]=anglesList.get(i);
+        }
         return angles;
     }
 
