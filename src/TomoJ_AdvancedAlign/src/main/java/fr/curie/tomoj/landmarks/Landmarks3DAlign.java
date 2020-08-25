@@ -128,6 +128,7 @@ public class Landmarks3DAlign {
             //System.out.println(bestPreviousAlignment);
             if (completion < 0) return Double.MAX_VALUE;
             //completion+=completionStep;
+
         } else {
             if (creation) {
                 bestRot = tp.getTiltSeries().getTiltAxis() + 90;
@@ -206,6 +207,7 @@ public class Landmarks3DAlign {
         //bestPreviousAlignment.printAlignment();
         System.out.println("before computeErrorForLandmarks :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
         bestPreviousAlignmentDeform.saveLandmarksErrors(savedir + tp.getTiltSeries().getTitle() + "_0_LandmarksErrors.txt");
+        System.out.println("time to compute exhaustive search and first optimization : "+Chrono.timeString(timeOptimize.get()));
 
         if (completion < 0) return Double.MAX_VALUE;
         completion += completionStep;
@@ -216,6 +218,8 @@ public class Landmarks3DAlign {
                 completionStep /= 2;
                 completion -= completionStep;
             }
+            Chrono timeCycle=new Chrono();
+            timeCycle.start();
             //compute the best alignment
             //bestPreviousAlignment.printAlignment();
             if (completion < 0) return Double.MAX_VALUE;
@@ -275,6 +279,9 @@ public class Landmarks3DAlign {
             completion += nbOutliers / (double) tp.getNumberOfPoints();
             cycle++;
             bestPreviousAlignmentDeform.saveLandmarksErrors(savedir + tp.getTiltSeries().getTitle() + "_" + cycle + "_LandmarksErrors.txt");
+            timeCycle.stop();
+            System.out.println("time to compute Cycle"+cycle+" : "+timeCycle.delayString());
+
         }
 
         //final with tilt for beam
