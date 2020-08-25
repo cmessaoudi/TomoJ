@@ -369,7 +369,9 @@ public class CrossCorrelationParameters implements Application {
         ts.setAlignmentRoi(roiX, roiY);
         ts.setBinning(downSampling);
         if (bandpassFilter) {
-            ts.setBandpassFilter(bandpassFilterMin - bandpassFilterDecrease, bandpassFilterMin, bandpassFilterMax, bandpassFilterMax + bandpassFilterDecrease);
+            double lowcut=Math.max(0,bandpassFilterMin - bandpassFilterDecrease);
+            double highcut=Math.min(bandpassFilterMax + bandpassFilterDecrease,ts.getWidth()/2);
+            ts.setBandpassFilter(lowcut, bandpassFilterMin, bandpassFilterMax, highcut);
         } else {
             ts.setBandpassFilter(Double.NaN, Double.NaN, Double.NaN, Double.NaN);
         }
@@ -441,14 +443,16 @@ public class CrossCorrelationParameters implements Application {
      */
     public void setParameters(Object... parameters) {
         for (int index = 0; index < parameters.length; index++) {
-            if(parameters[index]instanceof String) {
+            if (parameters[index] instanceof String) {
                 if (((String) parameters[index]).toLowerCase().equals("integertranslation")) {
                     integerTranslation = true;
                 } else if (((String) parameters[index]).toLowerCase().equals("roi")) {
                     roi = true;
-                    if (parameters[index + 1] instanceof String) roiX = Integer.parseInt((String) parameters[index + 1]);
+                    if (parameters[index + 1] instanceof String)
+                        roiX = Integer.parseInt((String) parameters[index + 1]);
                     else roiX = (Integer) parameters[index + 1];
-                    if (parameters[index + 2] instanceof String) roiY = Integer.parseInt((String) parameters[index + 2]);
+                    if (parameters[index + 2] instanceof String)
+                        roiY = Integer.parseInt((String) parameters[index + 2]);
                     else roiY = (Integer) parameters[index + 2];
                     index += 2;
 
