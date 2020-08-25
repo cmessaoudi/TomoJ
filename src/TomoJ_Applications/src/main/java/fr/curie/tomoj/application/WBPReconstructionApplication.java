@@ -42,9 +42,9 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     }
 
     public boolean run() {
-        if(width==0) width=ts.getWidth();
-        if(height==0) height=ts.getHeight();
-        if(depth==0) depth=ts.getWidth();
+        if (width == 0) width = ts.getWidth();
+        if (height == 0) height = ts.getHeight();
+        if (depth == 0) depth = ts.getWidth();
 
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         final int fillingType = ts.getFillType();
@@ -115,7 +115,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
             recthman.reconstruct(recParams);
             rec2 = recthman.getRec2();*/
             resolutionComputation.doSignalReconstruction();
-            rec=resolutionComputation.getReconstructionSignal();
+            rec = resolutionComputation.getReconstructionSignal();
         }
         if (computeFSC) {
             System.out.println("compute FSC");
@@ -211,7 +211,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     public void setParameters(Object... parameters) {
         super.setParameters(parameters);
         for (int index = 0; index < parameters.length; index++) {
-            if(parameters[index]instanceof String) {
+            if (parameters[index] instanceof String) {
                 if (((String) parameters[index]).toLowerCase().equals("noweighting")) {
                     weighting = false;
                 } else if (((String) parameters[index]).toLowerCase().equals("weightdiameter")) {
@@ -228,7 +228,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     }
 
     public static String help() {
-        return ReconstructionApplication.help()+"### weighted backprojection algorithm  ###\n" +
+        return ReconstructionApplication.help() + "### weighted backprojection algorithm  ###\n" +
                 "noweighting: removes the weighting part of algorithm\n" +
                 "weightdiameter value: diameter used for weighting\n" +
                 "elongationcorrection: attempts to correct the elongation due to missing-wedge\n" +
