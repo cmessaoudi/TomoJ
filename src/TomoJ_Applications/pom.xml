@@ -71,6 +71,12 @@
                 <artifactId>maven-assembly-plugin</artifactId>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 
 
