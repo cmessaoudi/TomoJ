@@ -7,6 +7,7 @@ import cern.colt.matrix.tdouble.DoubleMatrix2D;
 import cern.colt.matrix.tdouble.algo.DenseDoubleAlgebra;
 import cern.colt.matrix.tdouble.impl.DenseDoubleMatrix2D;
 import cern.jet.math.tdouble.DoubleFunctions;
+import fr.curie.tomoj.align.AffineAlignment;
 import fr.curie.tomoj.align.Alignment;
 import ij.ImagePlus;
 import ij.gui.NewImage;
@@ -1106,5 +1107,14 @@ public class alignmentLandmark implements Alignment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public AffineAlignment convertToAffine(){
+        AffineAlignment result=new AffineAlignment(tp.getTiltSeries());
+        for(int i=0;i<tp.getTiltSeries().getImageStackSize();i++){
+            result.setTransform(i, getTransform(i));
+        }
+        result.convertTolocalTransform();
+        return result;
     }
 }
