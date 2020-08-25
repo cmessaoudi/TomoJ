@@ -169,7 +169,9 @@ public class MRC_BZ2_Reader extends ImagePlus implements PlugIn {
             is.close();
             ImagePlus imp=null;
             Object pixels;
+            System.out.println("MRC_BZ2 summing?"+Prefs.get("MRC_BZ2.sum.bool",true));
             if(Prefs.get("MRC_BZ2.sum.bool",true)){
+                System.out.println("MRC_BZ2 summing");
                 switch (fi.fileType) {
                     case FileInfo.GRAY8:
                     case FileInfo.COLOR8:
