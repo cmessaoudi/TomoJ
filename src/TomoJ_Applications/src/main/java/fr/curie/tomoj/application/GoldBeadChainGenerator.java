@@ -69,6 +69,10 @@ public class GoldBeadChainGenerator implements Application {
         String resultString = "";
 
         FiducialMarkerListFeature fmlf = new FiducialMarkerListFeature(ts, useMinima, percentageExcludeX, percentageExcludeY, critical_FilterSmall, critical_FilterLarge, critical_MinimaRadius, critical_SeedNumber, patchSize, useMinima, thresholdFitGoldBead);
+        //fmlf.detectCircles(ts.getProcessor());
+        // true;
+
+
         FeatureTrackingChaining ftc = new FeatureTrackingChaining();
         ArrayList<Point2D[]> chains = ftc.computeFeatureChaining(ts, fmlf, fmlf, minChainLength, jumpmax, true);
         System.out.println("number of points detected" + chains.size());
