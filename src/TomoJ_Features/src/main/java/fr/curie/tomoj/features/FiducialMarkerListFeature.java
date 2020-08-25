@@ -9,10 +9,12 @@ import delaunay.DelaunayTriangulation;
 import delaunay.Pnt;
 import delaunay.Simplex;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.gui.PointRoi;
 import ij.gui.Roi;
 import ij.io.FileSaver;
 import ij.measure.CurveFitter;
+import ij.plugin.filter.Convolver;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.Blitter;
 import ij.process.FloatPolygon;
@@ -42,13 +44,16 @@ public class FiducialMarkerListFeature implements ListFeature {
     int critical_FilterLarge;
     int critical_MinimaRadius;
     int critical_SeedNumber;
-    int patchSize;
+    static int patchSize;
     boolean darkOnWhiteBG;
     double gaussianFitThreshold = 0.6;
     ArrayList<Point2D> points;
     TiltSeries ts;
     DelaunayTriangulation delaunay;
-    int index;
+    int circleIndex;
+    double amplitude,base;
+    static float[] gaussianImage=null;
+    static ArrayList<float[]> circles;
 
     public FiducialMarkerListFeature(TiltSeries ts, boolean useMinima, double percentageExcludeX, double percentageExcludeY, int critical_FilterSmall, int critical_FilterLarge, int critical_MinimaRadius, int critical_SeedNumber, int patchSize, boolean darkOnWhiteBG, double gaussianFitThreshold) {
         this.ts = ts;
@@ -59,16 +64,104 @@ public class FiducialMarkerListFeature implements ListFeature {
         this.critical_FilterLarge = critical_FilterLarge;
         this.critical_MinimaRadius = critical_MinimaRadius;
         this.critical_SeedNumber = critical_SeedNumber;
-        this.patchSize = patchSize;
         this.darkOnWhiteBG = darkOnWhiteBG;
         this.gaussianFitThreshold = gaussianFitThreshold;
+        /*if(this.patchSize!=patchSize||gaussianImage==null) {
+            for (int i = 1; i < ts.getImageStackSize(); i++) {
+                ts.setSlice(i + 1);
+                ImageProcessor fp = ts.getProcessor().duplicate();
+                ImageStatistics stats = fp.getStatistics();
+                amplitude += stats.max - stats.min;
+                base += useMinima ? stats.max : stats.min;
+            }
+            amplitude /= ts.getImageStackSize();
+            base /= ts.getImageStackSize();
+            gaussianImage = createGaussianImage(patchSize, patchSize / 4.0, useMinima);
+            correctGaussianAmplitude(gaussianImage, amplitude, base);
+            new ImagePlus("gaussian used", new FloatProcessor(patchSize, patchSize, gaussianImage)).show();
+        }  */
+        if(this.patchSize!=patchSize||circles==null){
+            if(circles!=null) circles.clear();
+            else circles=new ArrayList<>();
+            for (int i = 1; i < ts.getImageStackSize(); i++) {
+                ts.setSlice(i + 1);
+                ImageProcessor fp = ts.getProcessor().duplicate();
+                ImageStatistics stats = fp.getStatistics();
+                amplitude += useMinima ? stats.min : stats.max;
+                base += stats.max;
+            }
+            amplitude /= ts.getImageStackSize();
+            base /= ts.getImageStackSize();
+            ImageStack is=new ImageStack(patchSize,patchSize);
+            for(int r=1;r<patchSize/2;r++){
+                float[] tmp=createCircleImage(patchSize,r,base,amplitude) ;
+                circles.add(tmp);
+                is.addSlice("r="+r,tmp);
+            }
+            new ImagePlus("circles",is).show();
+            ts.setSlice(ts.getZeroIndex()+1);
+            Convolver convolv=new Convolver();
+            circleIndex=-1;
+            double bestRange=0;
+            for(int index=0;index<circles.size();index++) {
+                ImageProcessor conv = ts.getProcessor().duplicate();
+                convolv.convolve(conv, circles.get(index), patchSize, patchSize);
+                new FileSaver(new ImagePlus("", conv)).saveAsTiff("conv" + index + ".tif");
+                if (circleIndex <0) {
+                    circleIndex=index;
+                    ImageStatistics stats = conv.getStatistics();
+                    bestRange = stats.max - stats.min;
+                    System.out.println("#" + index + " range:" + bestRange);
+                } else {
+                    ImageStatistics stats = conv.getStatistics();
+                    double range = stats.max - stats.min;
+                    System.out.println("#" + index + " range:" + range);
+                    if (range > bestRange) {
+                        System.out.println("keep image " + index + " range:" + range);
+                        bestRange = range;
+                        circleIndex = index;
+                    }
+                }
+            }
+
+        }
+        this.patchSize = patchSize;
+        
     }
 
-
     public Object detect(ImageProcessor ip) {
+        //return detectGaussian(ip);
+        return detectCircles(ip);
+
+    }
+
+    public Object detectCircles(ImageProcessor ip) {
+        ArrayList<Point2D> Q = new ArrayList<Point2D>();
+        Convolver convolv=new Convolver();
+        convolv.setNormalize(true);
+        ImageProcessor conv = ip.duplicate();
+        convolv.convolve(conv,circles.get(circleIndex), patchSize, patchSize);
+
+        Polygon r = findBestPoints(conv);
+        int[] xcoord = r.xpoints;
+        int[] ycoord = r.ypoints;
+        for (int i = 0; i < xcoord.length; i++) {
+            Point2D tmp = (gaussianFitThreshold <= 0) ? new Point2D.Float(xcoord[i], ycoord[i]) : isGoldBeadPresent(ip, xcoord[i], ycoord[i], patchSize, darkOnWhiteBG);
+            //Point2D tmp=new Point2D.Float(xcoord[i],ycoord[i]);
+            if (tmp != null) Q.add(tmp);
+        }
+
+        //System.out.println("number of points detected circle "+index+": " + Q.size());
+        points = Q;
+        return Q;
+    }
+
+    public Object detectGaussian(ImageProcessor ip) {
         System.out.println("detection fiducial patch size : " + patchSize);
         ArrayList<Point2D> Q = new ArrayList<Point2D>();
-        float[] gaussianImage = createGaussianImage(patchSize, patchSize / 4.0, useMinima);
+//        float[] gaussianImage = createGaussianImage(patchSize, patchSize / 4.0, useMinima);
+//        ImageStatistics stats=ip.getStatistics();
+//        correctGaussianAmplitude(gaussianImage,stats.max-stats.min, useMinima?stats.max:stats.min);
         new FileSaver(new ImagePlus("", new FloatProcessor(patchSize, patchSize, gaussianImage, null))).saveAsTiff("gaussianImage.tif");
         ImageProcessor conv = ip.duplicate();
         conv.convolve(gaussianImage, patchSize, patchSize);
@@ -85,7 +178,7 @@ public class FiducialMarkerListFeature implements ListFeature {
             if (tmp != null) Q.add(tmp);
         }
         points = Q;
-        System.out.println("number of points detected : " + Q.size());
+        //System.out.println("number of points detected : " + Q.size());
 
         return Q;
 
@@ -127,7 +220,7 @@ public class FiducialMarkerListFeature implements ListFeature {
                         if (xx > startx && xx < endx && yy > starty && yy < endy) {
                             //if ((useMinima && value > ip.getPixelValue(xx, yy)) || (!useMinima && value < ip.getPixelValue(xx, yy))) {
                             msd += Math.abs(value - pixs[yyy + xx]);
-                            if ((useMinima && value > pixs[yyy + xx]) || (!useMinima && value < pixs[yyy + xx])) {
+                            if ((!useMinima && value > pixs[yyy + xx]) || (useMinima && value < pixs[yyy + xx])) {
                                 localMinima = false;
                                 break;
                             }
@@ -138,7 +231,7 @@ public class FiducialMarkerListFeature implements ListFeature {
                 }
             }
         }
-        new FileSaver(new ImagePlus("", conv)).saveAsTiff("conv_aftermsd.tif");
+        //new FileSaver(new ImagePlus("", conv)).saveAsTiff("conv_aftermsd.tif");
         ImageStatistics stat = new FloatStatistics(conv);
         int[] hist = stat.histogram;
         int sum = 0;
@@ -241,6 +334,28 @@ public class FiducialMarkerListFeature implements ListFeature {
             jj = j * size;
             for (int i = 0; i < size; i++) {
                 result[jj + i] = (darkOnWhiteBG) ? -(float) Math.exp(-(i - size2) * (i - size2) / div - (j - size2) * (j - size2) / div) : (float) Math.exp(-(i - size2) * (i - size2) / div - (j - size2) * (j - size2) / div);
+            }
+        }
+        //new ImagePlus("gaussian",new FloatProcessor(size,size,result)).show();
+        //reference=result;
+        return result;
+    }
+
+    public void correctGaussianAmplitude(float[] gaussian, double amplitude, double baseValue){
+        for(int i=0;i<gaussian.length;i++){
+            gaussian[i]=(float)(gaussian[i]*amplitude+baseValue);
+        }
+    }
+
+    public float[] createCircleImage(int size, double diameter, double bgValue, double beadValue){
+        float result[] = new float[size * size];
+        double size2 = size / 2.0;
+        double diameter2=diameter*diameter;
+        int jj;
+        for (int j = 0; j < size; j++) {
+            jj = j * size;
+            for (int i = 0; i < size; i++) {
+                result[jj + i] = ((i-size2)*(i-size2)+(j-size2)*(j-size2))<diameter2?(float) beadValue:(float)bgValue;
             }
         }
         //new ImagePlus("gaussian",new FloatProcessor(size,size,result)).show();
@@ -504,7 +619,7 @@ public class FiducialMarkerListFeature implements ListFeature {
         delaunay.size();
         int countTriangles = delaunay.size();
 
-        System.out.println("triangles:" + countTriangles);
+        //System.out.println("triangles:" + countTriangles);
         return delaunay;
     }
 
@@ -541,7 +656,7 @@ public class FiducialMarkerListFeature implements ListFeature {
                 }
             }
         }
-        System.out.println("#" + " score : " + maxNumberCorrespondences + "\n" + result);
+        //System.out.println("#" + " score : " + maxNumberCorrespondences + "\n" + result);
         return result;
     }
 
@@ -723,7 +838,7 @@ public class FiducialMarkerListFeature implements ListFeature {
             }
 
         }
-        System.out.println("matches:" + nbPoints);
+        //System.out.println("matches:" + nbPoints);
         return matches;
     }
 }
