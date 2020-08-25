@@ -167,12 +167,12 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     }
 
     public boolean run() {
-        if(width==0) width=ts.getWidth();
-        if(height==0) height=ts.getHeight();
-        if(depth==0) depth=ts.getWidth();
-        if(centerx==0) centerx=(width-1.0)/2.0;
-        if(centery==0) centery=(height-1.0)/2.0;
-        if(centerz==0) centerz=(depth-1.0)/2.0;
+        if (width == 0) width = ts.getWidth();
+        if (height == 0) height = ts.getHeight();
+        if (depth == 0) depth = ts.getWidth();
+        if (centerx == 0) centerx = (width - 1.0) / 2.0;
+        if (centery == 0) centery = (height - 1.0) / 2.0;
+        if (centerz == 0) centerz = (depth - 1.0) / 2.0;
 
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         if (relaxationCoefficient == 0) {
@@ -335,7 +335,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     public void setParameters(Object... parameters) {
         super.setParameters(parameters);
         for (int index = 0; index < parameters.length; index++) {
-            if(parameters[index]instanceof String) {
+            if (parameters[index] instanceof String) {
                 if (((String) parameters[index]).toLowerCase().equals("compensation")) {
                     longObjectCompensation = true;
                 } else if (((String) parameters[index]).toLowerCase().equals("nbiteration")) {
@@ -364,7 +364,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     }
 
     public static String help() {
-        return ReconstructionApplication.help()+"### os-sart algorithm (ART/SIRT...) ###\n" +
+        return ReconstructionApplication.help() + "### os-sart algorithm (ART/SIRT...) ###\n" +
                 "nbiteration value: number of iterations\n" +
                 "relaxationcoeff value: relaxation coefficient (1 for SIRT)\n" +
                 "update value: updates volume every updatevalue projection comparison (1 for ART, nbImagesInTiltSeries for SIRT)\n" +
