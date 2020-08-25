@@ -331,6 +331,29 @@ public class TiltSeries extends ImagePlus {
         //for (int i = 0; i < eulerMatrices.length; i++) eulerMatrices[i] = null;
     }
 
+    public void sortImages(){
+        System.out.println("sort images");
+        double [] tiltAnglesCopy=Arrays.copyOf(tiltAngles,tiltAngles.length);
+        System.out.println("before : \n"+Arrays.toString(tiltAnglesCopy));
+        Arrays.sort(tiltAnglesCopy);
+        System.out.println("after : \n"+Arrays.toString(tiltAnglesCopy));
+        ImageStack tmp=new ImageStack(data.getWidth(),data.getHeight());
+        for(int i=0;i<tiltAnglesCopy.length;i++){
+            int index=0;
+            while(tiltAnglesCopy[i]!=tiltAngles[index]) index++;
+            //System.out.println(("i="+i+" index="+index));
+            tmp.addSlice("", data.getPixels(index+1));
+        }
+        //System.arraycopy(tiltAnglesCopy,0,tiltAngles,0,tiltAnglesCopy.length);
+        //tiltAngles=tiltAnglesCopy;
+        setTiltAngles(tiltAnglesCopy);
+        //new ImagePlus("sorted",tmp).show();
+        //data=tmp;
+        for(int i=0;i<tmp.getSize();i++){
+            System.arraycopy(tmp.getPixels(i+1),0,data.getPixels(i+1),0,tmp.getWidth()*tmp.getHeight());
+        }
+    }
+
     public void updateZeroIndex() {
         double tmp = Math.abs(tiltAngles[0]);
         ImageStack is = getStack();
@@ -680,6 +703,9 @@ public class TiltSeries extends ImagePlus {
 
     public float[] getOriginalPixels(int index) {
         return (float[]) data.getPixels(index + 1);
+    }
+    public float[] getOriginalPixelsCopy(int index) {
+        return (float[]) data.getProcessor(index+1).duplicate().getPixels();
     }
 
     protected float[] applyThreshold(float[] res) {
