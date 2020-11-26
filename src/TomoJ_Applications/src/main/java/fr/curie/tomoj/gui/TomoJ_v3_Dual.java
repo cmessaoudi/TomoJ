@@ -21,6 +21,7 @@ import fr.curie.tomoj.workflow.UserAction;
 import fr.curie.tomoj.application.*;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -69,7 +70,7 @@ public class TomoJ_v3_Dual implements PlugIn {
     ADOSSARTApplication dualReconstruction;
     protected ArrayList<UserAction> log;
     GridConstraints constraints;
-    AffineTransform T12=new AffineTransform();
+    AffineTransform T12 = new AffineTransform();
 
     public TomoJ_v3_Dual() {
         log = new ArrayList<UserAction>();
@@ -80,7 +81,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         alignZeroTiltImagesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                T12=performPreAlignDual();
+                T12 = performPreAlignDual();
                 System.out.println(T12);
 
                 //tsList.get(0).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
@@ -100,7 +101,7 @@ public class TomoJ_v3_Dual implements PlugIn {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (stp == null) initSuperTomoJPoints();
-                computeCommonLandmarks0degree(0, 1, 5,T12);
+                computeCommonLandmarks0degree(0, 1, 5, T12);
                 currentDisplay.getTiltSeries().setSlice(currentDisplay.getTiltSeries().getCurrentSlice());
                 currentDisplay.getTiltSeries().updateAndDraw();
             }
@@ -235,8 +236,8 @@ public class TomoJ_v3_Dual implements PlugIn {
     }
 
     AffineTransform performPreAlignDual() {
-        TiltSeries ts1= tsList.get(0).getTiltSeries();
-        TiltSeries ts2= tsList.get(1).getTiltSeries();
+        TiltSeries ts1 = tsList.get(0).getTiltSeries();
+        TiltSeries ts2 = tsList.get(1).getTiltSeries();
         ts1.setSlice(ts1.getZeroIndex() + 1);
         ts2.setSlice(ts2.getZeroIndex() + 1);
         AffineTransform zeroTbkp = new AffineTransform(ts2.getAlignment().getZeroTransform());
@@ -248,8 +249,8 @@ public class TomoJ_v3_Dual implements PlugIn {
         dialog.setTitle("prealign");
         dialog.setVisible(true);
 
-        T12=new AffineTransform();
-        Thread T= new Thread() {
+        T12 = new AffineTransform();
+        Thread T = new Thread() {
             public void run() {
                 while (dialog.isActive()) {
                     try {
@@ -266,7 +267,7 @@ public class TomoJ_v3_Dual implements PlugIn {
 
                 T12.translate(dialog.getTranslationX(), dialog.getTranslationY());
                 T12.rotate(Math.toRadians(dialog.getRotation()));
-                System.out.println("after:"+T12);
+                System.out.println("after:" + T12);
 
             }
         };
@@ -281,7 +282,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         Point2D[] points1, points2;
         TiltSeries ts1 = tsList.get(firstTs).getTiltSeries();
         TiltSeries ts2 = tsList.get(secondTs).getTiltSeries();
-        computeCommonLandmarks0degree(ts1, ts2, threshold,T);
+        computeCommonLandmarks0degree(ts1, ts2, threshold, T);
     }
 
     public void computeCommonLandmarks0degree(TiltSeries ts1, TiltSeries ts2, double threshold, AffineTransform T) {
@@ -313,9 +314,9 @@ public class TomoJ_v3_Dual implements PlugIn {
         AffineTransform T2 = ts2.getAlignment().getZeroTransform();
         tr2.concatenate(T2);
         tr2.concatenate(T);
-        System.out.println("T2="+T2);
-        System.out.println("T12="+T);
-        System.out.println("final="+tr2);
+        System.out.println("T2=" + T2);
+        System.out.println("T12=" + T);
+        System.out.println("final=" + tr2);
 
         // Transform all points2t
         Point2D[] points2t = new Point2D[points2.length];
@@ -501,10 +502,23 @@ public class TomoJ_v3_Dual implements PlugIn {
             public void actionPerformed(ActionEvent e) {
                 TiltSeries ts = currentDisplay.getTiltSeries();
                 AnglesForTiltSeries.ask4Angles(ts);
-                ts.sortImages();
+                ts.sortImages(true);
             }
         });
         tiltMenu.add(setTiltAngles);
+
+        MenuItem sortTilt=new MenuItem("sort tilt images");
+        sortTilt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GenericDialog gd=new GenericDialog("sort tilt images");
+                gd.addCheckbox("sort images in ascending order",false);
+                gd.showDialog();
+                TiltSeries ts = currentDisplay.getTiltSeries();
+                ts.sortImages(!gd.getNextBoolean());
+            }
+        });
+        tiltMenu.add(sortTilt);
         MenuItem removeImage = new MenuItem("remove current image");
         removeImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -890,7 +904,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         }
         System.out.println("get angles done");
         TiltSeries ts = new TiltSeries(imp, tiltangles);
-        ts.sortImages();
+        ts.sortImages(true);
         System.out.println("create tilt series done");
         TomoJPoints tp = new TomoJPoints(ts);
         System.out.println("create points done");
@@ -970,7 +984,7 @@ public class TomoJ_v3_Dual implements PlugIn {
     private void $$$setupUI$$$() {
         panelroot = new JPanel();
         panelroot.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
-        panelroot.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "multiple-axis align and reconstruction"));
+        panelroot.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "multiple-axis align and reconstruction", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panelroot.add(panel1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
