@@ -331,18 +331,26 @@ public class TiltSeries extends ImagePlus {
         //for (int i = 0; i < eulerMatrices.length; i++) eulerMatrices[i] = null;
     }
 
-    public void sortImages(){
+    public void sortImages(boolean descendingOrder){
         System.out.println("sort images");
         double [] tiltAnglesCopy=Arrays.copyOf(tiltAngles,tiltAngles.length);
         System.out.println("before : \n"+Arrays.toString(tiltAnglesCopy));
         Arrays.sort(tiltAnglesCopy);
+        if(descendingOrder){
+            double[] tmp=new double[tiltAnglesCopy.length];
+            for(int i=0;i<tmp.length;i++){
+                tmp[i]=tiltAnglesCopy[tiltAnglesCopy.length-1-i];
+            }
+            tiltAnglesCopy=tmp;
+        }
         System.out.println("after : \n"+Arrays.toString(tiltAnglesCopy));
         ImageStack tmp=new ImageStack(data.getWidth(),data.getHeight());
         for(int i=0;i<tiltAnglesCopy.length;i++){
             int index=0;
             while(tiltAnglesCopy[i]!=tiltAngles[index]) index++;
-            //System.out.println(("i="+i+" index="+index));
-            tmp.addSlice("", data.getPixels(index+1));
+            System.out.println(("i="+i+" index="+index));
+            tmp.addSlice("", data.getProcessor(index+1).duplicate().getPixels());
+            System.out.println("tmp nb slices: "+tmp.getSize());
         }
         //System.arraycopy(tiltAnglesCopy,0,tiltAngles,0,tiltAnglesCopy.length);
         //tiltAngles=tiltAnglesCopy;
@@ -350,6 +358,7 @@ public class TiltSeries extends ImagePlus {
         //new ImagePlus("sorted",tmp).show();
         //data=tmp;
         for(int i=0;i<tmp.getSize();i++){
+            System.out.println("copy "+i);
             System.arraycopy(tmp.getPixels(i+1),0,data.getPixels(i+1),0,tmp.getWidth()*tmp.getHeight());
         }
     }
