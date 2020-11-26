@@ -35,7 +35,7 @@ public class Align2ImagesDialog extends JDialog {
 
     ImagePlus image1, image2, image2Ali, imageCombine;
     boolean wasCanceled = false;
-    boolean active=false;
+    boolean active = false;
 
 
     static private Double[] possibleIncrements = {0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0};
@@ -54,8 +54,8 @@ public class Align2ImagesDialog extends JDialog {
         image2Ali.show();
         imageCombine = new ImagePlus("combined", new ColorProcessor(image1.getWidth(), image1.getHeight()));
         imageCombine.show();
-        active=true;
-        System.out.println("constructor active:"+active);
+        active = true;
+        System.out.println("constructor active:" + active);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -137,7 +137,7 @@ public class Align2ImagesDialog extends JDialog {
         image2Ali.close();
         imageCombine.close();
         setVisible(false);
-        active=false;
+        active = false;
         dispose();
         wasCanceled = false;
     }
@@ -149,16 +149,17 @@ public class Align2ImagesDialog extends JDialog {
         setVisible(false);
         dispose();
         wasCanceled = true;
-        active=false;
+        active = false;
     }
 
     public boolean wasCanceled() {
         return wasCanceled;
     }
 
-    public boolean isActive(){
-        System.out.println("is active:"+active);
-        return active;}
+    public boolean isActive() {
+        System.out.println("is active:" + active);
+        return active;
+    }
 
 
     public void updatePreviews() {
@@ -292,4 +293,5 @@ public class Align2ImagesDialog extends JDialog {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }
