@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>net.imagej</groupId>
                 <artifactId>ij</artifactId>
-                <version>1.52q</version>
+                <version>1.53a</version>
             </dependency>
 
             <!--Jtransform for FFT-->
@@ -111,7 +111,7 @@
                 <!--module>src/deconvolution</module-->
             </modules>
             <build>
-                <directory>D:\tmp\compile</directory>
+                <directory>C:\tmp\compile</directory>
                 <pluginManagement>
                     <plugins>
                         <plugin>

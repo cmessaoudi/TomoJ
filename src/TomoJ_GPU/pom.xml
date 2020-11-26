@@ -71,7 +71,7 @@
             <groupId>jar.epfl</groupId>
             <artifactId>Fractional_Splines_Wavelets</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>TomoJ</groupId>

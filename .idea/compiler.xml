@@ -7,17 +7,25 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="deconvolution" />
-        <module name="Filters" />
+        <module name="Utility" />
         <module name="Inpainting" />
+      </profile>
+      <profile name="Annotation profile for TomoJ_v3" enabled="true">
+        <sourceOutputDir name="../../../../../tmp/compile/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../../../tmp/compile/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="deconvolution_" />
+        <module name="Filters" />
+        <module name="TomoJ_Applications" />
         <module name="InputOutput" />
         <module name="PlotJ" />
+        <module name="TomoJ_Features" />
+        <module name="Inpainting_" />
+        <module name="utility" />
+        <module name="TomoJ_Base" />
         <module name="TomoJ_AdvancedAlign" />
         <module name="TomoJ_AdvancedReconstruction" />
-        <module name="TomoJ_Applications" />
-        <module name="TomoJ_Base" />
-        <module name="TomoJ_Features" />
         <module name="TomoJ_GPU" />
-        <module name="Utility" />
       </profile>
     </annotationProcessing>
   </component>
