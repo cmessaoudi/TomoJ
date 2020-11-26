@@ -11,6 +11,7 @@ import fr.curie.utils.OutputStreamCapturer;
 import fr.curie.tomoj.application.Application;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -148,6 +149,7 @@ public class GridLandmarksGenerator implements Application {
         result.add(resultString);
         return result;
     }
+
     public ArrayList<Object> getParametersType() {
         return null;
     }
@@ -204,7 +206,7 @@ public class GridLandmarksGenerator implements Application {
         createUIComponents();
         basePanel = new JPanel();
         basePanel.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
-        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Landmarks Generation Using Seeds on Grid"));
+        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Landmarks Generation Using Seeds on Grid", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label1 = new JLabel();
         label1.setText("Number of points in grid");
         basePanel.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -243,4 +245,5 @@ public class GridLandmarksGenerator implements Application {
     public JComponent $$$getRootComponent$$$() {
         return basePanel;
     }
+
 }
