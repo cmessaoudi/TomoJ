@@ -31,6 +31,15 @@ public class AkazeListFeaturesOpenCV extends ListFeaturesOpenCV {
     private int diffusivityType = opencv_features2d.KAZE.DIFF_PM_G2;
     private double ransacPrecision = 2.0;
 
+    public static int DIFF_PM_G1=opencv_features2d.KAZE.DIFF_PM_G1;
+    public static int DIFF_PM_G2=opencv_features2d.KAZE.DIFF_PM_G2;
+    public static int DIFF_WEICKERT=opencv_features2d.KAZE.DIFF_WEICKERT;
+    public static int DIFF_CHARBONNIER=opencv_features2d.KAZE.DIFF_CHARBONNIER;
+    public static int DESCRIPTOR_KAZE=opencv_features2d.AKAZE.DESCRIPTOR_KAZE;
+    public static int DESCRIPTOR_KAZE_UPRIGHT=opencv_features2d.AKAZE.DESCRIPTOR_KAZE_UPRIGHT;
+    public static int DESCRIPTOR_MLDB=opencv_features2d.AKAZE.DESCRIPTOR_MLDB;
+    public static int DESCRIPTOR_MLDB_UPRIGHT=opencv_features2d.AKAZE.DESCRIPTOR_MLDB_UPRIGHT;
+
     public AkazeListFeaturesOpenCV() {
         descriptor_type = opencv_features2d.AKAZE.DESCRIPTOR_MLDB;
         descriptor_size = 0;
