@@ -24,6 +24,9 @@ public class OrbListFeaturesOpenCV extends ListFeaturesOpenCV {
     double ransacPrecision=2.0;
     int wta_k = 2;
 
+    public static int HARRIS_SCORE=opencv_features2d.ORB.HARRIS_SCORE;
+    public static int FAST_SCORE=opencv_features2d.ORB.FAST_SCORE;
+
 
     public OrbListFeaturesOpenCV(){
         //Orb params

@@ -30,6 +30,11 @@ public class KazeListFeaturesOpenCV extends ListFeaturesOpenCV {
     int diffusivityType=opencv_features2d.KAZE.DIFF_PM_G2;
     double ransacPrecision=2.0;
 
+    public static int DIFF_PM_G1=opencv_features2d.KAZE.DIFF_PM_G1;
+    public static int DIFF_PM_G2=opencv_features2d.KAZE.DIFF_PM_G2;
+    public static int DIFF_WEICKERT=opencv_features2d.KAZE.DIFF_WEICKERT;
+    public static int DIFF_CHARBONNIER=opencv_features2d.KAZE.DIFF_CHARBONNIER;
+
     public KazeListFeaturesOpenCV(){
 
         extended=false;
