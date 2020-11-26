@@ -18,7 +18,7 @@ import ij.gui.PointRoi;
 import ij.gui.Roi;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
-import org.bytedeco.javacpp.opencv_features2d;
+//import org.bytedeco.javacpp.opencv_features2d;
 import fr.curie.tomoj.tomography.TiltSeries;
 import fr.curie.tomoj.tomography.TomoJPoints;
 import fr.curie.utils.Chrono;
@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.Color;
@@ -949,19 +950,19 @@ public class FeatureTrackingGenerator implements Application {
         ;
         int kazeLayers = ((SpinnerNumberModel) spinnerKAZENbLayers.getModel()).getNumber().intValue();
 
-        int kazeDiffusivity = opencv_features2d.KAZE.DIFF_PM_G2;
+        int kazeDiffusivity = KazeListFeaturesOpenCV.DIFF_PM_G2;
         switch (comboBoxKAZEDiffusivity.getSelectedIndex()) {
             case 0:
-                kazeDiffusivity = opencv_features2d.KAZE.DIFF_PM_G1;
+                kazeDiffusivity = KazeListFeaturesOpenCV.DIFF_PM_G1;
                 break;
             case 1:
-                kazeDiffusivity = opencv_features2d.KAZE.DIFF_PM_G2;
+                kazeDiffusivity = KazeListFeaturesOpenCV.DIFF_PM_G2;
                 break;
             case 2:
-                kazeDiffusivity = opencv_features2d.KAZE.DIFF_WEICKERT;
+                kazeDiffusivity = KazeListFeaturesOpenCV.DIFF_WEICKERT;
                 break;
             case 3:
-                kazeDiffusivity = opencv_features2d.KAZE.DIFF_CHARBONNIER;
+                kazeDiffusivity = KazeListFeaturesOpenCV.DIFF_CHARBONNIER;
                 break;
         }
         if (kazeGenerator == null) {
@@ -1000,7 +1001,7 @@ public class FeatureTrackingGenerator implements Application {
         int orbFirstLevel = ((SpinnerNumberModel) spinnerORBFirstLevel.getModel()).getNumber().intValue();
         int orbEdgeThreshold = ((SpinnerNumberModel) spinnerORBEdgeThreshold.getModel()).getNumber().intValue();
         int orbWta_k = ((SpinnerNumberModel) spinnerORBwta_k.getModel()).getNumber().intValue();
-        int orbScoreType = (comboBoxORBDetectionMethod.getSelectedIndex() == 0) ? opencv_features2d.ORB.HARRIS_SCORE : opencv_features2d.ORB.FAST_SCORE;
+        int orbScoreType = (comboBoxORBDetectionMethod.getSelectedIndex() == 0) ? OrbListFeaturesOpenCV.HARRIS_SCORE : OrbListFeaturesOpenCV.FAST_SCORE;
         int orbPatchSize = ((SpinnerNumberModel) spinnerORBPatchSize.getModel()).getNumber().intValue();
         int orbFastThreshold = ((SpinnerNumberModel) spinnerORBFASTThreshold.getModel()).getNumber().intValue();
 
@@ -1017,19 +1018,19 @@ public class FeatureTrackingGenerator implements Application {
 
     protected void updateAKAZEParameters() {
         //AKAZE
-        int akaze_type = opencv_features2d.AKAZE.DESCRIPTOR_MLDB;
+        int akaze_type = AkazeListFeaturesOpenCV.DESCRIPTOR_MLDB;
         switch (comboBoxAKAZEType.getSelectedIndex()) {
             case 0:
-                akaze_type = opencv_features2d.AKAZE.DESCRIPTOR_KAZE;
+                akaze_type = AkazeListFeaturesOpenCV.DESCRIPTOR_KAZE;
                 break;
             case 1:
-                akaze_type = opencv_features2d.AKAZE.DESCRIPTOR_KAZE_UPRIGHT;
+                akaze_type = AkazeListFeaturesOpenCV.DESCRIPTOR_KAZE_UPRIGHT;
                 break;
             case 2:
-                akaze_type = opencv_features2d.AKAZE.DESCRIPTOR_MLDB;
+                akaze_type = AkazeListFeaturesOpenCV.DESCRIPTOR_MLDB;
                 break;
             case 3:
-                akaze_type = opencv_features2d.AKAZE.DESCRIPTOR_MLDB_UPRIGHT;
+                akaze_type = AkazeListFeaturesOpenCV.DESCRIPTOR_MLDB_UPRIGHT;
                 break;
         }
         int akaze_size = ((SpinnerNumberModel) spinnerAKAZESize.getModel()).getNumber().intValue();
@@ -1038,19 +1039,19 @@ public class FeatureTrackingGenerator implements Application {
         int akazeOctave = ((SpinnerNumberModel) spinnerAKAZENbOctaves.getModel()).getNumber().intValue();
         int akazeLayers = ((SpinnerNumberModel) spinnerAKAZENbLayers.getModel()).getNumber().intValue();
 
-        int akazeDiffusivity = opencv_features2d.KAZE.DIFF_PM_G2;
+        int akazeDiffusivity = AkazeListFeaturesOpenCV.DIFF_PM_G2;
         switch (comboBoxAKAZEDiffusivity.getSelectedIndex()) {
             case 0:
-                akazeDiffusivity = opencv_features2d.KAZE.DIFF_PM_G1;
+                akazeDiffusivity = AkazeListFeaturesOpenCV.DIFF_PM_G1;
                 break;
             case 1:
-                akazeDiffusivity = opencv_features2d.KAZE.DIFF_PM_G2;
+                akazeDiffusivity = AkazeListFeaturesOpenCV.DIFF_PM_G2;
                 break;
             case 2:
-                akazeDiffusivity = opencv_features2d.KAZE.DIFF_WEICKERT;
+                akazeDiffusivity = AkazeListFeaturesOpenCV.DIFF_WEICKERT;
                 break;
             case 3:
-                akazeDiffusivity = opencv_features2d.KAZE.DIFF_CHARBONNIER;
+                akazeDiffusivity = AkazeListFeaturesOpenCV.DIFF_CHARBONNIER;
                 break;
         }
         if (akazeGenerator == null) {
@@ -1356,7 +1357,7 @@ public class FeatureTrackingGenerator implements Application {
     private void $$$setupUI$$$() {
         createUIComponents();
         basePanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Landmarks Generation Using Feature Tracking Algorithms"));
+        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Landmarks Generation Using Feature Tracking Algorithms", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final Spacer spacer1 = new Spacer();
         basePanel.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         allPanel = new JPanel();
@@ -1365,7 +1366,7 @@ public class FeatureTrackingGenerator implements Application {
         orbParametersPanel = new JPanel();
         orbParametersPanel.setLayout(new GridLayoutManager(9, 2, new Insets(0, 0, 0, 0), -1, -1));
         allPanel.add(orbParametersPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        orbParametersPanel.setBorder(BorderFactory.createTitledBorder("ORB parameters"));
+        orbParametersPanel.setBorder(BorderFactory.createTitledBorder(null, "ORB parameters", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label1 = new JLabel();
         label1.setText("Number of features");
         orbParametersPanel.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1417,7 +1418,7 @@ public class FeatureTrackingGenerator implements Application {
         briskParametersPanel = new JPanel();
         briskParametersPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         allPanel.add(briskParametersPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        briskParametersPanel.setBorder(BorderFactory.createTitledBorder("BRISK parameters"));
+        briskParametersPanel.setBorder(BorderFactory.createTitledBorder(null, "BRISK parameters", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label10 = new JLabel();
         label10.setText("Threshold");
         briskParametersPanel.add(label10, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1435,7 +1436,7 @@ public class FeatureTrackingGenerator implements Application {
         siftParametersPanel = new JPanel();
         siftParametersPanel.setLayout(new GridLayoutManager(7, 3, new Insets(0, 0, 0, 0), -1, -1));
         allPanel.add(siftParametersPanel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        siftParametersPanel.setBorder(BorderFactory.createTitledBorder("SIFT parameters"));
+        siftParametersPanel.setBorder(BorderFactory.createTitledBorder(null, "SIFT parameters", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label13 = new JLabel();
         label13.setText("Number of Features");
         label13.setToolTipText("The number of best features to retain. The features are ranked by their scores (measured in SIFT algorithm as the local contrast). 0 = infinite features");
@@ -1476,7 +1477,7 @@ public class FeatureTrackingGenerator implements Application {
         kazeParametersPanel = new JPanel();
         kazeParametersPanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         allPanel.add(kazeParametersPanel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        kazeParametersPanel.setBorder(BorderFactory.createTitledBorder("KAZE parameters"));
+        kazeParametersPanel.setBorder(BorderFactory.createTitledBorder(null, "KAZE parameters", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         checkBoxKAZEExtended = new JCheckBox();
         checkBoxKAZEExtended.setText("Extended (128 bits descriptor)");
         kazeParametersPanel.add(checkBoxKAZEExtended, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1511,7 +1512,7 @@ public class FeatureTrackingGenerator implements Application {
         akazePanel = new JPanel();
         akazePanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         allPanel.add(akazePanel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        akazePanel.setBorder(BorderFactory.createTitledBorder("AKAZE parameters"));
+        akazePanel.setBorder(BorderFactory.createTitledBorder(null, "AKAZE parameters", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label23 = new JLabel();
         label23.setText("Threshold");
         akazePanel.add(label23, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -1540,7 +1541,7 @@ public class FeatureTrackingGenerator implements Application {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(2, 4, new Insets(0, 0, 0, 0), -1, -1));
         akazePanel.add(panel1, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel1.setBorder(BorderFactory.createTitledBorder("descriptor"));
+        panel1.setBorder(BorderFactory.createTitledBorder(null, "descriptor", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label27 = new JLabel();
         label27.setText("type");
         panel1.add(label27, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
