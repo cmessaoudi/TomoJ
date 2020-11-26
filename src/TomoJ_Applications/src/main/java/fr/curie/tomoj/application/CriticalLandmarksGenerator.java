@@ -17,6 +17,7 @@ import fr.curie.utils.OutputStreamCapturer;
 import fr.curie.tomoj.application.Application;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -310,12 +311,12 @@ public class CriticalLandmarksGenerator implements Application {
         OutputStreamCapturer capture = new OutputStreamCapturer();
         Chrono time = new Chrono();
         time.start();
-        if(ts.getAlignment()instanceof alignmentLandmark){
+        if (ts.getAlignment() instanceof alignmentLandmark) {
             System.out.println("convert alignmentLandmark to affine");
-            ts.setAlignment( ((alignmentLandmark) ts.getAlignment()).convertToAffine());
-        }  else if(ts.getAlignment()instanceof AlignmentLandmarkImproved){
+            ts.setAlignment(((alignmentLandmark) ts.getAlignment()).convertToAffine());
+        } else if (ts.getAlignment() instanceof AlignmentLandmarkImproved) {
             System.out.println("convert alignmentLandmarkImproved to affine");
-            ts.setAlignment( ((AlignmentLandmarkImproved) ts.getAlignment()).convertToAffine());
+            ts.setAlignment(((AlignmentLandmarkImproved) ts.getAlignment()).convertToAffine());
         } else {
             System.out.println("affine alignment!");
         }
@@ -581,7 +582,7 @@ public class CriticalLandmarksGenerator implements Application {
         createUIComponents();
         basePanel = new JPanel();
         basePanel.setLayout(new GridLayoutManager(10, 2, new Insets(0, 0, 0, 0), -1, -1));
-        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Landmarks Generation Using Local Extrema As Seeds"));
+        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Landmarks Generation Using Local Extrema As Seeds", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         localMinimaRadioButton = new JRadioButton();
         localMinimaRadioButton.setSelected(true);
         localMinimaRadioButton.setText("local minima");
@@ -615,7 +616,7 @@ public class CriticalLandmarksGenerator implements Application {
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         basePanel.add(panel1, new GridConstraints(7, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel1.setBorder(BorderFactory.createTitledBorder("Local extrema filter parameters"));
+        panel1.setBorder(BorderFactory.createTitledBorder(null, "Local extrema filter parameters", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label6 = new JLabel();
         label6.setText("Filter small structures");
         panel1.add(label6, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(232, 16), null, 0, false));

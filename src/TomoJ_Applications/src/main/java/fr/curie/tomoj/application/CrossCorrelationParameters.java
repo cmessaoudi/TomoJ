@@ -16,6 +16,7 @@ import fr.curie.utils.Chrono;
 import fr.curie.utils.OutputStreamCapturer;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -117,12 +118,18 @@ public class CrossCorrelationParameters implements Application {
 
         ((SpinnerNumberModel) spinnerRoiX.getModel()).setMinimum(1);
         ((SpinnerNumberModel) spinnerRoiX.getModel()).setMaximum(ts.getWidth());
-        ((SpinnerNumberModel) spinnerRoiX.getModel()).setValue(ts.getWidth() / 2);
+        int s = 2;
+        while (s < ts.getWidth()) s *= 2;
+        s /= 2;
+        ((SpinnerNumberModel) spinnerRoiX.getModel()).setValue(Math.max(s, ts.getWidth() / 2));
         ((SpinnerNumberModel) spinnerRoiX.getModel()).setStepSize(1);
 
         ((SpinnerNumberModel) spinnerRoiY.getModel()).setMinimum(1);
         ((SpinnerNumberModel) spinnerRoiY.getModel()).setMaximum(ts.getHeight());
-        ((SpinnerNumberModel) spinnerRoiY.getModel()).setValue(ts.getHeight() / 2);
+        s = 2;
+        while (s < ts.getHeight()) s *= 2;
+        s /= 2;
+        ((SpinnerNumberModel) spinnerRoiY.getModel()).setValue(Math.max(s, ts.getHeight() / 2));
         ((SpinnerNumberModel) spinnerRoiY.getModel()).setStepSize(1);
 
         ((SpinnerNumberModel) spinnerVariance.getModel()).setMinimum(1);
@@ -369,8 +376,8 @@ public class CrossCorrelationParameters implements Application {
         ts.setAlignmentRoi(roiX, roiY);
         ts.setBinning(downSampling);
         if (bandpassFilter) {
-            double lowcut=Math.max(0,bandpassFilterMin - bandpassFilterDecrease);
-            double highcut=Math.min(bandpassFilterMax + bandpassFilterDecrease,ts.getWidth()/2);
+            double lowcut = Math.max(0, bandpassFilterMin - bandpassFilterDecrease);
+            double highcut = Math.min(bandpassFilterMax + bandpassFilterDecrease, ts.getWidth() / 2);
             ts.setBandpassFilter(lowcut, bandpassFilterMin, bandpassFilterMax, highcut);
         } else {
             ts.setBandpassFilter(Double.NaN, Double.NaN, Double.NaN, Double.NaN);
@@ -662,7 +669,7 @@ public class CrossCorrelationParameters implements Application {
         createUIComponents();
         rootPanel = new JPanel();
         rootPanel.setLayout(new GridLayoutManager(8, 2, new Insets(0, 0, 0, 0), -1, -1));
-        rootPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Fast Alignment Using Cross-Correlation"));
+        rootPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Fast Alignment Using Cross-Correlation", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         loopUntilStabilizationCheckBox = new JCheckBox();
         loopUntilStabilizationCheckBox.setText("Loop until stabilization");
         rootPanel.add(loopUntilStabilizationCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

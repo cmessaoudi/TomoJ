@@ -9,6 +9,7 @@ import fr.curie.utils.Chrono;
 import fr.curie.utils.OutputStreamCapturer;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -150,7 +151,7 @@ public class CenterImagesApplication implements Application {
     private void $$$setupUI$$$() {
         basePanel = new JPanel();
         basePanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
-        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Center Images"));
+        basePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Center Images", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         centerImagesRadioButton = new JRadioButton();
         centerImagesRadioButton.setSelected(true);
         centerImagesRadioButton.setText("center with images intensities");
@@ -175,4 +176,5 @@ public class CenterImagesApplication implements Application {
     public JComponent $$$getRootComponent$$$() {
         return basePanel;
     }
+
 }
