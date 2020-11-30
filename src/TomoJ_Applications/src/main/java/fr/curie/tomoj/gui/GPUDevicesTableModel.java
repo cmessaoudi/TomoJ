@@ -88,6 +88,7 @@ class GPUDevicesTableModel extends AbstractTableModel {
     }
 
     public int getRowCount() {
+        if (data==null) return 0;
         return data.length;
     }
 

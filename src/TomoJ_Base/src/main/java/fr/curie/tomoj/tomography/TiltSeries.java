@@ -348,9 +348,9 @@ public class TiltSeries extends ImagePlus {
         for(int i=0;i<tiltAnglesCopy.length;i++){
             int index=0;
             while(tiltAnglesCopy[i]!=tiltAngles[index]) index++;
-            System.out.println(("i="+i+" index="+index));
+            //System.out.println(("i="+i+" index="+index));
             tmp.addSlice("", data.getProcessor(index+1).duplicate().getPixels());
-            System.out.println("tmp nb slices: "+tmp.getSize());
+            //System.out.println("tmp nb slices: "+tmp.getSize());
         }
         //System.arraycopy(tiltAnglesCopy,0,tiltAngles,0,tiltAnglesCopy.length);
         //tiltAngles=tiltAnglesCopy;
@@ -358,7 +358,7 @@ public class TiltSeries extends ImagePlus {
         //new ImagePlus("sorted",tmp).show();
         //data=tmp;
         for(int i=0;i<tmp.getSize();i++){
-            System.out.println("copy "+i);
+            //System.out.println("copy "+i);
             System.arraycopy(tmp.getPixels(i+1),0,data.getPixels(i+1),0,tmp.getWidth()*tmp.getHeight());
         }
     }

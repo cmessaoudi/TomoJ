@@ -98,7 +98,13 @@ public class GPUDevice {
             final long deviceType = CL_DEVICE_TYPE_ALL;
 
             // Enable exceptions and subsequently omit error checks in this sample
-            CL.setExceptionsEnabled(true);
+            try {
+                CL.setExceptionsEnabled(true);
+            }catch (Exception e){
+                System.out.println("CL init does not work!!!!!!!!");
+                e.printStackTrace();
+                return null;
+            }
 
             // Obtain the number of platforms
             int[] numPlatformsArray = new int[1];

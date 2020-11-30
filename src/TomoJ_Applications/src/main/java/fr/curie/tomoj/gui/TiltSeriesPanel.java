@@ -25,6 +25,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class TiltSeriesPanel {
@@ -88,7 +90,7 @@ public class TiltSeriesPanel {
     TomoReconstruction2 reconstruction = null;
     boolean reconstructionAutomaticSaving = false;
 
-    boolean gpuAvailable = true;
+    public static boolean gpuAvailable = true;
 
     Application currentApplication;
     Application currentApplicationAlign;
@@ -112,7 +114,11 @@ public class TiltSeriesPanel {
         System.out.flush();
         this.ts = ts;
         $$$setupUI$$$();
+        System.out.println("tiltSeriesPanel creation");
+        System.out.flush();
         if (!gpuAvailable) {
+            System.out.println("no Gpu available from tiltSeriespanel");
+            System.out.flush();
             tableGPU.setEnabled(false);
             tableGPU.setVisible(false);
             useGPUCheckBox.setEnabled(false);
@@ -761,8 +767,30 @@ public class TiltSeriesPanel {
         try {
             Class tmp = Class.forName("org.jocl.CLException");
             if (tmp != null) {
-                gpuAvailable = true;
-                System.out.println("opencl available");
+                //gpuAvailable = true;
+                System.out.println("opencl java files detected");
+                String javaLibraryPath = System.getProperty("java.library.path");
+                String systemLibraryPath = System.getProperty("sun.boot.library.path");
+                System.out.println("library path" + javaLibraryPath);
+                System.out.println("system path:" + systemLibraryPath);
+                if (IJ.isLinux()) {
+                    System.out.println("linux: checking that libOpenCL.so is the path");
+
+                    Field field = ClassLoader.class.getDeclaredField("sys_paths");
+                    System.out.println(field.toGenericString());
+
+                    String[] libdirs = systemLibraryPath.split(":");
+                    boolean openclExist = false;
+                    for (String name : libdirs) {
+                        File tmpfile = new File(name + "/libOpenCL.so");
+                        openclExist = (tmpfile.exists() || openclExist);
+                    }
+                    File tmpfile = new File("/usr/lib/x86_64-linux-gnu/libOpenCL.so");
+                    openclExist = (tmpfile.exists() || openclExist);
+
+                    System.out.println("opencl library found (libOpenCL.so):" + openclExist);
+                    gpuAvailable = openclExist;
+                }
             } else {
                 gpuAvailable = false;
                 System.out.println("opencl library not found : reconstruction on GPU is unavailable!");
