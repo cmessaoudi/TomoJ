@@ -93,6 +93,11 @@ public abstract class ProjectorGPU extends Projector {
         savedir = (fi != null && !fi.directory.equalsIgnoreCase("")) ? fi.directory : IJ.getDirectory("current");
     }
 
+    public ProjectorGPU(TiltSeries ts, TomoReconstruction2 rec,  FFTWeightingGPU weightingFilter){
+        super(ts,rec,weightingFilter);
+
+    }
+
     protected void initCL() {
         kernelOffset = device.getNbKernels();
         String programSource = getSourceCode();
@@ -307,6 +312,10 @@ public abstract class ProjectorGPU extends Projector {
             System.arraycopy(tmp, i * volumeWidth * YSliceSize + YoffsetStart * volumeWidth, slice, startY * volumeWidth + YoffsetStart * volumeWidth, volumeWidth * (YSliceSize - YoffsetEnd - YoffsetStart));
 
         }
+    }
+
+    public void copyInGPUBuffer(int startY, int endY){
+        copyInGPUBuffer(device,volMemBufferIndex.get(currentWorkingBuffer),rec,startY,endY);
     }
 
     public void copyInGPUBuffer(GPUDevice device, int volIndex, ImagePlus updatingVolume, int startY, int endY){
