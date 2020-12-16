@@ -107,6 +107,17 @@ public abstract class Projector {
         volumeCenters[2] = cz;
     }
 
+    public FFTWeighting getWeightingFilter() {
+        return weightingFilter;
+    }
+
+    public TiltSeries getTiltSeries() {
+        return ts;
+    }
+
+    public TomoReconstruction2 getReconstruction() {
+        return rec;
+    }
 
     public double getCompletion() {
         return completion;
