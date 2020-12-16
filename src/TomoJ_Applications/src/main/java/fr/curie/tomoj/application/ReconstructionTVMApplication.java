@@ -27,6 +27,7 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
     private JSpinner spinnerTVMtheta;
     private JSpinner spinnerTVMiterations;
     private JPanel basePanel;
+    private JCheckBox fistaOptimizationCheckBox;
 
     protected double theta = 25;
     protected double g = 1;
@@ -37,10 +38,12 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
     protected boolean longObjectCompensation = true;
     protected TiltSeries ts;
     protected boolean firstDisplay;
+    protected boolean fista = true;
 
     public ReconstructionTVMApplication(TiltSeries ts) {
         this.ts = ts;
         firstDisplay = true;
+
     }
 
     public void initValues() {
@@ -52,6 +55,7 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
         spinnerTVMg.setValue(g);
         spinnerTVMdt.setValue(dt);
         spinnerTVMiterations.setValue(tvmiterations);
+        fistaOptimizationCheckBox.setSelected(fista);
 
     }
 
@@ -71,6 +75,12 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
             public void actionPerformed(ActionEvent e) {
                 longObjectCompensation = resinOrCryoSampleCheckBox.isSelected();
 
+            }
+        });
+        fistaOptimizationCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fista = fistaOptimizationCheckBox.isSelected();
             }
         });
         spinnerTVMg.addChangeListener(new ChangeListener() {
@@ -106,6 +116,7 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         final ReconstructionParameters params = AdvancedReconstructionParameters.createTVMParameters(width, height, depth, nbiterations, relaxationCoefficient, theta, g, dt, tvmiterations);
         params.setLongObjectCompensation(longObjectCompensation);
+        params.setFista(fista);
         System.out.println(getParametersValuesAsString());
         System.out.println("*******\n" + params.asString());
 
@@ -220,6 +231,9 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
         resinOrCryoSampleCheckBox = new JCheckBox();
         resinOrCryoSampleCheckBox.setText("resin or cryo sample");
         panel2.add(resinOrCryoSampleCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fistaOptimizationCheckBox = new JCheckBox();
+        fistaOptimizationCheckBox.setText("Fista optimization");
+        panel2.add(fistaOptimizationCheckBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, true));

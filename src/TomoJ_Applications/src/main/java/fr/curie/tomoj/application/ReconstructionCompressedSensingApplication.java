@@ -35,6 +35,7 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
     private JSpinner spinnerWaveletShift;
     private JComboBox comboBoxWaveletType;
     private JPanel panelPlotXY;
+    private JCheckBox fistaOptimizationCheckBox;
 
     protected int nbiterations = 10;
     protected double relaxationCoefficient = 1;
@@ -43,6 +44,7 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
     protected double waveletDegree = 3.0;
     protected double waveletShift = 0;
     protected int waveletType = CompressedSensingProjector.WAVELET_BSPLINE;
+    protected boolean fista = true;
 
     protected TiltSeries ts;
     protected boolean firstDisplay;
@@ -63,6 +65,7 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
     public ReconstructionCompressedSensingApplication(TiltSeries ts) {
         this.ts = ts;
         firstDisplay = true;
+
     }
 
     public void initValues() {
@@ -79,6 +82,7 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
         spinnerRelaxationCoefficent.setValue(relaxationCoefficient);
         spinnerCSThreshold.setValue(CSThreshold);
         resinOrCryoSampleCheckBox.setSelected(longObjectCompensation);
+        fistaOptimizationCheckBox.setSelected(fista);
         spinnerWaveletDegree.setValue(waveletDegree);
         spinnerWaveletShift.setValue(waveletShift);
         switch (waveletType) {
@@ -123,6 +127,12 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
 
             }
         });
+        fistaOptimizationCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fista = fistaOptimizationCheckBox.isSelected();
+            }
+        });
 
         comboBoxWaveletType.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -162,6 +172,7 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
         final OutputStreamCapturer capture = new OutputStreamCapturer();
         final ReconstructionParameters params = AdvancedReconstructionParameters.createCompressedSensingParameters(width, height, depth, nbiterations, relaxationCoefficient, CSThreshold, waveletType, waveletDegree, waveletShift);
         params.setLongObjectCompensation(longObjectCompensation);
+        params.setFista(fista);
         System.out.println(getParametersValuesAsString());
         System.out.println("*******\n" + params.asString());
 
@@ -329,6 +340,9 @@ public class ReconstructionCompressedSensingApplication extends ReconstructionAp
         csLabel.setText("Percentage of zeros");
         panel1.add(csLabel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(spinnerCSThreshold, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fistaOptimizationCheckBox = new JCheckBox();
+        fistaOptimizationCheckBox.setText("Fista optimization");
+        panel1.add(fistaOptimizationCheckBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         basePanel.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();

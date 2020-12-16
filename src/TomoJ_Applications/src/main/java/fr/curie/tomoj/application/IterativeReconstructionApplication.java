@@ -42,6 +42,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     final static int REC_ART = 0;
     final static int REC_SIRT = 1;
     final static int REC_OSSART = 2;
+    boolean fista = true;
     //protected boolean computeOnGPU;
     //ResolutionEstimation resolutionComputation;
 
@@ -57,6 +58,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     private JCheckBox saveErrorVolumesCheckBox;
     private JCheckBox saveErrorVolumeAllIterationsCheckBox;
     private JPanel basePanel;
+    private JCheckBox fistaOptimizationCheckBox;
 
     public IterativeReconstructionApplication(TiltSeries series) {
         this.ts = series;
@@ -96,6 +98,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         positivityConstraintCheckBox.setSelected(positivityConstraint);
         saveErrorVolumesCheckBox.setSelected(saveErrorVolume);
         saveErrorVolumeAllIterationsCheckBox.setSelected(saveErrorVolumeAll);
+        fistaOptimizationCheckBox.setSelected(fista);
 
     }
 
@@ -109,6 +112,11 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
             public void actionPerformed(ActionEvent e) {
                 if (positivityConstraintCheckBox.isEnabled())
                     positivityConstraint = positivityConstraintCheckBox.isSelected();
+            }
+        });
+        fistaOptimizationCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fista = fistaOptimizationCheckBox.isSelected();
             }
         });
         saveErrorVolumesCheckBox.addActionListener(new ActionListener() {
@@ -215,6 +223,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         recParams.setRescaleData(rescaleData);
         recParams.setLongObjectCompensation(longObjectCompensation);
         recParams.setPositivityConstraint(positivityConstraintCheckBox.isSelected());
+        recParams.setFista(fista);
 
         final String ftitle = title;
         if (computeOnGPU) {
@@ -359,6 +368,8 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
 
                 } else if (((String) parameters[index]).toLowerCase().equals("positivity")) {
                     positivityConstraint = true;
+                } else if (((String) parameters[index]).toLowerCase().equals("fista")) {
+                    fista = true;
                 }
             }
         }
@@ -371,6 +382,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
                 "update value: updates volume every updatevalue projection comparison (1 for ART, nbImagesInTiltSeries for SIRT)\n" +
                 "compensation: activates long object compensation (cryo/resin samples)\n" +
                 "positivity: forces the values in reconstruction to be positive\n" +
+                "fista: uses the Fista optimization for faster convergence\n" +
                 "";
     }
 
@@ -447,14 +459,14 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         OSSARTRadioButton.setText("OS-SART");
         basePanel.add(OSSARTRadioButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(6, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         basePanel.add(panel1, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Iterative reconstruction Options", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JLabel label1 = new JLabel();
         label1.setText("number of iterations");
         panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel1.add(spacer1, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setText("relaxation coefficient");
         panel1.add(label2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -474,11 +486,15 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         panel1.add(positivityConstraintCheckBox, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveErrorVolumesCheckBox = new JCheckBox();
         saveErrorVolumesCheckBox.setText("save error volumes");
-        panel1.add(saveErrorVolumesCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(saveErrorVolumesCheckBox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         saveErrorVolumeAllIterationsCheckBox = new JCheckBox();
         saveErrorVolumeAllIterationsCheckBox.setEnabled(false);
         saveErrorVolumeAllIterationsCheckBox.setText("for all iterations");
-        panel1.add(saveErrorVolumeAllIterationsCheckBox, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(saveErrorVolumeAllIterationsCheckBox, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fistaOptimizationCheckBox = new JCheckBox();
+        fistaOptimizationCheckBox.setSelected(true);
+        fistaOptimizationCheckBox.setText("Fista optimization");
+        panel1.add(fistaOptimizationCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(ARTRadioButton);
