@@ -173,6 +173,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
                 tvmproj.setNbRaysPerPixels(recNbRaysPerPixels);
                 if (isRescaleData()) tvmproj.setScale(ts.getWidth() / (double)rec.getWidth());
                 //errors = rec2.regularization(ts, tvmproj, params.getNbIterations(), 0, rec2.getHeight());
+                if(fista)return new FistaProjector3D(tvmproj);
                 return tvmproj;
             case BAYESIAN:
                 BayesianVoxelProjector3D bayproj = new BayesianVoxelProjector3D(ts, rec, null);
@@ -192,6 +193,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
                 csproj.setSoftThresholdingPercentageOfZeros(getWaveletPercentageOfZeros());
                 if(isRescaleData()) csproj.setScale(ts.getWidth()/(double)rec.getWidth());
                 //errors = rec2.OSSART(ts,csproj,params.getNbIterations(), params.getRelaxationCoefficient(), ts.getImageStackSize(), params.getFscType(),0, rec2.getHeight());
+                if(fista) return new FistaProjector3D(csproj);
                 return csproj;
                 
         }
@@ -221,7 +223,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
                 break;
 
         }
-        result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+"\n";
+        result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+", Fista:"+isFista()+"\n";
         return result;
 
     }
@@ -244,7 +246,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
                 result+="_TVM_NbIterations"+nbIterations+"_regularizationWeight"+regularizationWeight;
                 break;
         }
-        result+="_lObjComp"+isLongObjectCompensation()+"_rescale"+isRescaleData()+"_posConstraint"+isPositivityConstraint();
+        result+="_lObjComp"+isLongObjectCompensation()+"_rescale"+isRescaleData()+"_posConstraint"+isPositivityConstraint()+"_fista"+isFista();
         return result;
 
     }
