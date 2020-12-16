@@ -6,6 +6,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.Prefs;
 import ij.io.FileInfo;
+import ij.process.Blitter;
 import ij.process.FloatBlitter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
@@ -1408,6 +1409,17 @@ public class TomoReconstruction2 extends ImagePlus {
         err1[4] = imax;
         System.out.println("");
         return err1;
+    }
+
+    public TomoReconstruction2 getCopy(){
+        return new TomoReconstruction2(this.duplicate());
+    }
+
+    public void copyFrom(TomoReconstruction2 recToCopy){
+        for(int z=0;z<getSizez();z++){
+            ImageProcessor tmp=this.data.getProcessor(z+1);
+            tmp.copyBits(recToCopy.data.getProcessor(z+1),0,0, Blitter.COPY);
+        }
     }
 
 //    /**
