@@ -29,7 +29,7 @@ import static fr.curie.tomoj.tomography.AdvancedReconstructionParameters.*;
  */
 public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager {
 
-    Projector[] projectors;
+    ProjectorGPU[] projectors;
     GPUDevice[] devices;
     FFTWeightingGPU[] weigthingGPU;
 
@@ -78,7 +78,8 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
 
 
     private void createProjector(int index, ReconstructionParameters parameters) {
-        System.out.println("create projector");
+        System.out.println("create projector "+index);
+        System.out.flush();
         switch (parameters.getType()){
             case BP:
             case WBP:
@@ -127,6 +128,11 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
                 if (parameters.isRescaleData()) csproj.setScale(ts.getWidth() / rec2.getWidth());
                 projectors[index] = csproj;
                 break;
+        }
+        if(parameters.isFista()) {
+            System.out.println("convert projector to use Fista "+index);
+            System.out.flush();
+            projectors[index]=new FistaProjector3DGPU(projectors[index]);
         }
     }
 
