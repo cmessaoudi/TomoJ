@@ -1,6 +1,7 @@
 package fr.curie.tomoj.tomography;
 
 import fr.curie.tomoj.tomography.filters.FFTWeighting;
+import fr.curie.tomoj.tomography.projectors.FistaProjector3D;
 import fr.curie.tomoj.tomography.projectors.Projector;
 import fr.curie.tomoj.tomography.projectors.VoxelProjector3D;
 import ij.Prefs;
@@ -13,6 +14,12 @@ public class ReconstructionParameters {
     public static final int WBP=1;
     public static final int OSSART=2;
 
+    public static final int ALL_PROJECTIONS=10;
+    public static final int EVEN_PROJECTIONS=11;
+    public static final int ODD_PROJECTIONS=12;
+    public static final int DEFINED_PROJECTIONS=13;
+
+
     protected int width,height,depth;
 
     protected int recNbRaysPerPixels=1;
@@ -22,14 +29,15 @@ public class ReconstructionParameters {
     protected double relaxationCoefficient;
     protected int updateNb=0;
     protected boolean positivityConstraint=false;
+    protected boolean fista=false;
     protected double weightingRadius;
     protected boolean rescaleData=true;
     protected boolean longObjectCompensation=false;
     protected boolean elongationCorrection=false;
-    protected int fscType=TomoReconstruction2.ALL_PROJECTIONS;
+    protected int fscType=ALL_PROJECTIONS;
     protected double[] reconstructionCenterModifiers;
 
-
+    protected int[] availableIndexes=null;
 
 
     public ReconstructionParameters(int width, int height, int depth) {
@@ -144,6 +152,57 @@ public class ReconstructionParameters {
         this.fscType = fscType;
     }
 
+    public int[] getAvailableIndexes(TiltSeries ts) {
+        if(this.availableIndexes==null){
+            int nbproj=ts.getImageStackSize();
+            boolean[] atraiter = new boolean[nbproj];
+            nbproj = 0;
+            for (int i = 0; i < atraiter.length; i++) {
+                switch (type) {
+                    case ALL_PROJECTIONS:
+                    default:
+                        atraiter[i] = true;
+                        nbproj++;
+                        break;
+                    case EVEN_PROJECTIONS:
+                        boolean even = (i % 2 == 0);
+                        atraiter[i] = even;
+                        if (even) nbproj++;
+                        if (nbproj > atraiter.length / 2) {
+                            atraiter[i] = false;
+                            nbproj--;
+                        }
+                        break;
+                    case ODD_PROJECTIONS:
+                        boolean odd = (i % 2 == 1);
+                        atraiter[i] = odd;
+                        if (odd) nbproj++;
+                        if (nbproj > atraiter.length / 2) {
+                            atraiter[i] = false;
+                            nbproj--;
+                        }
+                        break;
+                }
+            }
+            System.out.println("nb proj:" + nbproj);
+            availableIndexes = new int[nbproj];
+            int cc=0;
+            for(int im=0;im<ts.getImageStackSize();im++) {
+                if (atraiter[im]) {
+                    availableIndexes[cc] = im;
+                    atraiter[im] = false;
+                    cc++;
+                }
+            }
+        }
+        return availableIndexes;
+    }
+
+    public void setAvailableIndexes(int[] availableIndexes) {
+        this.availableIndexes = availableIndexes;
+        fscType=DEFINED_PROJECTIONS;
+    }
+
     public double[] getReconstructionCenterModifiers() {
         return reconstructionCenterModifiers;
     }
@@ -152,9 +211,13 @@ public class ReconstructionParameters {
         this.reconstructionCenterModifiers = reconstructionCenterModifiers;
     }
 
+    public boolean isFista() {
+        return fista;
+    }
 
-
-
+    public void setFista(boolean fista) {
+        this.fista = fista;
+    }
 
     public static ReconstructionParameters createOSSARTParameters(int width, int height, int depth, int nbIterations, double relaxationCoefficient, int updateNb){
         ReconstructionParameters result=new ReconstructionParameters(width, height, depth);
@@ -208,6 +271,7 @@ public class ReconstructionParameters {
         if (rescaleData) proj.setScale(ts.getWidth() / (double)rec.getWidth());
         proj.setLongObjectCompensation(longObjectCompensation);
         proj.setNbRaysPerPixels(recNbRaysPerPixels);
+        if(fista) return new FistaProjector3D(proj);
         return proj;
     }
 
@@ -225,7 +289,7 @@ public class ReconstructionParameters {
                 break;
 
         }
-        result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+"\n";
+        result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+", Fista:"+isFista()+"\n";
         return result;
 
     }
@@ -242,7 +306,7 @@ public class ReconstructionParameters {
                 result+="_BP_elongationCorrection"+isElongationCorrection();
                 break;
         }
-        result+="_lObjComp"+isLongObjectCompensation()+"_rescale"+isRescaleData()+"_posConstraint"+isPositivityConstraint();
+        result+="_lObjComp"+isLongObjectCompensation()+"_rescale"+isRescaleData()+"_posConstraint"+isPositivityConstraint()+"_fista"+isFista();
         return result;
 
     }
