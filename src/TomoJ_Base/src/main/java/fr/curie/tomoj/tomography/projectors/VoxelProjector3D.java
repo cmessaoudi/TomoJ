@@ -827,6 +827,7 @@ public class VoxelProjector3D extends Projector {
         currentIteration++;
         if (errorVolume != null) {
             //save it
+            System.out.println("save error volume as "+savedir + ts.getTitle() + "errorVolume_" + currentIteration + ".tif");
             FileSaver fs = new FileSaver(errorVolume);
             fs.saveAsTiffStack(savedir + ts.getTitle() + "errorVolume_" + currentIteration + ".tif");
             //clear it
