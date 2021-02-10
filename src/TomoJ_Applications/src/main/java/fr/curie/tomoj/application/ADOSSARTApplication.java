@@ -4,6 +4,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import fr.curie.tomoj.gui.TiltSeriesPanel;
+import fr.curie.tomoj.tomography.ReconstructionParameters;
 import ij.Prefs;
 import fr.curie.tomoj.SuperTomoJPoints;
 import fr.curie.tomoj.tomography.TiltSeries;
@@ -148,8 +149,12 @@ public class ADOSSARTApplication extends ReconstructionApplication {
 
         Projector proj1 = new VoxelProjector3D(ts1, rec, null);
         Projector proj2 = new VoxelProjector3D(ts2, rec, null);
+        ReconstructionParameters params = new ReconstructionParameters(rec.getWidth(), rec.getHeight(), rec.getSizez());
+        params.setNbIterations(nbIteration);
+        params.setRelaxationCoefficient(relaxationCoefficient);
+        params.setProjectionType(ReconstructionParameters.ALL_PROJECTIONS);
 
-        rec.ADOSSART(ts1, proj1, ts2, proj2, nbIteration, relaxationCoefficient, TomoReconstruction2.ALL_PROJECTIONS, 0, ts1.getHeight());
+        rec.ADOSSART(ts1, proj1, ts2, proj2, params, 0, ts1.getHeight());
         return true;
     }
 

@@ -80,7 +80,7 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
     private void createProjector(int index, ReconstructionParameters parameters) {
         System.out.println("create projector "+index);
         System.out.flush();
-        switch (parameters.getType()){
+        switch (parameters.getReconstructionType()){
             case BP:
             case WBP:
             case OSSART:
@@ -162,7 +162,7 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
 
     public ArrayList<Double> doGPURec(Chrono time, final ProjectorGPU[] projectors, Boolean[] use, ReconstructionParameters params) {
 
-        System.out.println("recType:" + params.getType());
+        System.out.println("recType:" + params.getReconstructionType());
 
         return doGPURec(rec2, ts, projectors, time,  use, params, saveErrorVol, saveForAll, ProjectorGPU.ONE_KERNEL_PROJ_DIFF);
 
@@ -223,7 +223,7 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
                             }
                             System.out.println("working on section " + offset + " -> " + endY + "(" + YsliceSize + ")");
                             totalSlices[ii] += YsliceSize;
-                            switch (parameters.getType()) {
+                            switch (parameters.getReconstructionType()) {
                                 case BP:
                                 case WBP:
                                     if (rec2.getCompletion() < 0) return;
@@ -234,7 +234,7 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
                                 case BAYESIAN:
                                     projectors[ii].initForIterative(offset, endY, ts.getImageStackSize(), kernelToUse, false);
                                     projectors[ii].setPositivityConstraint(parameters.isPositivityConstraint());
-                                    ArrayList<Double> errorbay = rec2.regularization(ts, projectors[ii], parameters.getNbIterations(), offset, endY);
+                                    ArrayList<Double> errorbay = rec2.regularization(ts, projectors[ii], parameters, offset, endY);
                                     synchronized (errors) {
                                         if(errors.size()==0) for(int i=0;i<parameters.getNbIterations();i++) errors.add(0.0);
                                         for (int e = 0; e < errorbay.size(); e++) errors.set(e,errors.get(e)+errorbay.get(e));
@@ -243,7 +243,7 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
                                 case COMPRESSED_SENSING:
                                     projectors[ii].initForIterative(offset, endY, ts.getImageStackSize(), kernelToUse, false);
                                     projectors[ii].setPositivityConstraint(parameters.isPositivityConstraint());
-                                    ArrayList<Double> errorcs = rec2.OSSART(ts, projectors[ii], parameters.getNbIterations(), parameters.getRelaxationCoefficient(), ts.getImageStackSize(),parameters.getFscType(), offset, endY);
+                                    ArrayList<Double> errorcs = rec2.OSSART(ts, projectors[ii], parameters, offset, endY);
                                     synchronized (errors) {
                                         if(errors.size()==0) for(int i=0;i<parameters.getNbIterations();i++) errors.add(0.0);
                                         for (int e = 0; e < errorcs.size(); e++) errors.set(e,errors.get(e)+errorcs.get(e));
@@ -257,16 +257,20 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
                                     projectors[ii].setPositivityConstraint(parameters.isPositivityConstraint());
                                     if (saveError && saveForAll) {
                                         projectors[ii].initForIterative(offset, endY, parameters.getUpdateNb(), kernelToUse, true);
-                                        errortmp = rec2.OSSART(ts, projectors[ii], parameters.getNbIterations(), parameters.getRelaxationCoefficient(), parameters.getUpdateNb(), parameters.getFscType(),offset, endY);
+                                        errortmp = rec2.OSSART(ts, projectors[ii], parameters,offset, endY);
                                     } else if (saveError) {
                                         projectors[ii].initForIterative(offset, endY, parameters.getUpdateNb(), kernelToUse, false);
-                                        errortmp = rec2.OSSART(ts, projectors[ii], parameters.getNbIterations() - 1, parameters.getRelaxationCoefficient(), parameters.getUpdateNb(),parameters.getFscType(), offset, endY);
+                                        ReconstructionParameters first=new ReconstructionParameters(parameters);
+                                        first.setNbIterations(parameters.getNbIterations() - 1);
+                                        errortmp = rec2.OSSART(ts, projectors[ii], first, offset, endY);
                                         if (rec2.getCompletion() < 0) return;
                                         projectors[ii].createErrorVolume();
-                                        errortmp2 = rec2.OSSART(ts, projectors[ii], 1, parameters.getRelaxationCoefficient(), parameters.getUpdateNb(),parameters.getFscType(), offset, endY);
+                                        ReconstructionParameters last=new ReconstructionParameters(parameters);
+                                        last.setNbIterations( 1);
+                                        errortmp2 = rec2.OSSART(ts, projectors[ii], last, offset, endY);
                                     } else {
                                         projectors[ii].initForIterative(offset, endY, parameters.getUpdateNb(), kernelToUse, false);
-                                        errortmp = rec2.OSSART(ts, projectors[ii], parameters.getNbIterations(), parameters.getRelaxationCoefficient(), parameters.getUpdateNb(),parameters.getFscType(), offset, endY);
+                                        errortmp = rec2.OSSART(ts, projectors[ii], parameters, offset, endY);
                                     }
                                     synchronized (errors) {
                                         //if(errors.size()==0) for(int i=0;i<parameters.getNbIterations();i++) errors.add(0.0);
@@ -418,17 +422,17 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
     public void savePrefs(ReconstructionParameters params){
         Prefs.set("TOMOJ_Thickness.int", params.getDepth());
         int recChoiceIndex = (isGpu()) ? 10 : 0;
-        if (params.getType()==BAYESIAN)
+        if (params.getReconstructionType()==BAYESIAN)
             recChoiceIndex += 5;
-        else if (params.getType()==TVM)
+        else if (params.getReconstructionType()==TVM)
             recChoiceIndex += 6;
-        else if (params.getType()==WBP) recChoiceIndex += 1;
-        else if (params.getType()==OSSART && params.getUpdateNb()==1) recChoiceIndex += 2;
-        else if (params.getType()==OSSART && params.getUpdateNb()==ts.getImageStackSize()) recChoiceIndex += 3;
-        else if (params.getType()==OSSART) recChoiceIndex += 4;
+        else if (params.getReconstructionType()==WBP) recChoiceIndex += 1;
+        else if (params.getReconstructionType()==OSSART && params.getUpdateNb()==1) recChoiceIndex += 2;
+        else if (params.getReconstructionType()==OSSART && params.getUpdateNb()==ts.getImageStackSize()) recChoiceIndex += 3;
+        else if (params.getReconstructionType()==OSSART) recChoiceIndex += 4;
         Prefs.set("TOMOJ_ReconstructionType.int", recChoiceIndex);
         Prefs.set("TOMOJ_SampleType.bool", params.isLongObjectCompensation());
-        if(params.getType()==WBP)Prefs.set("TOMOJ_wbp_diameter.double", params.getWeightingRadius());
+        if(params.getReconstructionType()==WBP)Prefs.set("TOMOJ_wbp_diameter.double", params.getWeightingRadius());
         if(params.getNbIterations()!=0)Prefs.set("TOMOJ_IterationNumber.int", params.getNbIterations());
         if(params.getUpdateNb()!=0) Prefs.set("TOMOJ_updateOSART.int", params.getUpdateNb());
         if(!Double.isNaN(params.getRelaxationCoefficient())) Prefs.set("TOMOJ_relaxationCoefficient.double", params.getRelaxationCoefficient());
@@ -467,7 +471,7 @@ public class ReconstructionThreadManagerGPU extends ReconstructionThreadManager 
             } else {
                 ((ProjectorGPU)projectors[d]).setUseImage3D(true);
             }
-            switch(parameters.getType()) {
+            switch(parameters.getReconstructionType()) {
                 case BP:
                 case WBP:
                 case OSSART:

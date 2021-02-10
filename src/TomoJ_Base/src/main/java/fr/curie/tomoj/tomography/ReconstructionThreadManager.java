@@ -80,8 +80,11 @@ public class ReconstructionThreadManager {
         thprojs=null;
         rec2.initCompletion();
         ts.getAlignment().resetEulerMatrices();
+        saveErrorVol= parameters.isSaveErrorVolume();
+        saveForAll=parameters.isSaveErrorVolumeAll();
+        System.out.println("save error volume: "+saveErrorVol+" all: "+saveForAll);
 
-        numberofsteps = (parameters.getType()>WBP) ? ts.getImageStackSize() * parameters.getNbIterations() *2: ts.getImageStackSize();
+        numberofsteps = (parameters.getReconstructionType()>WBP) ? ts.getImageStackSize() * parameters.getNbIterations() *2: ts.getImageStackSize();
         final Chrono time = new Chrono(numberofsteps);
         //start computation
         if(exec==null) exec = Executors.newFixedThreadPool(Prefs.getThreads());
@@ -91,7 +94,7 @@ public class ReconstructionThreadManager {
                 time.start();
                 //errors =  doCPUrec(parameters,saveErrorVol,saveForAll);
                 errors = doRec(parameters,saveErrorVol,saveForAll,time);
-                if ((parameters.getType()==BP || parameters.getType()==WBP) && parameters.isElongationCorrection()) {
+                if ((parameters.getReconstructionType()==BP || parameters.getReconstructionType()==WBP) && parameters.isElongationCorrection()) {
                     IJ.selectWindow(rec2.getID());
                     IJ.run(rec2, "Elongation_Correction_Tomography", "" + Math.max(Math.abs(ts.getTiltAngle(0)), Math.abs(ts.getTiltAngle(ts.getImageStackSize() - 1))));
                 }
@@ -219,28 +222,34 @@ public class ReconstructionThreadManager {
         ArrayList<Double> errors;
         rec2.initCompletion();
         projector = params.getProjector(ts,rec2);
-        switch (params.getType()) {
+        switch (params.getReconstructionType()) {
             case BP:
             case WBP:
-                rec2.WBP(ts, projector, 0, rec2.getHeight());
+                rec2.WBP(ts, projector, params,0, rec2.getHeight());
                 errors = null;
                 break;
             case OSSART:
                 if (saveError&&saveForAll) {
                     if(projector instanceof VoxelProjector3D) ((VoxelProjector3D)projector).createErrorVolume();
-                    errors = rec2.OSSART(ts, projector, params.getNbIterations(), params.getRelaxationCoefficient(), params.getUpdateNb(),params.getFscType(), 0, rec2.getHeight());
+                    errors = rec2.OSSART(ts, projector, params, 0, rec2.getHeight());
                 } else if (saveError) {
                     errors = new ArrayList<Double>(params.getNbIterations());
-                    ArrayList<Double> etmp = rec2.OSSART(ts, projector, params.getNbIterations() - 1, params.getRelaxationCoefficient(), params.getUpdateNb(),params.getFscType(), 0, rec2.getHeight());
+                    ReconstructionParameters firsPart=new ReconstructionParameters(params);
+                    firsPart.setNbIterations(params.getNbIterations()-1);
+                    ArrayList<Double> etmp = rec2.OSSART(ts, projector, firsPart, 0, rec2.getHeight());
                     for (int e = 0; e < etmp.size(); e++) errors.add(etmp.get(e));
+                    System.out.println("should create error volume for last iteration");
                     if(projector instanceof VoxelProjector3D) ((VoxelProjector3D)projector).createErrorVolume();
-                    etmp = rec2.OSSART(ts, projector, 1, params.getRelaxationCoefficient(), params.getUpdateNb(),params.getFscType(), 0, rec2.getHeight());
+                    else System.out.println("projector is not VoxelProjector3D");
+                    ReconstructionParameters lastPart=new ReconstructionParameters(params);
+                    lastPart.setNbIterations(1);
+                    etmp = rec2.OSSART(ts, projector, lastPart, 0, rec2.getHeight());
                     errors.add(etmp.get(0));
                 } else
-                    errors = rec2.OSSART(ts, projector, params.getNbIterations(), params.getRelaxationCoefficient(), params.getUpdateNb(),params.getFscType(), 0, rec2.getHeight());
+                    errors = rec2.OSSART(ts, projector, params, 0, rec2.getHeight());
                 break;
             default:
-                errors = rec2.regularization(ts, projector, params.getNbIterations(), 0, rec2.getHeight());
+                errors = rec2.regularization(ts, projector, params, 0, rec2.getHeight());
         }
         return errors;
     }

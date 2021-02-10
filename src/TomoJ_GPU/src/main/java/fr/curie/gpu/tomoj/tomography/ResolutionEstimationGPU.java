@@ -120,7 +120,7 @@ public class ResolutionEstimationGPU extends ResolutionEstimation {
         }
         recManFSCodd.setUse(use);
         if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
-        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
+        recParameters.setFscType(ReconstructionParameters.ODD_PROJECTIONS);
 
         currentRecThreadManager=recManFSCodd;
         recFSCodd=recManFSCodd.reconstruct(recParameters,false);
@@ -143,14 +143,14 @@ public class ResolutionEstimationGPU extends ResolutionEstimation {
             //IJ.showMessageWithCancel("copy rec","FSC copy rec");
         }
         recManFSCeven.setUse(use);
-        recParameters.setFscType(TomoReconstruction2.FSC_EVEN);
+        recParameters.setFscType(ReconstructionParameters.EVEN_PROJECTIONS);
 
         currentRecThreadManager=recManFSCeven;
         recFSCeven=recManFSCeven.reconstruct(recParameters,false);
         recFSCeven.setTitle("FSCeven");
 
 
-        recParameters.setFscType(TomoReconstruction2.ALL_PROJECTIONS);
+        recParameters.setFscType(ReconstructionParameters.ALL_PROJECTIONS);
 
     }
     public double[][] SSNR(boolean computeVSSNR){

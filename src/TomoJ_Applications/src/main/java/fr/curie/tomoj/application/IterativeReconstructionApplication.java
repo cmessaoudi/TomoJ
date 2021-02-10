@@ -224,6 +224,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         recParams.setLongObjectCompensation(longObjectCompensation);
         recParams.setPositivityConstraint(positivityConstraintCheckBox.isSelected());
         recParams.setFista(fista);
+        recParams.setSaveErrorVolume(saveErrorVolume, saveErrorVolumeAll);
 
         final String ftitle = title;
         if (computeOnGPU) {
