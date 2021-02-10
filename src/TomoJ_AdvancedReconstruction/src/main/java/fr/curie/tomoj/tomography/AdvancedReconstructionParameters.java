@@ -1,6 +1,5 @@
 package fr.curie.tomoj.tomography;
 
-import fr.curie.tomoj.tomography.filters.FFTWeighting;
 import fr.curie.tomoj.tomography.projectors.*;
 
 /**
@@ -107,7 +106,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
 
     public static ReconstructionParameters createTVMParameters(int width,int height, int depth,int nbIterations, double regularizationWeight){
         AdvancedReconstructionParameters result=new AdvancedReconstructionParameters(width, height, depth);
-        result.type=TVM;
+        result.reconstructionType =TVM;
         result.nbIterations=nbIterations;
         result.setWeightingRadius(Double.NaN);
         result.setRelaxationCoefficient(1);
@@ -117,7 +116,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     }
     public static ReconstructionParameters createTVMParameters(int width,int height, int depth,int nbIterations, double relaxationCoefficient, double tvmTheta, double tvmG, double tvmDt, int tvmIterations){
         AdvancedReconstructionParameters result=new AdvancedReconstructionParameters(width, height, depth);
-        result.type=TVM;
+        result.reconstructionType =TVM;
         result.nbIterations=nbIterations;
         result.setWeightingRadius(Double.NaN);
         result.setRelaxationCoefficient(relaxationCoefficient);
@@ -130,7 +129,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     }
     public static ReconstructionParameters createBayesianParameters(int width,int height, int depth,int nbIterations,double regularizationAlpha, double regularizationWeight){
         AdvancedReconstructionParameters result=new AdvancedReconstructionParameters(width, height, depth);
-        result.type=BAYESIAN;
+        result.reconstructionType =BAYESIAN;
         result.nbIterations=nbIterations;
         result.weightingRadius=Double.NaN;
         result.relaxationCoefficient=regularizationAlpha;
@@ -140,7 +139,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     }
     public static ReconstructionParameters createCompressedSensingParameters(int width,int height, int depth,int nbIterations,double relaxationCoefficient, double waveletPercentageOfZeros,int waveletType, double waveletDegree, double waveletShift){
         AdvancedReconstructionParameters result=new AdvancedReconstructionParameters(width, height, depth);
-        result.type=COMPRESSED_SENSING;
+        result.reconstructionType =COMPRESSED_SENSING;
         result.nbIterations=nbIterations;
         result.weightingRadius=Double.NaN;
         result.relaxationCoefficient=relaxationCoefficient;
@@ -155,7 +154,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     public Projector getProjector(TiltSeries ts, TomoReconstruction2 rec){
 
         VoxelProjector3D proj;
-        switch (type){
+        switch (reconstructionType){
             case BP:
             case WBP:
             case OSSART:
@@ -202,7 +201,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
 
     public String asString(){
         String result= "reconstruction, width:"+width+", height:"+height+", thickness:"+depth+"\n";
-        switch (type){
+        switch (reconstructionType){
             case OSSART:
                 result+="OSSART : NbIterations:"+nbIterations+", relaxationCoefficient:"+relaxationCoefficient+", updateNb:"+updateNb+"\n";
                 break;
@@ -229,7 +228,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     }
     public String asCompressedString(){
         String result= "W"+width+"_H"+height+"_T"+depth;
-        switch (type){
+        switch (reconstructionType){
             case OSSART:
                 result+="_OSSART_NbIte"+nbIterations+"_rc"+relaxationCoefficient+"_upNb"+updateNb;
                 break;

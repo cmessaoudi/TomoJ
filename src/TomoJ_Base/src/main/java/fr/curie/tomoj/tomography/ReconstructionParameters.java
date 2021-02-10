@@ -24,7 +24,8 @@ public class ReconstructionParameters {
 
     protected int recNbRaysPerPixels=1;
 
-    protected int type;
+    protected int reconstructionType;
+    protected int projectionType;
     protected int nbIterations=0;
     protected double relaxationCoefficient;
     protected int updateNb=0;
@@ -34,10 +35,12 @@ public class ReconstructionParameters {
     protected boolean rescaleData=true;
     protected boolean longObjectCompensation=false;
     protected boolean elongationCorrection=false;
-    protected int fscType=ALL_PROJECTIONS;
     protected double[] reconstructionCenterModifiers;
+    protected boolean saveErrorVolume=false;
+    protected boolean SaveErrorVolumeAll=false;
 
     protected int[] availableIndexes=null;
+    protected int tempNbCall=0;
 
 
     public ReconstructionParameters(int width, int height, int depth) {
@@ -46,12 +49,31 @@ public class ReconstructionParameters {
         this.depth = depth;
     }
 
-    public int getType() {
-        return type;
+    public ReconstructionParameters(ReconstructionParameters other){
+        this.width = other.width;
+        this.height = other.height;
+        this.depth = other.depth;
+
+        this.recNbRaysPerPixels = other.recNbRaysPerPixels;
+        this.reconstructionType = other.reconstructionType;
+        this.nbIterations = other.nbIterations;
+        this.relaxationCoefficient = other.relaxationCoefficient;
+        this.updateNb = other.updateNb;
+        this.positivityConstraint = other.positivityConstraint;
+        this.fista = other.fista;
+        this.weightingRadius = other.weightingRadius;
+        this.rescaleData = other.rescaleData;
+        this.longObjectCompensation = other.longObjectCompensation;
+        this.elongationCorrection = other.elongationCorrection;
+        this.reconstructionCenterModifiers = other.reconstructionCenterModifiers;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public int getReconstructionType() {
+        return reconstructionType;
+    }
+
+    public void setReconstructionType(int reconstructionType) {
+        this.reconstructionType = reconstructionType;
     }
 
 
@@ -64,11 +86,16 @@ public class ReconstructionParameters {
     }
 
     public double getRelaxationCoefficient() {
+        if(relaxationCoefficient<0) return 1./(++tempNbCall);
         return relaxationCoefficient;
     }
 
     public void setRelaxationCoefficient(double relaxationCoefficient) {
         this.relaxationCoefficient = relaxationCoefficient;
+    }
+
+    public void resetTmpNbCall(){
+        tempNbCall=0;
     }
 
     public int getUpdateNb() {
@@ -145,11 +172,41 @@ public class ReconstructionParameters {
     }
 
     public int getFscType() {
-        return fscType;
+        return projectionType;
     }
 
     public void setFscType(int fscType) {
-        this.fscType = fscType;
+        this.projectionType = fscType;
+        availableIndexes=null;
+    }
+
+    public int getProjectionType() {
+        return projectionType;
+    }
+
+    public void setProjectionType(int projectionType) {
+        this.projectionType = projectionType;
+        availableIndexes=null;
+    }
+
+    public boolean isSaveErrorVolume() {
+        return saveErrorVolume;
+    }
+
+    public void setSaveErrorVolume(boolean saveErrorVolume) {
+        this.saveErrorVolume = saveErrorVolume;
+    }
+    public void setSaveErrorVolume(boolean saveErrorVolume, boolean saveErrorVolumeAll) {
+        this.saveErrorVolume = saveErrorVolume;
+        this.SaveErrorVolumeAll = saveErrorVolumeAll;
+    }
+
+    public boolean isSaveErrorVolumeAll() {
+        return SaveErrorVolumeAll;
+    }
+
+    public void setSaveErrorVolumeAll(boolean saveErrorVolumeAll) {
+        SaveErrorVolumeAll = saveErrorVolumeAll;
     }
 
     public int[] getAvailableIndexes(TiltSeries ts) {
@@ -158,7 +215,7 @@ public class ReconstructionParameters {
             boolean[] atraiter = new boolean[nbproj];
             nbproj = 0;
             for (int i = 0; i < atraiter.length; i++) {
-                switch (type) {
+                switch (projectionType) {
                     case ALL_PROJECTIONS:
                     default:
                         atraiter[i] = true;
@@ -200,7 +257,7 @@ public class ReconstructionParameters {
 
     public void setAvailableIndexes(int[] availableIndexes) {
         this.availableIndexes = availableIndexes;
-        fscType=DEFINED_PROJECTIONS;
+        reconstructionType =DEFINED_PROJECTIONS;
     }
 
     public double[] getReconstructionCenterModifiers() {
@@ -221,7 +278,7 @@ public class ReconstructionParameters {
 
     public static ReconstructionParameters createOSSARTParameters(int width, int height, int depth, int nbIterations, double relaxationCoefficient, int updateNb){
         ReconstructionParameters result=new ReconstructionParameters(width, height, depth);
-        result.type=OSSART;
+        result.reconstructionType =OSSART;
         result.nbIterations=nbIterations;
         result.relaxationCoefficient=relaxationCoefficient;
         result.updateNb=updateNb;
@@ -232,7 +289,7 @@ public class ReconstructionParameters {
     public static ReconstructionParameters createOSSARTParameters(int width, int height, int depth, int nbIterations, double relaxationCoefficient, int updateNb, double[] reconstructionCenterModifiers){
         ReconstructionParameters result=new ReconstructionParameters(width, height, depth);
         result.reconstructionCenterModifiers=reconstructionCenterModifiers;
-        result.type=OSSART;
+        result.reconstructionType =OSSART;
         result.nbIterations=nbIterations;
         result.relaxationCoefficient=relaxationCoefficient;
         result.updateNb=updateNb;
@@ -245,7 +302,7 @@ public class ReconstructionParameters {
 
     public static ReconstructionParameters createWBPParameters(int width,int height, int depth,double weightingRadius){
         ReconstructionParameters result=new ReconstructionParameters(width, height, depth);
-        result.type=(Double.isNaN(weightingRadius)||weightingRadius<=0)?BP:WBP;
+        result.reconstructionType =(Double.isNaN(weightingRadius)||weightingRadius<=0)?BP:WBP;
         result.weightingRadius=weightingRadius;
         result.setUpdateNb(0);
         result.setNbIterations(0);
@@ -255,7 +312,7 @@ public class ReconstructionParameters {
 
     public Projector getProjector(TiltSeries ts, TomoReconstruction2 rec){
         VoxelProjector3D proj;
-        switch (type){
+        switch (reconstructionType){
             case BP:
                 proj=new VoxelProjector3D(ts,rec,null);
                 break;
@@ -277,7 +334,7 @@ public class ReconstructionParameters {
 
     public String asString(){
         String result= "reconstruction, width:"+width+", height:"+height+", thickness:"+depth+"\n";
-        switch (type){
+        switch (reconstructionType){
             case OSSART:
                 result+="OSSART : NbIterations:"+nbIterations+", relaxationCoefficient:"+relaxationCoefficient+", updateNb:"+updateNb+"\n";
                 break;
@@ -295,7 +352,7 @@ public class ReconstructionParameters {
     }
     public String asCompressedString(){
         String result= "W"+width+"_H"+height+"_T"+depth;
-        switch (type){
+        switch (reconstructionType){
             case OSSART:
                 result+="_OSSART_NbIte"+nbIterations+"_rc"+relaxationCoefficient+"_upNb"+updateNb;
                 break;
@@ -314,13 +371,13 @@ public class ReconstructionParameters {
     public void savePrefs(TiltSeries ts){
         Prefs.set("TOMOJ_Thickness.int", getDepth());
         int recChoiceIndex =  0;
-        if (type==WBP) recChoiceIndex += 1;
-        else if (type==OSSART && updateNb==1) recChoiceIndex += 2;
-        else if (type==OSSART && updateNb==ts.getImageStackSize()) recChoiceIndex += 3;
-        else if (type==OSSART) recChoiceIndex += 4;
+        if (reconstructionType ==WBP) recChoiceIndex += 1;
+        else if (reconstructionType ==OSSART && updateNb==1) recChoiceIndex += 2;
+        else if (reconstructionType ==OSSART && updateNb==ts.getImageStackSize()) recChoiceIndex += 3;
+        else if (reconstructionType ==OSSART) recChoiceIndex += 4;
         Prefs.set("TOMOJ_ReconstructionType.int", recChoiceIndex);
         Prefs.set("TOMOJ_SampleType.bool", longObjectCompensation);
-        if(type==WBP)Prefs.set("TOMOJ_wbp_diameter.double", weightingRadius);
+        if(reconstructionType ==WBP)Prefs.set("TOMOJ_wbp_diameter.double", weightingRadius);
         if(nbIterations!=0)Prefs.set("TOMOJ_IterationNumber.int", getNbIterations());
         if(updateNb!=0) Prefs.set("TOMOJ_updateOSART.int", getUpdateNb());
         if(!Double.isNaN(getRelaxationCoefficient())) Prefs.set("TOMOJ_relaxationCoefficient.double", getRelaxationCoefficient());
