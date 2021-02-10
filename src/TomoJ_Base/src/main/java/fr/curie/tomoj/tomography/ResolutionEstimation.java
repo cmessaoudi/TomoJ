@@ -12,7 +12,6 @@ import cern.colt.matrix.tfloat.impl.DenseFloatMatrix2D;
 import cern.colt.matrix.tfloat.impl.DenseFloatMatrix3D;
 import cern.jet.math.tfcomplex.FComplexFunctions;
 import cern.jet.math.tfloat.FloatFunctions;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
@@ -117,7 +116,7 @@ public class ResolutionEstimation {
         tsFSCeven=tsSignal;
         tsFSCodd=tsSignal;
 
-        System.out.println("FSCodd");
+        System.out.println("FSCodd - "+recParameters.getReconstructionType());
         if(recThManSignal!=null) {
             if(recManFSCodd==null)recManFSCodd=new ReconstructionThreadManager(recThManSignal,tsFSCodd);
             else recManFSCodd.setTiltSeries(tsFSCodd);
@@ -126,7 +125,7 @@ public class ResolutionEstimation {
             else recManFSCodd.setTiltSeries(tsFSCodd);
         }
         if(recFSCodd!=null) recManFSCodd.setRec2(recFSCodd);
-        recParameters.setFscType(TomoReconstruction2.FSC_ODD);
+        recParameters.setFscType(ReconstructionParameters.ODD_PROJECTIONS);
         currentRecThreadManager=recManFSCodd;
         recFSCodd=recManFSCodd.reconstruct(recParameters,false);
         recFSCodd.setTitle("FSCodd");
@@ -147,7 +146,7 @@ public class ResolutionEstimation {
             recManFSCeven.setRec2(recFSCeven);
             //IJ.showMessageWithCancel("copy rec","FSC copy rec");
         }
-        recParameters.setFscType(TomoReconstruction2.FSC_EVEN);
+        recParameters.setFscType(ReconstructionParameters.EVEN_PROJECTIONS);
 
         currentRecThreadManager=recManFSCeven;
         recFSCeven=recManFSCeven.reconstruct(recParameters,false);
@@ -162,7 +161,7 @@ public class ResolutionEstimation {
 //        recFSCodd=recManFSCodd.reconstruct(recParameters,false);
 //        recFSCodd.setTitle("FSCodd");
 
-        recParameters.setFscType(TomoReconstruction2.ALL_PROJECTIONS);
+        recParameters.setFscType(ReconstructionParameters.ALL_PROJECTIONS);
 
     }
     public double[][] SSNR(boolean computeVSSNR){
