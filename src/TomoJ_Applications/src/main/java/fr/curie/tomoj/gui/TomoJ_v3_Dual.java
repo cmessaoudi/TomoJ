@@ -507,12 +507,12 @@ public class TomoJ_v3_Dual implements PlugIn {
         });
         tiltMenu.add(setTiltAngles);
 
-        MenuItem sortTilt=new MenuItem("sort tilt images");
+        MenuItem sortTilt = new MenuItem("sort tilt images");
         sortTilt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GenericDialog gd=new GenericDialog("sort tilt images");
-                gd.addCheckbox("sort images in ascending order",false);
+                GenericDialog gd = new GenericDialog("sort tilt images");
+                gd.addCheckbox("sort images in ascending order", false);
                 gd.showDialog();
                 TiltSeries ts = currentDisplay.getTiltSeries();
                 ts.sortImages(!gd.getNextBoolean());
@@ -685,7 +685,7 @@ public class TomoJ_v3_Dual implements PlugIn {
                 boolean finaltransforms = false;
                 boolean combine = false;
                 boolean tiff2mrc = false;
-                if ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) {
+                //if ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) {
                     GenericDialog gd = new GenericDialog("open options");
                     gd.addNumericField("binning", 1, 2);
                     gd.addCheckbox("final Transform", false);
@@ -701,7 +701,7 @@ public class TomoJ_v3_Dual implements PlugIn {
                     if (binning < 0) binning = -binning;
                     if (name.toLowerCase().endsWith(".xf") || name.toLowerCase().endsWith(".prexf") || name.toLowerCase().endsWith(".prexg"))
                         tiff2mrc = gd.getNextBoolean();
-                }
+                //}
                 CommandWorkflow.loadTransforms(dir, name, ts, binning, finaltransforms, combine, tiff2mrc);
 
                 IJ.showStatus("loading finished");
