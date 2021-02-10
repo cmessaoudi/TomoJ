@@ -17,6 +17,7 @@ import fr.curie.utils.Chrono;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -43,9 +44,6 @@ public class TomoReconstruction2 extends ImagePlus {
     public static int DIVIDE = FloatBlitter.DIVIDE;
     protected Projector projector = null;
 
-    public final static int FSC_EVEN = 1;
-    public final static int FSC_ODD = 2;
-    public final static int ALL_PROJECTIONS = 0;
 
 
     /**
@@ -498,22 +496,63 @@ public class TomoReconstruction2 extends ImagePlus {
         System.out.println("\n");
     }
 
-
-    public ArrayList<Double> OSSART(TiltSeries ts, Projector projector, int nbiteration, double relaxationcoeff, int update) {
-        return OSSART(ts, projector, nbiteration, relaxationcoeff, update, 0, height);
+    public void WBP(final TiltSeries ts, final Projector projector, ReconstructionParameters params, int startY, int endY) {
+        int[] imgsIndexes= params.getAvailableIndexes(ts);
+        System.out.println(Arrays.toString(imgsIndexes));
+        int update=params.getUpdateNb();
+        double completionIncrement = (endY - startY) / (double) height;
+        Chrono time = new Chrono(imgsIndexes.length);
+        if (completion < 0) initCompletion();
+        //int nbcpu = Runtime.getRuntime().availableProcessors();
+        //int nbcpu= Prefs.getThreads();
+        //float[] mask = (weighting) ? createWeightingMask(ts, diameter) : null;
+        time.start();
+        String method = "BP : ";
+        if (projector.isWeighting()) {
+            method = "W" + method;
+        }
+        //setProjectionCenter(ts);
+        final ArrayList<ImageProcessor> ip = new ArrayList<ImageProcessor>(update);
+        final ArrayList<Integer> eulerIndex = new ArrayList<Integer>(update);
+        int index = 0;
+        for (int i = 0; i < imgsIndexes.length; i++) {
+            if (completion < 0) return;
+            projector.addProjection(imgsIndexes[i]);
+            if (completion < 0) return;
+            index++;
+            //final DoubleMatrix2D euler = ts.getEulerMatrix(i);
+            if (index >= update || i == imgsIndexes.length - 1) {
+                projector.backproject(startY, endY);
+                projector.clearAllProjections();
+                index = 0;
+            }
+            completion += completionIncrement;
+            time.stop();
+            String strtime = method + 100 * (i + 1) / imgsIndexes.length + "% remaining " + time.remainString(i + 1);
+            System.out.print("\r                                                                 \r" + strtime + " total :" + time.totalTimeEstimateString(i + 1) + "           ");
+//            if (show) {
+//                IJ.showStatus(strtime);
+//            }
+        }
+        System.out.println("\n");
     }
 
-    public ArrayList<Double> OSSART(TiltSeries ts, Projector projector, int nbiteration, double relaxationcoeff, int update, int startY, int endY) {
-        return OSSART(ts, projector, nbiteration, relaxationcoeff, update, ALL_PROJECTIONS, startY, endY);
+
+
+    public ArrayList<Double> OSSART(TiltSeries ts, Projector projector, ReconstructionParameters params) {
+        return OSSART(ts, projector, params, 0, height);
     }
 
-    public ArrayList<Double> OSSART(TiltSeries ts, Projector projector, int nbiteration, double relaxationcoeff, int update, int type, int startY, int endY) {
+
+
+    public ArrayList<Double> OSSART(TiltSeries ts, Projector projector, ReconstructionParameters params, int startY, int endY) {
         this.projector = projector;
 
         System.out.println("OS-SART : ");
-        System.out.println("iterations : " + nbiteration);
-        System.out.println("relaxation coefficient : " + relaxationcoeff);
-        System.out.println("update : " + update);
+        System.out.println("iterations : " + params.getNbIterations());
+        System.out.println("relaxation coefficient : " + params.getRelaxationCoefficient());
+        params.resetTmpNbCall();
+        System.out.println("update : " + params.getUpdateNb());
         if (completion < 0) initCompletion();
         if (exec == null) exec = Executors.newFixedThreadPool(nbcpu);
         totalTimeProjection = 0;
@@ -541,18 +580,17 @@ public class TomoReconstruction2 extends ImagePlus {
         Chrono time = new Chrono();
         time.start();
         try {
-            PrintWriter pw = new PrintWriter(savedir + nbiteration + "_error.txt");
-            for (int i = 1; i <= nbiteration; i++) {
+            PrintWriter pw = new PrintWriter(savedir + params.getNbIterations() + "_error.txt");
+            for (int i = 1; i <= params.getNbIterations(); i++) {
                 currentIterationNb = i;
                 if (completion < 0) {
                     pw.close();
                     return errorsIterations;
                 }
                 System.out.println("(" + startY + ", " + endY + ") iteration #" + i);
-                double rl = (relaxationcoeff > 0) ? relaxationcoeff : 1. / i;
-                if (relaxationcoeff <= 0) System.out.println("automatic relaxation coefficient: " + rl);
+
                 projector.startOfIteration();
-                err = osartIteration(projector, ts, rl, update, type, startY, endY);
+                err = osartIteration(projector, ts, params, startY, endY);
                 projector.endOfIteration();
                 if (completion < 0) {
                     pw.close();
@@ -594,13 +632,16 @@ public class TomoReconstruction2 extends ImagePlus {
         return errorsIterations;
     }
 
-    protected double[] osartIteration(Projector projector, final TiltSeries ts, final double relaxationcoeff, int update, int type, int startY, int endY) {
+    protected double[] osartIteration(Projector projector, final TiltSeries ts, ReconstructionParameters params, int startY, int endY) {
         projector.clearAllProjections();
         double completionIncrement = (endY - startY) / (double) height;
         int nbproj = ts.getImageStackSize();
-        int[] indexes = orderShuffleART(ts, type);
+        int[] indexes = orderShuffleART(ts, params);
+        System.out.println(Arrays.toString(indexes));
         double[] err1 = new double[5];
         //setProjectionCenter(ts);
+        final double relaxationcoeff= params.relaxationCoefficient;
+        final int update = params.updateNb;
         float factorimg = (float) (relaxationcoeff / update);
         int diffIndex = 0;
         double som = 0;
@@ -690,42 +731,17 @@ public class TomoReconstruction2 extends ImagePlus {
         return err1;
     }
 
-    public int[] orderShuffleART(TiltSeries ts, int type) {
-        int nbproj = ts.getImageStackSize();
+    public int[] orderShuffleART(TiltSeries ts, ReconstructionParameters params) {
+        int[] availableImages=params.getAvailableIndexes(ts);
+        int nbproj = availableImages.length;
         DoubleMatrix1D[] W = new DoubleMatrix1D[nbproj];
         for (int im = 0; im < nbproj; im++) {
             W[im] = ts.getAlignment().getEulerMatrix(im).viewRow(2);
         }
 
         boolean[] atraiter = new boolean[nbproj];
-        nbproj = 0;
-        for (int i = 0; i < atraiter.length; i++) {
-            switch (type) {
-                case ALL_PROJECTIONS:
-                default:
-                    atraiter[i] = true;
-                    nbproj++;
-                    break;
-                case FSC_EVEN:
-                    boolean even = (i % 2 == 0);
-                    atraiter[i] = even;
-                    if (even) nbproj++;
-                    if (nbproj > atraiter.length / 2) {
-                        atraiter[i] = false;
-                        nbproj--;
-                    }
-                    break;
-                case FSC_ODD:
-                    boolean odd = (i % 2 == 1);
-                    atraiter[i] = odd;
-                    if (odd) nbproj++;
-                    if (nbproj > atraiter.length / 2) {
-                        atraiter[i] = false;
-                        nbproj--;
-                    }
-                    break;
-            }
-        }
+        Arrays.fill(atraiter,true);
+
         System.out.println("nb proj:" + nbproj);
         int[] indexes = new int[nbproj];
         int cc = 0;
@@ -755,7 +771,7 @@ public class TomoReconstruction2 extends ImagePlus {
                 im = omini;
             }
             if (atraiter[im]) {
-                indexes[cc] = im;
+                indexes[cc] = availableImages[im];
                 atraiter[im] = false;
                 cc++;
             }
@@ -763,13 +779,9 @@ public class TomoReconstruction2 extends ImagePlus {
         return indexes;
     }
 
-    public ArrayList<Double> regularization(TiltSeries ts, Projector projector, int nbiteration, int startY, int endY) {
-        return regularization(ts, projector, nbiteration, ALL_PROJECTIONS, startY, endY);
-    }
-
-    public ArrayList<Double> regularization(TiltSeries ts, Projector projector, int nbiteration, int type, int startY, int endY) {
+    public ArrayList<Double> regularization(TiltSeries ts, Projector projector, ReconstructionParameters params, int startY, int endY) {
         System.out.println("regularization : ");
-        System.out.println("iterations : " + nbiteration);
+        System.out.println("iterations : " + params.getNbIterations());
         if (completion < 0) initCompletion();
         if (exec == null) exec = Executors.newFixedThreadPool(nbcpu);
         totalTimeProjection = 0;
@@ -803,8 +815,8 @@ public class TomoReconstruction2 extends ImagePlus {
         Chrono time = new Chrono();
         time.start();
         try {
-            PrintWriter pw = new PrintWriter(savedir + nbiteration + "_error.txt");
-            for (int i = 1; i <= nbiteration; i++) {
+            PrintWriter pw = new PrintWriter(savedir + params.getNbIterations() + "_error.txt");
+            for (int i = 1; i <= params.getNbIterations(); i++) {
                 currentIterationNb = i;
                 if (completion < 0) {
                     pw.close();
@@ -816,7 +828,7 @@ public class TomoReconstruction2 extends ImagePlus {
                 timeStartIteration.stop();
                 totalTimeStartIteration += timeStartIteration.delay();
 
-                err = osartIteration(projector, ts, factor, update, type, startY, endY);
+                err = osartIteration(projector, ts, params, startY, endY);
 
                 timeEndIteration.start();
                 projector.endOfIteration();
@@ -864,11 +876,8 @@ public class TomoReconstruction2 extends ImagePlus {
         return errorsIterations;
     }
 
-    public ArrayList<Double> ADASIRT(TiltSeries ts1, Projector projector1, TiltSeries ts2, Projector projector2, int nbiteration, int startY, int endY) {
-        return ADASIRT(ts1, projector1, ts2, projector2, nbiteration, ALL_PROJECTIONS, startY, endY);
-    }
-
-    public ArrayList<Double> ADASIRT(TiltSeries ts1, Projector projector1, TiltSeries ts2, Projector projector2, int nbiteration, int type, int startY, int endY) {
+    public ArrayList<Double> ADASIRT(TiltSeries ts1, Projector projector1, TiltSeries ts2, Projector projector2, ReconstructionParameters params, int startY, int endY) {
+        int nbiteration=params.getNbIterations();
         System.out.println("ADASIRT : ");
         System.out.println("iterations : " + nbiteration);
         if (completion < 0) initCompletion();
@@ -917,7 +926,7 @@ public class TomoReconstruction2 extends ImagePlus {
                 timeStartIteration.stop();
                 totalTimeStartIteration += timeStartIteration.delay();
 
-                err = osartIteration(projector1, ts1, factor, ts1.getImageStackSize(), type, startY, endY);
+                err = osartIteration(projector1, ts1, params, startY, endY);
 
                 timeEndIteration.start();
                 projector1.endOfIteration();
@@ -928,7 +937,7 @@ public class TomoReconstruction2 extends ImagePlus {
                 timeStartIteration.stop();
                 totalTimeStartIteration += timeStartIteration.delay();
 
-                err = osartIteration(projector2, ts2, factor, ts2.getImageStackSize(), type, startY, endY);
+                err = osartIteration(projector2, ts2, params, startY, endY);
                 timeEndIteration.start();
                 projector1.endOfIteration();
                 timeEndIteration.stop();
@@ -983,14 +992,13 @@ public class TomoReconstruction2 extends ImagePlus {
      * @param projector1    Projector used for projections and backprojections of the first TiltSeries
      * @param ts2           Second TiltSeries
      * @param projector2    Projector used for projections and backprojections of the second TiltSeries
-     * @param nbiteration   Number of reconstruction iteration
-     * @param type          Whether or not all projections will be used. Possible values: ALL_PROJECTIONS / FSC_EVEN / FSC_ODD
      *                                                                                    0 / 1 / 2
      * @param startY
      * @param endY
      * @return
      */
-    public ArrayList<Double> ADOSSART(TiltSeries ts1, Projector projector1, TiltSeries ts2, Projector projector2, int nbiteration, double relaxationcoeff, int type, int startY, int endY) {
+    public ArrayList<Double> ADOSSART(TiltSeries ts1, Projector projector1, TiltSeries ts2, Projector projector2, ReconstructionParameters params, int startY, int endY) {
+        int nbiteration=params.getNbIterations();
         System.out.println("ADOSSART : ");
         System.out.println("iterations : " + nbiteration);
 
@@ -1006,7 +1014,7 @@ public class TomoReconstruction2 extends ImagePlus {
 //        final int update = 1;
 //        double factor=1.0/((ts1.getImageStackSize() + ts2.getStackSize()) * update);
 //        double factor = 1.2;
-        double factor = relaxationcoeff;
+        double factor = params.relaxationCoefficient;
 //        double factor = 1.0 / (nbiteration * 2); // TEST
 //        double factor = 1.0 / nbiteration;
         FileInfo fi = ts1.getOriginalFileInfo();
@@ -1041,7 +1049,7 @@ public class TomoReconstruction2 extends ImagePlus {
                 }
                 System.out.println("(" + startY + ", " + endY + ") iteration #" + i);
 
-                err = osartIterationDual(projector1, ts1, projector2, ts2, factor, 1, type, startY, endY);
+                err = osartIterationDual(projector1, ts1, projector2, ts2, params, startY, endY);
 
                 timeEndIteration.start();
                 projector1.endOfIteration();
@@ -1090,7 +1098,8 @@ public class TomoReconstruction2 extends ImagePlus {
     }
 
 
-    public ArrayList<Double> ADASIRT2Single(TiltSeries ts, Projector projector, int nbiteration, int type, int startY, int endY) {
+    public ArrayList<Double> ADASIRT2Single(TiltSeries ts, Projector projector, ReconstructionParameters params, int startY, int endY) {
+        int nbiteration=params.getNbIterations();
         System.out.println("ADASIRT : ");
         System.out.println("iterations : " + nbiteration);
 
@@ -1134,7 +1143,7 @@ public class TomoReconstruction2 extends ImagePlus {
                 }
                 System.out.println("(" + startY + ", " + endY + ") iteration #" + i);
 
-                err = osartIteration(projector, ts, factor, 1, type, startY, endY);
+                err = osartIteration(projector, ts, params, startY, endY);
 
                 timeEndIteration.start();
                 projector.endOfIteration();
@@ -1269,15 +1278,18 @@ public class TomoReconstruction2 extends ImagePlus {
 //        return errorsIterations;
 //    }
 
-    private double[] osartIterationDual(Projector projector1, final TiltSeries ts1, Projector projector2, final TiltSeries ts2, final double relaxationcoeff, int update, int type, int startY, int endY) {
+    private double[] osartIterationDual(Projector projector1, final TiltSeries ts1, Projector projector2, final TiltSeries ts2, ReconstructionParameters params, int startY, int endY) {
+        double relaxationcoeff=params.getRelaxationCoefficient();
+        int update=params.getUpdateNb();
+
         int alternate = 2;
         projector1.clearAllProjections();
         projector2.clearAllProjections();
         double completionIncrement = (endY - startY) / (double) height;
         int nbproj1 = ts1.getImageStackSize();
         int nbproj2 = ts2.getImageStackSize();
-        int[] indexes1 = orderShuffleART(ts1, type);
-        int[] indexes2 = orderShuffleART(ts2, type);
+        int[] indexes1 = orderShuffleART(ts1, params);
+        int[] indexes2 = orderShuffleART(ts2, params);
         double[] err1 = new double[5];
         float factorimg = (float) (relaxationcoeff / update);
         int diffIndex = 0;
