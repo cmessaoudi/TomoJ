@@ -40,9 +40,18 @@ public class AffineAlignment implements Alignment {
     }
 
     @Override
+    public AffineTransform getTranslationTransform(int index) {
+        AffineTransform tmp=getTransform(index,combine);
+        AffineTransform result=new AffineTransform();
+        result.setToTranslation(tmp.getTranslateX(),tmp.getTranslateY());
+        return result;
+    }
+
+    @Override
     public AffineTransform[] getTransforms() {
         return transforms;
     }
+
 
     /**
      * remove an image from the tilt series (beware it is starting from 0)

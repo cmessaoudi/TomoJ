@@ -957,6 +957,13 @@ public class alignmentLandmark implements Alignment {
         return T;
     }
 
+    public AffineTransform getTranslationTransform(int index) {
+        AffineTransform T = new AffineTransform();
+        T.translate(-di.get(index).getQuick(0), -di.get(index).getQuick(1));
+        T.translate(-diaxis.get(index).getQuick(0), -diaxis.get(index).getQuick(1));
+        return T;
+    }
+
     @Override
     /** compute transforms for all images and return them in an array
      * @return the array containing all transforms*/

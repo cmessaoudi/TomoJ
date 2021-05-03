@@ -29,4 +29,7 @@ public interface Alignment {
     public void saveToFile(String path, boolean... options) throws IOException;
 
     public float[] applyTransformOnImage(TiltSeries ts, int index);
+
+
+    public AffineTransform getTranslationTransform(int index);
 }
