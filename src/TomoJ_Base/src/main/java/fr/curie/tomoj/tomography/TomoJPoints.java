@@ -444,7 +444,7 @@ public class TomoJPoints {
     }
 
     public Roi getRoi(int imgnb) {
-        AffineTransform T = ts.getAlignment().getTransform(imgnb);
+        AffineTransform T = (ts.getAlignMethodForReconstruction()==TiltSeries.ALIGN_PROJECTOR)?ts.getAlignment().getTranslationTransform(imgnb):ts.getAlignment().getTransform(imgnb);
         PointRoi roi = null;
 
         if (currentIndex >= 0) {
