@@ -6,6 +6,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
 import ij.gui.PointRoi;
+import ij.gui.Roi;
 import ij.measure.CurveFitter;
 import ij.process.*;
 import fr.curie.filters.FFTFilter_TomoJ;
@@ -297,6 +298,65 @@ public class SeedDetector {
         return ip;
     }
 
+    public ImageProcessor getFilteredImage(ImagePlus input, double removepercentageX, double removepercentageY, int critical_FilterSmall, int critical_FilterLarge){
+        ImageProcessor ip = input.getProcessor().duplicate().convertToFloat();
+        //System.out.println("getfilteredImage: ip width:"+ip.getWidth()+", height:"+ip.getHeight());
+        int startx = (int) (removepercentageX / 2 * ip.getWidth());
+        int starty = (int) (removepercentageY / 2 * ip.getHeight());
+        int endx = (int) ((1 - removepercentageX / 2) * ip.getWidth());
+        int endy = (int) ((1 - removepercentageY / 2) * ip.getHeight());
+
+        int sx=ip.getWidth();
+        int sy=ip.getHeight();
+        Chrono time=new Chrono();
+        if (completion < 0) return ip;
+        time.start();
+        float[] pixsfftcomputation=(float[])ip.getPixels();
+        DenseFloatMatrix2D H1 = new DenseFloatMatrix2D(sy, sx);
+        H1.assign(pixsfftcomputation);
+        DenseFComplexMatrix2D fft = H1.getFft2();
+        float[] fft1 = fft.elements();
+        double cx = (sx) / 2;
+        double cy = (sy) / 2;
+        //doing filtering
+        double bandpassLowkeep=critical_FilterSmall;
+        double bandpassLowCut=critical_FilterSmall/2;
+        double bandpassHighCut=critical_FilterLarge*2;
+        double bandpassHighKeep=critical_FilterLarge;
+        double auxmin = Math.PI / (bandpassLowkeep - bandpassLowCut);
+        double auxmax = Math.PI / (bandpassHighCut - bandpassHighKeep);
+        for (int j = 0; j < sy; j++) {
+            int jj = j * sx;
+            double cj = (j > cy) ? j - sy : j;
+            for (int i = 0; i < sx; i++) {
+                double ci = (i > cx) ? i - sx : i;
+                double dist = Math.sqrt(ci * ci + cj * cj);
+                if (dist >= bandpassLowCut && dist < bandpassLowkeep) {
+                    double tmp = (1 + Math.cos((dist - bandpassLowkeep) * auxmin)) * .5f;
+                    fft1[(jj + i) * 2] *= tmp;
+                    fft1[(jj + i) * 2 + 1] *= tmp;
+                } else if (dist >= bandpassLowkeep && dist <= bandpassHighKeep) {
+                } else if (dist > bandpassHighKeep && dist <= bandpassHighCut) {
+                    double tmp = (1 + Math.cos((dist - bandpassHighKeep) * auxmax)) * .5f;
+                    fft1[(jj + i) * 2] *= tmp;
+                    fft1[(jj + i) * 2 + 1] *= tmp;
+                } else {
+                    fft1[(jj + i) * 2] = 0;
+                    fft1[(jj + i) * 2 + 1] = 0;
+                }
+            }
+        }
+
+        fft = new DenseFComplexMatrix2D(sy, sx);
+        fft.assign(fft1);
+        fft.ifft2(true);
+        fft1 = fft.elements();
+        for (int j = 0; j < pixsfftcomputation.length; j++) {
+            pixsfftcomputation[j] = fft1[j * 2];
+        }
+        return ip;
+    }
+
     public ImageProcessor getFilteredImageMSD(ImagePlus input, boolean useMinima, boolean show, double removepercentageX, double removepercentageY, int critical_FilterSmall,int critical_FilterLarge, int critical_MinimaRadius,int critical_SeedNumber) {
         return getFilteredImageMSDNew(input,useMinima,show,removepercentageX,removepercentageY,critical_FilterSmall,critical_FilterLarge,critical_MinimaRadius,critical_SeedNumber);
     }
@@ -473,6 +533,54 @@ public class SeedDetector {
         return ip;
     }
 
+    public ImagePlus previewDetection(int index, boolean localMinima, double percentageExcludeX, double percentageExcludeY, int critical_FilterSmall, int critical_FilterLarge, int extremaNeighborhoodRadius,int nbSeeds,int patchSize, double thresholdFitGoldBead){
+        ArrayList<LandmarksChain> seedstmp = new ArrayList<LandmarksChain>();
+        ImageProcessor ip = new FloatProcessor(ts.getWidth(), ts.getHeight());
+        ImagePlus imptmp = new ImagePlus("", ip);
+        ip.setPixels(ts.getOriginalPixelsCopy(index));
+        ip.resetRoi();
+        imptmp.setTitle("" + index);
+        //filter the image
+        System.out.println("Filtering image " + index);
+        getFilteredImageMSD(imptmp, localMinima, true, percentageExcludeX, percentageExcludeY, critical_FilterSmall, critical_FilterLarge, extremaNeighborhoodRadius, nbSeeds);
+        if (completion < 0) return null;
+        FloatPolygon r = ((PointRoi) imptmp.getRoi()).getFloatPolygon();
+        float[] xcoord = r.xpoints;
+        float[] ycoord = r.ypoints;
+        for (int i = 0; i < xcoord.length; i++) {
+            if (completion < 0) return imptmp;
+            Point2D.Double pt = new Point2D.Double(xcoord[i] - cx, ycoord[i] - cy);
+            //ChainsGenerator.refineLandmarkPositionFlipFlap(pt,ts,index,21);
+            Point2D.Double[] landmarkchain = new Point2D.Double[ts.getImageStackSize()];
+            landmarkchain[index] = pt;
+            //chainsGenerator.refineLandmark(index,index,landmarkchain,21,true);
+            //chainsGenerator.refineLandmarkPositionGaussian(landmarkchain,ts, index,21);
+            //chainsGenerator.refineLandmarkPositionDiscus(landmarkchain,ts, index,21,4,true);
+            seedstmp.add(new LandmarksChain(landmarkchain, 0, index));
+        }
+
+        int nbBefore = seedstmp.size();
+        //double s = seedDetector.isGoldBeadPresent(seedstmp, ii, patchSize, localMinima);
+
+        if(thresholdFitGoldBead>0) {
+            double s = isGoldBeadPresent(seedstmp, index, patchSize, localMinima, thresholdFitGoldBead);
+            System.out.println("preview " + index + " do bead selection : " + nbBefore + " --> " + seedstmp.size());
+        }
+        PointRoi roi=null;
+        for(LandmarksChain landmarkchain:seedstmp){
+            Point2D p=landmarkchain.getLandmarkchain()[index];
+            if(roi==null) roi=new PointRoi(p.getX()+ts.getCenterX(),p.getY()+ts.getCenterY());
+            else roi.addPoint(p.getX()+ts.getCenterX(),p.getY()+ts.getCenterY());
+        }
+        System.out.println("roi nb point "+roi.getNCoordinates());
+        imptmp.setRoi(roi);
+        //ip.setRoi(roi);
+
+        return imptmp;
+
+
+    }
+
     public double isGoldBeadPresent(ArrayList<LandmarksChain> points, int indexImage,int patchSize, boolean darkOnWhiteBG, double thresholdFit){
         double radius=-1;
         int patchSize2=patchSize/2;
@@ -502,7 +610,7 @@ public class SeedDetector {
                     row = smooth(row, 1);
                     //row = reduce(row, 1);
                     paramsX = fitGaussian(row, darkOnWhiteBG);
-                    if(Math.abs(paramsX[2])<patchSize2)lc.getLandmarkchain()[indexImage].setLocation(lc.getLandmarkchain()[indexImage].getX() + paramsX[2], lc.getLandmarkchain()[indexImage].getY());
+                    //if(Math.abs(paramsX[2])<patchSize2)lc.getLandmarkchain()[indexImage].setLocation(lc.getLandmarkchain()[indexImage].getX() + paramsX[2], lc.getLandmarkchain()[indexImage].getY());
                     //System.out.println("#"+i+" centerX:" + paramsX[2] + ", sigma: " + paramsX[3]+ ", R=" + paramsX[4]);
                     //pw.addPlot(xs,row, Color.BLACK,"row point "+i);
 
@@ -516,11 +624,11 @@ public class SeedDetector {
                     column = smooth(column, 1);
                     //column = reduce(column, 1);
                     paramsY = fitGaussian(column, darkOnWhiteBG);
-                    if(Math.abs(paramsX[2])<patchSize2)lc.getLandmarkchain()[indexImage].setLocation(lc.getLandmarkchain()[indexImage].getX(), lc.getLandmarkchain()[indexImage].getY() + paramsY[2]);
+                    //if(Math.abs(paramsY[2])<patchSize2)lc.getLandmarkchain()[indexImage].setLocation(lc.getLandmarkchain()[indexImage].getX(), lc.getLandmarkchain()[indexImage].getY() + paramsY[2]);
                     //System.out.println("#"+i+" centerY:" + paramsY[2] + ", sigma: " + paramsY[3] + ", R=" + paramsY[4]);
                     //pw.addPlot(xs,column, Color.RED,"col point "+i);
                     nbloop++;
-                }while (nbloop<5&&(Math.abs(paramsX[2])>0.5||Math.abs(paramsY[2])>0.5));
+                }while (nbloop<0&&(Math.abs(paramsX[2])>0.5||Math.abs(paramsY[2])>0.5));
                 if (paramsY[4] > thresholdFit && paramsY[3] < 2 * patchSize && paramsX[4] > thresholdFit && paramsX[3] < 2 * patchSize) {
                     radius += (paramsY[3]+paramsX[3])/2;
                     count++;
