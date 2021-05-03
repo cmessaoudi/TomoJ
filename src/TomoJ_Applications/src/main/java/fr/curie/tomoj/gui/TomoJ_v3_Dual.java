@@ -686,21 +686,21 @@ public class TomoJ_v3_Dual implements PlugIn {
                 boolean combine = false;
                 boolean tiff2mrc = false;
                 //if ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK) {
-                    GenericDialog gd = new GenericDialog("open options");
-                    gd.addNumericField("binning", 1, 2);
-                    gd.addCheckbox("final Transform", false);
-                    gd.addCheckbox("combine with existing alignment", false);
-                    if (name.toLowerCase().endsWith(".xf") || name.toLowerCase().endsWith(".prexf") || name.toLowerCase().endsWith(".prexg"))
-                        gd.addCheckbox("mrc created with tiff2mrc", false);
-                    gd.showDialog();
-                    if (gd.wasCanceled()) return;
-                    binning = gd.getNextNumber();
-                    finaltransforms = gd.getNextBoolean();
-                    combine = gd.getNextBoolean();
-                    if (binning == 0) binning = 1;
-                    if (binning < 0) binning = -binning;
-                    if (name.toLowerCase().endsWith(".xf") || name.toLowerCase().endsWith(".prexf") || name.toLowerCase().endsWith(".prexg"))
-                        tiff2mrc = gd.getNextBoolean();
+                GenericDialog gd = new GenericDialog("open options");
+                gd.addNumericField("binning", 1, 2);
+                gd.addCheckbox("final Transform", false);
+                gd.addCheckbox("combine with existing alignment", false);
+                if (name.toLowerCase().endsWith(".xf") || name.toLowerCase().endsWith(".prexf") || name.toLowerCase().endsWith(".prexg"))
+                    gd.addCheckbox("mrc created with tiff2mrc", false);
+                gd.showDialog();
+                if (gd.wasCanceled()) return;
+                binning = gd.getNextNumber();
+                finaltransforms = gd.getNextBoolean();
+                combine = gd.getNextBoolean();
+                if (binning == 0) binning = 1;
+                if (binning < 0) binning = -binning;
+                if (name.toLowerCase().endsWith(".xf") || name.toLowerCase().endsWith(".prexf") || name.toLowerCase().endsWith(".prexg"))
+                    tiff2mrc = gd.getNextBoolean();
                 //}
                 CommandWorkflow.loadTransforms(dir, name, ts, binning, finaltransforms, combine, tiff2mrc);
 
@@ -983,20 +983,20 @@ public class TomoJ_v3_Dual implements PlugIn {
      */
     private void $$$setupUI$$$() {
         panelroot = new JPanel();
-        panelroot.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panelroot.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         panelroot.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "multiple-axis align and reconstruction", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panelroot.add(panel1, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panelroot.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         runButton = new JButton();
         runButton.setText("Run");
         panel1.add(runButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         applicationPanel = new JPanel();
         applicationPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panelroot.add(applicationPanel, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panelroot.add(applicationPanel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
-        panelroot.add(panel2, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panelroot.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         alignZeroTiltImagesButton = new JButton();
         alignZeroTiltImagesButton.setText("align zero tilt images");
         panel2.add(alignZeroTiltImagesButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
