@@ -42,6 +42,10 @@ public class Blur_Borders implements ExtendedPlugInFilter, DialogListener {
      * @param ip Description of the Parameter
      */
     public void run(ImageProcessor ip) {
+        if(sizePercent<0){
+            hammingWindow(ip);
+            return;
+        }
 
         //int ind = pfr.getSliceNumber();
         for (int y = 0; y < ip.getHeight(); y++) {
@@ -61,6 +65,26 @@ public class Blur_Borders implements ExtendedPlugInFilter, DialogListener {
         }
 
 
+    }
+
+    public void hammingWindow(ImageProcessor ip){
+        double centerx=ip.getWidth()/2.0;
+        double centery=ip.getHeight()/2.0;
+        double distmax=Math.min(centerx,centery);
+        for (int y = 0; y < ip.getHeight(); y++) {
+            double yc= y-centery;
+            for (int x = 0; x < ip.getWidth(); x++) {
+                double xc=x-centerx;
+                double dist=Math.sqrt(xc*xc + yc*yc);
+                if(dist < distmax){
+                    double val = ip.getPixelValue(x, y);
+                    val*=0.5*(1+Math.cos(Math.PI*dist/(distmax)));
+                    ip.putPixelValue(x, y, val);
+                }else{
+                    ip.putPixelValue(x, y, 0);
+                }
+            }
+        }
     }
 
     /**
