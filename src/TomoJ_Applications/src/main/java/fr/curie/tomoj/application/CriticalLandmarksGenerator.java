@@ -91,6 +91,7 @@ public class CriticalLandmarksGenerator implements Application {
         $$$setupUI$$$();
         chainLength = Math.max(ts.getImageStackSize() / 4, 3);
         patchSize = (int) (10 * ts.getWidth() / 256.0 + 1);
+        if (patchSize % 2 == 0) patchSize += 1;
     }
 
     private void addListeners() {
@@ -113,6 +114,7 @@ public class CriticalLandmarksGenerator implements Application {
         spinnerPatchSize.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 patchSize = ((SpinnerNumberModel) spinnerPatchSize.getModel()).getNumber().intValue();
+                updatePreview();
             }
         });
         localMinimaRadioButton.addActionListener(new ActionListener() {
@@ -137,11 +139,13 @@ public class CriticalLandmarksGenerator implements Application {
                 if (fiducialMarkersCheckBox.isSelected())
                     ((SpinnerNumberModel) spinnerCorrelationThreshold.getModel()).setValue(correlationThreshold / 2.0);
                 else ((SpinnerNumberModel) spinnerCorrelationThreshold.getModel()).setValue(correlationThreshold * 2.0);
+                updatePreview();
             }
         });
         spinnerThresholdFitGoldBead.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 thresholdFitGoldBead = ((SpinnerNumberModel) spinnerThresholdFitGoldBead.getModel()).getNumber().doubleValue();
+                updatePreview();
             }
         });
         spinnerCorrelationThreshold.addChangeListener(new ChangeListener() {
@@ -294,7 +298,7 @@ public class CriticalLandmarksGenerator implements Application {
         ((SpinnerNumberModel) spinnerPatchSize.getModel()).setMinimum(3);
         ((SpinnerNumberModel) spinnerPatchSize.getModel()).setMaximum(ts.getWidth());
         ((SpinnerNumberModel) spinnerPatchSize.getModel()).setValue(patchSize);
-        ((SpinnerNumberModel) spinnerPatchSize.getModel()).setStepSize(1);
+        ((SpinnerNumberModel) spinnerPatchSize.getModel()).setStepSize(2);
 
         ((SpinnerNumberModel) spinnerExtremaRadius.getModel()).setMinimum(1);
         ((SpinnerNumberModel) spinnerExtremaRadius.getModel()).setMaximum(ts.getWidth());
@@ -694,6 +698,7 @@ public class CriticalLandmarksGenerator implements Application {
                 IJ.showStatus("looking for seeds...");
                 seedDetector.resetCompletion();
                 seedDetector.getFilteredImageMSD(previewCritical2, localMinima, true, percentageToExcludeX, percentageToExcludeY, filterSmall, filterLarge, extremaNeighborhoodRadius, nbSeeds);
+
                 previewCritical2.setTitle(title + ((PointRoi) previewCritical2.getRoi()).getNCoordinates() + " seed detected(" + ts.getTiltAngle(previewIndex) + ")");
                 previewCritical2.updateAndDraw();
                 previewCritical = previewCritical2;
@@ -708,17 +713,36 @@ public class CriticalLandmarksGenerator implements Application {
                 previewCritical.getWindow().toFront();
 
             } else {
+
+                ImagePlus tmp = seedDetector.previewDetection(previewIndex, localMinima, percentageToExcludeX, percentageToExcludeY, filterSmall, filterLarge, extremaNeighborhoodRadius, nbSeeds, patchSize, fiducialMarkers ? thresholdFitGoldBead : -1);
+
+                //tmp.show();
+                previewCritical.updateAndDraw();
+                previewCritical.deleteRoi();
+                previewCritical.setProcessor(tmp.getProcessor());
+                previewCritical.resetDisplayRange();
+                previewCritical.setRoi(tmp.getRoi());
+                System.out.println("update preview critical");
+                System.out.println("nb point " + ((PointRoi) previewCritical.getRoi()).getNCoordinates());
+                /*
                 //generator.resetCompletion();
                 previewCritical.setProcessor(title + "seed detected(" + ts.getTiltAngle(previewIndex) + ")", ip);
                 System.out.println("update preview critical");
                 previewCritical.deleteRoi();
                 IJ.showStatus("looking for seeds...");
                 seedDetector.getFilteredImageMSD(previewCritical, localMinima, true, percentageToExcludeX, percentageToExcludeY, filterSmall, filterLarge, extremaNeighborhoodRadius, nbSeeds);
+                if(fiducialMarkers){
+                    seedDetector.selectGoldBeadFromROI(previewCritical,patchSize,localMinima,thresholdFitGoldBead);
+                }
+
+                 */
                 if (!previewCritical.isVisible() && basePanel.isVisible() && ts.getCompletion() >= 0) {
+                    //previewCritical.getProcessor().resetMinAndMax();
                     previewCritical.show();
                     previewCritical.updateAndDraw();
                     previewCritical.getWindow().toFront();
                 }
+                previewCritical.getWindow().toFront();
                 previewCritical.setTitle(title + ((PointRoi) previewCritical.getRoi()).getNCoordinates() + " seed detected(" + ts.getTiltAngle(previewIndex) + ")");
             }
         }
