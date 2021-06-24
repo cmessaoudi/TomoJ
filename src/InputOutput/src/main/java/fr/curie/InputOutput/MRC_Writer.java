@@ -34,8 +34,14 @@ public class MRC_Writer implements PlugInFilter {
         img = imp;
         if (!(arg == null || arg.equals(""))) {
             File dest = new File(arg);
-            directory = dest.getParent() + System.getProperty("file.separator");
+            directory = dest.getParent();
             name = dest.getName();
+            System.out.println("test "+directory);
+            if(directory==null) {
+                System.out.println("empty directory change to user.dir");
+                directory=System.getProperty("user.dir");
+            }
+            directory+=System.getProperty("file.separator");
             System.out.println("saving as mrc " + directory + name);
         } else {
             name = null;
@@ -58,7 +64,9 @@ public class MRC_Writer implements PlugInFilter {
         if (name == null) {
             return;
         }
+
         IJ.showStatus("saving: " + directory + name);
+        //System.out.println("saving: " + directory + name);
         //ImageStack stack = myimp.getStack();
         //save(stack, directory + name);
         //SPIDER.saveImage(directory, name, myimp, true);
@@ -81,6 +89,7 @@ public class MRC_Writer implements PlugInFilter {
             out.close();
         } catch (IOException ioe) {
             IJ.error("" + ioe);
+            ioe.printStackTrace();
         }
     }
 
