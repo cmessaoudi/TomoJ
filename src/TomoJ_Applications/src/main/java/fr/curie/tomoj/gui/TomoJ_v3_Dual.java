@@ -653,7 +653,7 @@ public class TomoJ_v3_Dual implements PlugIn {
                     finalT = true;
                 }
                 //System.out.println("saving as final transforms: "+finalT);
-                SaveDialog sd = new SaveDialog(title + "transforms as...", title + "transf.csv", "");
+                SaveDialog sd = new SaveDialog(title + "transforms as...", title + "_transf.csv", "");
                 String dir = sd.getDirectory();
                 String name = sd.getFileName();
                 if (dir == null || name == null) {
