@@ -91,6 +91,11 @@ public class Landmarks3DAlign {
         double bestTilt = 90;
         double worstRot = -1;
         double worstError = 0;
+        boolean tiltDebug=false;
+        if (tiltDebug) {
+            System.out.println("start ");
+            printThetas(bestPreviousAlignmentDeform);
+        }
 
         if (options.isExhaustiveSearch()) {
             System.out.println("exhaustive search for tilt axis");
@@ -145,11 +150,17 @@ public class Landmarks3DAlign {
             }
         }
 
+        if (tiltDebug) {
+            System.out.println("after exhaustive ");
+            printThetas(bestPreviousAlignmentDeform);
+        }
+
         //continuous optimization for the axis direction
         final boolean optimizeAngle = false;
         double[] params = new double[((optimizeAngle) ? 2 : 1)];
         params[0] = bestRot;
         if (optimizeAngle) params[1] = 90;
+        if(tiltDebug)options.setAllowTiltCorrection(true);
         //double[] params = new double[]{bestRot,bestTilt};
 
         //System.out.println("error images:"+bestPreviousAlignment.computeErrorForLandmarks2());
@@ -168,6 +179,12 @@ public class Landmarks3DAlign {
             e.printStackTrace();
         }
         bestPreviousAlignmentDeform.out = null;
+        if(tiltDebug)options.setAllowTiltCorrection(false);
+
+        if (tiltDebug) {
+            System.out.println("after first optimize ");
+            printThetas(bestPreviousAlignmentDeform);
+        }
 
         if (completion < 0) return Double.MAX_VALUE;
         Powell pow = new Powell(new Function() {
@@ -204,6 +221,11 @@ public class Landmarks3DAlign {
         double fitness = bestPreviousAlignmentDeform.optimize(true, true);
         timeStep.stop();
         timeOptimize.addAndGet(timeStep.delay());
+
+        if (tiltDebug) {
+            System.out.println("after powell ");
+            printThetas(bestPreviousAlignmentDeform);
+        }
         //bestPreviousAlignment.printAlignment();
         System.out.println("before computeErrorForLandmarks :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
         bestPreviousAlignmentDeform.saveLandmarksErrors(savedir + tp.getTiltSeries().getTitle() + "_0_LandmarksErrors.txt");
@@ -282,6 +304,10 @@ public class Landmarks3DAlign {
             timeCycle.stop();
             System.out.println("time to compute Cycle"+cycle+" : "+timeCycle.delayString());
 
+            if (tiltDebug) {
+                System.out.println("en cycle "+cycle);
+                printThetas(bestPreviousAlignmentDeform);
+            }
         }
 
         //final with tilt for beam
@@ -315,6 +341,10 @@ public class Landmarks3DAlign {
 
         if (completion < 0) return Double.MAX_VALUE;
         currentWorkingAlignment = bestPreviousAlignmentDeform;
+
+        if(tiltDebug){
+            options.setAllowTiltCorrection(true);
+        }
         timeStep.start();
         fitness = bestPreviousAlignmentDeform.optimize(true, true);
         timeStep.stop();
@@ -324,6 +354,10 @@ public class Landmarks3DAlign {
         System.out.println("average worst error is : " + errors2[0]);
         System.out.println("average of average error is : " + errors2[1]);
 
+        if (tiltDebug) {
+            System.out.println("end ");
+            printThetas(bestPreviousAlignmentDeform);
+        }
         completion += completionStep;
         double zheight = correctAlignment(options.isCorrectForHeight());
         completion += completionStep;
@@ -352,6 +386,18 @@ public class Landmarks3DAlign {
         System.out.println("total time to compute : " + timeTotal.delayString());
         System.out.println("total time in optimize : " + Chrono.timeString(timeOptimize.get()));
         return fitness;
+
+    }
+
+    public void printThetas(AlignmentLandmarkImproved ali){
+        System.out.println("thetas");
+        String tmp="[";
+        for(int i=0;i< ali.nImages-1;i++){
+            tmp+=ali.currentAi.get(i).getTheta()+" ";
+
+        }
+        tmp+=ali.getCurrentAi().get(ali.nImages-1).getTheta()+"]";
+        System.out.println(tmp);
 
     }
 
