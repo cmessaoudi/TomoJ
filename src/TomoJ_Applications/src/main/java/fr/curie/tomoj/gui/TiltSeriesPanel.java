@@ -819,16 +819,21 @@ public class TiltSeriesPanel {
             gpuAvailable = false;
         }
         if (gpuAvailable) {
-            tableGPU.setModel(new GPUDevicesTableModel(width, height, depth));
+            try {
+                tableGPU.setModel(new GPUDevicesTableModel(width, height, depth));
 
-            tableGPU.setFillsViewportHeight(true);
-            tableGPU.setEnabled(false);
-            JPanel tmp = new JPanel();
-            tableGPU.setBackground(tmp.getBackground());
-            //tableGPU.setPreferredSize(new Dimension(500, 200));
-            JTableHeader jth = tableGPU.getTableHeader();
-            //panelGPU.add(jth, BorderLayout.PAGE_START);
-            jth.setResizingAllowed(true);
+                tableGPU.setFillsViewportHeight(true);
+                tableGPU.setEnabled(false);
+                JPanel tmp = new JPanel();
+                tableGPU.setBackground(tmp.getBackground());
+                //tableGPU.setPreferredSize(new Dimension(500, 200));
+                JTableHeader jth = tableGPU.getTableHeader();
+                //panelGPU.add(jth, BorderLayout.PAGE_START);
+                jth.setResizingAllowed(true);
+            } catch (Exception e) {
+                System.out.println("opencl library not loaded correctly : reconstruction on GPU is unavailable!");
+                gpuAvailable = false;
+            }
         }
         spinnerCenterX = new JSpinner(new SpinnerNumberModel(100, 0.5, 20000, 0.5));
         spinnerCenterY = new JSpinner(new SpinnerNumberModel(100, 0.5, 20000, 0.5));
