@@ -80,31 +80,17 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="374" />
+    <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH" value="139" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1591891995233" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="SDKs" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../SEM3DE_" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="http.proxy" />
+    <property name="settings.editor.selected.configurable" value="build.tools" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\fr\curie\plotj" />
-      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\plotj" />
-      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java" />
-      <recent name="C:\progs\TomoJ_v3\src\TomoJ_GPU\src\main\resources" />
-      <recent name="C:\progs\TomoJ_v3\src\Inpainting\src\main\java\fr\curie\inpainting" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="fr.curie.plugins" />
-      <recent name="fr.curie.inpainting" />
-      <recent name="fr.curie.tomoj.tomography" />
-      <recent name="fr.curie.gpu.utils" />
-      <recent name="fr.curie.gpu.plugins" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\progs\TomoJ_v3\src\InputOutput\src\main\java" />
@@ -113,10 +99,38 @@
       <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\fr\curie\plotj" />
       <recent name="C:\progs\TomoJ_v3\src\TomoJ_Applications\src\main\resources" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="fr.curie.gpu.tomoj.tomography.projectors" />
+      <recent name="fr.curie.plugins" />
+      <recent name="fr.curie.inpainting" />
+      <recent name="fr.curie.tomoj.tomography" />
+      <recent name="fr.curie.gpu.utils" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\fr\curie\plotj" />
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java\plotj" />
+      <recent name="C:\progs\TomoJ_v3\src\PlotJ\src\main\java" />
+      <recent name="C:\progs\TomoJ_v3\src\TomoJ_GPU\src\main\resources" />
+      <recent name="C:\progs\TomoJ_v3\src\Inpainting\src\main\java\fr\curie\inpainting" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TomoJ" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="fr.curie.tomoj.TomoJ" />
+      <module name="TomoJ_Applications" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.curie.tomoj.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -152,6 +166,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TomoJ" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -168,150 +187,63 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="-441" y="-1677" key="FileChooserDialogImpl" timestamp="1600069219529">
-      <screen x="-1905" y="-2160" width="3840" height="2120" />
+    <state x="222" y="-2020" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1622799730439">
+      <screen x="-252" y="-2160" width="2560" height="1400" />
     </state>
-    <state x="-441" y="-1677" key="FileChooserDialogImpl/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1600069219529" />
-    <state x="732" y="237" key="FileChooserDialogImpl/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@0.0.1920.1040" timestamp="1599050127372" />
-    <state width="2529" height="199" key="GridCell.Tab.0.bottom" timestamp="1606327704506">
-      <screen x="21" y="-2160" width="2560" height="1400" />
+    <state x="222" y="-2020" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1622799730439" />
+    <state x="721" y="-1688" key="#com.intellij.ide.util.MemberChooser" timestamp="1621436985431">
+      <screen x="-252" y="-2160" width="2560" height="1400" />
     </state>
-    <state width="1858" height="325" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1179.-2160.3072.1688@0.0.1920.1040" timestamp="1603386508168" />
-    <state width="3077" height="660" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1179.-2160.3840.2120@-1179.-2160.3840.2120" timestamp="1600876519694" />
-    <state width="1834" height="322" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1309.-2160.2560.1400@0.0.1920.1040" timestamp="1598626774328" />
-    <state width="3077" height="660" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1600093907756" />
-    <state width="1840" height="323" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1932.-2160.3840.2120/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598954694855" />
-    <state width="2529" height="199" key="GridCell.Tab.0.bottom/0.0.1920.1040/21.-2160.2560.1400@21.-2160.2560.1400" timestamp="1606327704506" />
-    <state width="2215" height="150" key="GridCell.Tab.0.bottom/0.0.1920.1040/21.-2160.3072.1688@21.-2160.3072.1688" timestamp="1604682229836" />
-    <state width="1880" height="362" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599829360218" />
-    <state width="2529" height="199" key="GridCell.Tab.0.center" timestamp="1606327704506">
-      <screen x="21" y="-2160" width="2560" height="1400" />
+    <state x="-738" y="-1591" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1617006287579" />
+    <state x="721" y="-1688" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1621436985431" />
+    <state x="568" y="-968" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/-405.-1440.2560.1400@-405.-1440.2560.1400" timestamp="1621334565705" />
+    <state x="-504" y="-1722" key="FileChooserDialogImpl" timestamp="1620113944969">
+      <screen x="-1905" y="-2160" width="3072" height="1688" />
     </state>
-    <state width="1858" height="325" key="GridCell.Tab.0.center/0.0.1920.1040/-1179.-2160.3072.1688@0.0.1920.1040" timestamp="1603386508168" />
-    <state width="3077" height="660" key="GridCell.Tab.0.center/0.0.1920.1040/-1179.-2160.3840.2120@-1179.-2160.3840.2120" timestamp="1600876519694" />
-    <state width="1834" height="322" key="GridCell.Tab.0.center/0.0.1920.1040/-1309.-2160.2560.1400@0.0.1920.1040" timestamp="1598626774327" />
-    <state width="3077" height="660" key="GridCell.Tab.0.center/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1600093907756" />
-    <state width="1840" height="323" key="GridCell.Tab.0.center/0.0.1920.1040/-1932.-2160.3840.2120/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598954694855" />
-    <state width="2529" height="199" key="GridCell.Tab.0.center/0.0.1920.1040/21.-2160.2560.1400@21.-2160.2560.1400" timestamp="1606327704506" />
-    <state width="2215" height="150" key="GridCell.Tab.0.center/0.0.1920.1040/21.-2160.3072.1688@21.-2160.3072.1688" timestamp="1604682229836" />
-    <state width="1880" height="362" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599829360218" />
-    <state width="2529" height="199" key="GridCell.Tab.0.left" timestamp="1606327704506">
-      <screen x="21" y="-2160" width="2560" height="1400" />
+    <state x="-504" y="-1722" key="FileChooserDialogImpl/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1620113944969" />
+    <state width="1872" height="275" key="GridCell.Tab.0.bottom" timestamp="1624539863642">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1858" height="325" key="GridCell.Tab.0.left/0.0.1920.1040/-1179.-2160.3072.1688@0.0.1920.1040" timestamp="1603386508168" />
-    <state width="3077" height="660" key="GridCell.Tab.0.left/0.0.1920.1040/-1179.-2160.3840.2120@-1179.-2160.3840.2120" timestamp="1600876519694" />
-    <state width="1834" height="322" key="GridCell.Tab.0.left/0.0.1920.1040/-1309.-2160.2560.1400@0.0.1920.1040" timestamp="1598626774327" />
-    <state width="3077" height="660" key="GridCell.Tab.0.left/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1600093907756" />
-    <state width="1840" height="323" key="GridCell.Tab.0.left/0.0.1920.1040/-1932.-2160.3840.2120/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598954694855" />
-    <state width="2529" height="199" key="GridCell.Tab.0.left/0.0.1920.1040/21.-2160.2560.1400@21.-2160.2560.1400" timestamp="1606327704506" />
-    <state width="2215" height="150" key="GridCell.Tab.0.left/0.0.1920.1040/21.-2160.3072.1688@21.-2160.3072.1688" timestamp="1604682229836" />
-    <state width="1880" height="362" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599829360218" />
-    <state width="2529" height="199" key="GridCell.Tab.0.right" timestamp="1606327704506">
-      <screen x="21" y="-2160" width="2560" height="1400" />
+    <state width="2806" height="290" key="GridCell.Tab.0.bottom/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1620056741395" />
+    <state width="2201" height="275" key="GridCell.Tab.0.bottom/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1624536439166" />
+    <state width="1860" height="141" key="GridCell.Tab.0.bottom/0.0.1920.1040/-252.-2160.2560.1400@0.0.1920.1040" timestamp="1622118362750" />
+    <state width="1860" height="161" key="GridCell.Tab.0.bottom/0.0.1920.1040/-405.-1440.2560.1400@-405.-1440.2560.1400" timestamp="1623079820090" />
+    <state width="1872" height="275" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1624539863642" />
+    <state width="1872" height="275" key="GridCell.Tab.0.center" timestamp="1624539863642">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1858" height="325" key="GridCell.Tab.0.right/0.0.1920.1040/-1179.-2160.3072.1688@0.0.1920.1040" timestamp="1603386508168" />
-    <state width="3077" height="660" key="GridCell.Tab.0.right/0.0.1920.1040/-1179.-2160.3840.2120@-1179.-2160.3840.2120" timestamp="1600876519694" />
-    <state width="1834" height="322" key="GridCell.Tab.0.right/0.0.1920.1040/-1309.-2160.2560.1400@0.0.1920.1040" timestamp="1598626774327" />
-    <state width="3077" height="660" key="GridCell.Tab.0.right/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1600093907756" />
-    <state width="1840" height="323" key="GridCell.Tab.0.right/0.0.1920.1040/-1932.-2160.3840.2120/-1920.0.1920.1040@0.0.1920.1040" timestamp="1598954694855" />
-    <state width="2529" height="199" key="GridCell.Tab.0.right/0.0.1920.1040/21.-2160.2560.1400@21.-2160.2560.1400" timestamp="1606327704506" />
-    <state width="2215" height="150" key="GridCell.Tab.0.right/0.0.1920.1040/21.-2160.3072.1688@21.-2160.3072.1688" timestamp="1604682229836" />
-    <state width="1880" height="362" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599829360218" />
-    <state x="-671" y="-1703" key="NewModule_or_Project.wizard" timestamp="1600069352998">
-      <screen x="-1905" y="-2160" width="3840" height="2120" />
+    <state width="2806" height="290" key="GridCell.Tab.0.center/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1620056741395" />
+    <state width="2201" height="275" key="GridCell.Tab.0.center/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1624536439166" />
+    <state width="1860" height="141" key="GridCell.Tab.0.center/0.0.1920.1040/-252.-2160.2560.1400@0.0.1920.1040" timestamp="1622118362750" />
+    <state width="1860" height="161" key="GridCell.Tab.0.center/0.0.1920.1040/-405.-1440.2560.1400@-405.-1440.2560.1400" timestamp="1623079820090" />
+    <state width="1872" height="275" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1624539863642" />
+    <state width="1872" height="275" key="GridCell.Tab.0.left" timestamp="1624539863642">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="-671" y="-1703" key="NewModule_or_Project.wizard/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1600069352998" />
-    <state x="617" y="224" key="NewModule_or_Project.wizard/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@0.0.1920.1040" timestamp="1599050183541" />
-    <state x="-526" y="-1534" key="SettingsEditor" timestamp="1599228484821">
-      <screen x="-1905" y="-2160" width="3840" height="2120" />
+    <state width="2806" height="290" key="GridCell.Tab.0.left/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1620056741395" />
+    <state width="2201" height="275" key="GridCell.Tab.0.left/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1624536439166" />
+    <state width="1860" height="141" key="GridCell.Tab.0.left/0.0.1920.1040/-252.-2160.2560.1400@0.0.1920.1040" timestamp="1622118362750" />
+    <state width="1860" height="161" key="GridCell.Tab.0.left/0.0.1920.1040/-405.-1440.2560.1400@-405.-1440.2560.1400" timestamp="1623079820090" />
+    <state width="1872" height="275" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1624539863642" />
+    <state width="1872" height="275" key="GridCell.Tab.0.right" timestamp="1624539863642">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="-526" y="-1534" key="SettingsEditor/0.0.1920.1040/-1905.-2160.3840.2120/-1920.0.1920.1040@-1905.-2160.3840.2120" timestamp="1599228484821" />
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>No facets are configured</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>TomoJ_v3</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
-          <last-edited>Maven: asm:asm-commons:3.0</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
+    <state width="2806" height="290" key="GridCell.Tab.0.right/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1620056741395" />
+    <state width="2201" height="275" key="GridCell.Tab.0.right/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1624536439166" />
+    <state width="1860" height="141" key="GridCell.Tab.0.right/0.0.1920.1040/-252.-2160.2560.1400@0.0.1920.1040" timestamp="1622118362750" />
+    <state width="1860" height="161" key="GridCell.Tab.0.right/0.0.1920.1040/-405.-1440.2560.1400@-405.-1440.2560.1400" timestamp="1623079820090" />
+    <state width="1872" height="275" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1624539863642" />
+    <state x="475" y="-1940" key="SettingsEditor" timestamp="1621437374994">
+      <screen x="-252" y="-2160" width="2560" height="1400" />
+    </state>
+    <state x="475" y="-1940" key="SettingsEditor/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1621437374994" />
+    <state x="-844" y="-1819" key="new project wizard" timestamp="1620113999027">
+      <screen x="-1905" y="-2160" width="3072" height="1688" />
+    </state>
+    <state x="-844" y="-1819" key="new project wizard/0.0.1920.1040/-1905.-2160.3072.1688@-1905.-2160.3072.1688" timestamp="1620113999027" />
+    <state x="833" y="-1529" width="672" height="678" key="search.everywhere.popup" timestamp="1621416409366">
+      <screen x="-252" y="-2160" width="2560" height="1400" />
+    </state>
+    <state x="833" y="-1529" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/-252.-2160.2560.1400@-252.-2160.2560.1400" timestamp="1621416409366" />
   </component>
 </project>
