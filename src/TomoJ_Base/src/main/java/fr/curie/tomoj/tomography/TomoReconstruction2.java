@@ -641,7 +641,7 @@ public class TomoReconstruction2 extends ImagePlus {
         double[] err1 = new double[5];
         //setProjectionCenter(ts);
         final double relaxationcoeff= params.relaxationCoefficient;
-        final int update = params.updateNb;
+        final int update = (params.updateNb==0)?ts.getImageStackSize():params.updateNb;
         float factorimg = (float) (relaxationcoeff / update);
         int diffIndex = 0;
         double som = 0;
