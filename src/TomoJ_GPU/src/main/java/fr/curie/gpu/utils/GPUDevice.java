@@ -165,7 +165,8 @@ public class GPUDevice {
             DEVICES = devices.toArray(tmp);
             return DEVICES;
         } catch (Exception e){
-            System.out.println("no OpenCL detected");
+            System.out.println("no OpenCL detected"+e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
