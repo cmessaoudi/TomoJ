@@ -1,9 +1,6 @@
 package fr.curie.tomoj.tomography.projectors;
 
-import fr.curie.gpu.utils.GPUDevice;
-import fr.curie.tomoj.tomography.TiltSeries;
 import fr.curie.tomoj.tomography.TomoReconstruction2;
-import fr.curie.tomoj.tomography.filters.FFTWeighting;
 
 public class FistaProjector3D extends Projector{
     Projector workingProjector;
