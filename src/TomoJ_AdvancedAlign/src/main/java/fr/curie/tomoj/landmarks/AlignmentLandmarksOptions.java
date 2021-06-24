@@ -17,6 +17,7 @@ public class AlignmentLandmarksOptions{
     private double k = 10;
     private boolean correctForHeight = true;
     private boolean allowShifts = true;
+    private boolean allowTiltCorrection=false;
 
     public AlignmentLandmarksOptions(){}
 
@@ -116,16 +117,25 @@ public class AlignmentLandmarksOptions{
         this.allowShifts = allowShifts;
     }
 
+    public boolean isAllowTiltCorrection() {
+        return allowTiltCorrection;
+    }
+
+    public void setAllowTiltCorrection(boolean allowTiltCorrection) {
+        this.allowTiltCorrection = allowTiltCorrection;
+    }
+
     public String toString(){
         return "exhaustiveSearch: "+exhaustiveSearch+" \nexhaustiveSearchIncrement: "+exhaustiveSearchIncrementRotation+"\n" +
                 "MahalanobisWeighting: "+mahalanobisWeight+"\nallow in plane rotation: "+allowInPlaneRotation+"\n" +
                 "deformations:\nshrinkage: "+deformShrinkage+"\nmagnification: "+deformMagnification+"\n" +
                 "scaling X: "+deformScalingX+"\nshearing (delta): "+deformDelta+"\n" +
+                "correct tilts: "+allowTiltCorrection+ "\n"+
                 "number of cycles of removal of landmarks: "+numberOfCycles+"\nk: "+k+"\ncorrect for height: "+correctForHeight;
     }
     public String toCompressedString(){
         return "Mahalanobis_"+mahalanobisWeight+"_psi_"+allowInPlaneRotation+"_" +
                 "shrink_"+deformShrinkage+"_mag_"+deformMagnification+"_" +
-                "scaleX_"+deformScalingX+"_shear_"+deformDelta+"_";
+                "scaleX_"+deformScalingX+"_shear_"+deformDelta+"_"+"_tilt_"+allowTiltCorrection+"_";
     }
 }
