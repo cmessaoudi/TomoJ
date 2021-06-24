@@ -75,6 +75,7 @@ public class CrossCorrelationParameters implements Application {
     public CrossCorrelationParameters(TiltSeries ts) {
         this.ts = ts;
         align = new SingleTiltAlign(ts);
+        $$$setupUI$$$();
     }
 
     public void interrupt() {
@@ -104,44 +105,44 @@ public class CrossCorrelationParameters implements Application {
         expandImagesCheckBox.setSelected(false);
         cumulativeReferenceCheckBox.setSelected(false);
 
-        double radius = ts.getWidth() / 64;
-        ((SpinnerNumberModel) spinnerCutMinRadius.getModel()).setMinimum(0);
-        spinnerCutMinRadius.setValue(2 * radius);
-        ((SpinnerNumberModel) spinnerCutMaxRadius.getModel()).setMinimum(0);
-        spinnerCutMaxRadius.setValue(8 * radius);
-        ((SpinnerNumberModel) spinnerBandpassDropDown.getModel()).setMinimum(0);
-        spinnerBandpassDropDown.setValue(3 * radius);
+        int radius = ts.getWidth() / 64;
+        ((SpinnerNumberModel) spinnerCutMinRadius.getModel()).setMinimum(new Integer(0));
+        spinnerCutMinRadius.setValue(new Integer(2 * radius));
+        ((SpinnerNumberModel) spinnerCutMaxRadius.getModel()).setMinimum(new Integer(0));
+        spinnerCutMaxRadius.setValue(new Integer(8 * radius));
+        ((SpinnerNumberModel) spinnerBandpassDropDown.getModel()).setMinimum(new Integer(0));
+        spinnerBandpassDropDown.setValue(new Integer(3 * radius));
 
-        ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setMinimum(2);
-        ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setValue(2);
-        ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setStepSize(1);
+        ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setMinimum(new Integer(2));
+        ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setValue(new Integer(2));
+        ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setStepSize(new Integer(1));
 
-        ((SpinnerNumberModel) spinnerRoiX.getModel()).setMinimum(1);
-        ((SpinnerNumberModel) spinnerRoiX.getModel()).setMaximum(ts.getWidth());
+        ((SpinnerNumberModel) spinnerRoiX.getModel()).setMinimum(new Integer(1));
+        ((SpinnerNumberModel) spinnerRoiX.getModel()).setMaximum(new Integer(ts.getWidth()));
         int s = 2;
         while (s < ts.getWidth()) s *= 2;
         s /= 2;
-        ((SpinnerNumberModel) spinnerRoiX.getModel()).setValue(Math.max(s, ts.getWidth() / 2));
-        ((SpinnerNumberModel) spinnerRoiX.getModel()).setStepSize(1);
+        ((SpinnerNumberModel) spinnerRoiX.getModel()).setValue(new Integer((Math.max(s, ts.getWidth() / 2))));
+        ((SpinnerNumberModel) spinnerRoiX.getModel()).setStepSize(new Integer(1));
 
-        ((SpinnerNumberModel) spinnerRoiY.getModel()).setMinimum(1);
-        ((SpinnerNumberModel) spinnerRoiY.getModel()).setMaximum(ts.getHeight());
+        ((SpinnerNumberModel) spinnerRoiY.getModel()).setMinimum(new Integer(1));
+        ((SpinnerNumberModel) spinnerRoiY.getModel()).setMaximum(new Integer(ts.getHeight()));
         s = 2;
         while (s < ts.getHeight()) s *= 2;
         s /= 2;
-        ((SpinnerNumberModel) spinnerRoiY.getModel()).setValue(Math.max(s, ts.getHeight() / 2));
-        ((SpinnerNumberModel) spinnerRoiY.getModel()).setStepSize(1);
+        ((SpinnerNumberModel) spinnerRoiY.getModel()).setValue(new Integer(Math.max(s, ts.getHeight() / 2)));
+        ((SpinnerNumberModel) spinnerRoiY.getModel()).setStepSize(new Integer(1));
 
-        ((SpinnerNumberModel) spinnerVariance.getModel()).setMinimum(1);
-        ((SpinnerNumberModel) spinnerVariance.getModel()).setMaximum(ts.getWidth());
-        ((SpinnerNumberModel) spinnerVariance.getModel()).setValue(1);
-        ((SpinnerNumberModel) spinnerVariance.getModel()).setStepSize(1);
+        ((SpinnerNumberModel) spinnerVariance.getModel()).setMinimum(new Integer(1));
+        ((SpinnerNumberModel) spinnerVariance.getModel()).setMaximum(new Integer(ts.getWidth()));
+        ((SpinnerNumberModel) spinnerVariance.getModel()).setValue(new Integer(1));
+        ((SpinnerNumberModel) spinnerVariance.getModel()).setStepSize(new Integer(1));
 
         spinnerExpandTiltAxis.setEnabled(false);
-        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setMinimum(-180);
-        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setMaximum(180);
-        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setValue(ts.getTiltAxis());
-        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setStepSize(0.1);
+        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setMinimum(new Double(-180));
+        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setMaximum(new Double(180));
+        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setValue(new Double(ts.getTiltAxis()));
+        ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).setStepSize(new Double(1));
         tiltAxis = ts.getTiltAxis();
 
     }
@@ -648,14 +649,7 @@ public class CrossCorrelationParameters implements Application {
     }
 
     private void createUIComponents() {
-        spinnerExpandTiltAxis = new JSpinner(new SpinnerNumberModel(0, -180, 180, 0.001));
-    }
-
-    {
-// GUI initializer generated by IntelliJ IDEA GUI Designer
-// >>> IMPORTANT!! <<<
-// DO NOT EDIT OR ADD ANY CODE HERE!
-        $$$setupUI$$$();
+        spinnerExpandTiltAxis = new JSpinner(new SpinnerNumberModel(0.0, -180.0, 180.0, 1.0));
     }
 
     /**
