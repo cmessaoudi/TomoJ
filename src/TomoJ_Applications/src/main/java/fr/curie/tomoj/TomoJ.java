@@ -1,6 +1,7 @@
 package fr.curie.tomoj;
 
 import fr.curie.InputOutput.MRC_Reader;
+import fr.curie.InputOutput.MRC_Writer;
 import fr.curie.InputOutput.Spider_Reader;
 import fr.curie.tomoj.application.*;
 import fr.curie.tomoj.tomography.TiltSeries;
@@ -15,6 +16,7 @@ import ij.Prefs;
 import ij.io.FileSaver;
 import ij.io.Opener;
 import ij.process.ImageProcessor;
+import ij.process.StackConverter;
 import org.jocl.Sizeof;
 
 import java.awt.geom.Point2D;
@@ -46,6 +48,7 @@ public class TomoJ {
 
         }else imp=new ImagePlus(path);
         double[] angles = labels2Angles(imp.getImageStack());
+        if (imp.getType() != ImagePlus.GRAY32) new StackConverter(imp).convertToGray32();
         ts = new TiltSeries(imp);
         ts.setFileInfo(imp.getOriginalFileInfo());
         if (angles != null) ts.setTiltAngles(angles);
@@ -91,6 +94,7 @@ public class TomoJ {
                 "-loadAngles filepath: load the angles from a file\n" +
                 "-loadTransforms filepath binning: load transforms from a file\n" +
                 "-loadlandmarks file path binning: load landmarks from a file\n" +
+                "-savealignedimages: save the images after application of current alignment\n"+
                 "-xcorr options: correct shift using cross-correlation (see options below)\n" +
                 "-generatelandmarks options: generates landmarks chains automatically using local minima/maxima detection and patch tracking (see options below)\n" +
                 "-alignlandmarks options: align images using landmarks chains (see options below)\n" +
@@ -327,7 +331,7 @@ public class TomoJ {
                 cc.setParameters(params.toArray());
                 cc.run();
                 String savedir = ts.getOriginalFileInfo().directory;
-                String imgname = ts.getTitle();
+                String imgname = ts.getShortTitle();
                 System.out.println("saving in directory: " + savedir);
                 System.out.println("saving prefix: " + imgname);
                 CommandWorkflow.saveTransform(savedir, imgname + "_xcorr.txt", ts, false);
@@ -360,12 +364,19 @@ public class TomoJ {
                 al.setParameters(params.toArray());
                 al.run();
                 String savedir = ts.getOriginalFileInfo().directory;
-                String imgname = ts.getTitle();
+                String imgname = ts.getShortTitle();
                 System.out.println("saving in directory: " + savedir);
                 System.out.println("saving prefix: " + imgname);
                 CommandWorkflow.saveLandmarks(savedir, imgname + "_landmarksAfterAlignment.txt", ts);
                 CommandWorkflow.saveTransform(savedir,imgname+"_alignment.csv",ts,false);
                 storeAction(al);
+            }
+            if (args[a].startsWith("-savealignedimages")) {
+                String savedir = ts.getOriginalFileInfo().directory;
+                if (savedir==null) savedir="";
+                String imgname = ts.getShortTitle();
+                System.out.println("saving in directory: " + savedir);
+                exportAlignedImages(ts, savedir, imgname+"_ali.mrc");
             }
             if (args[a].startsWith("-wbp")) {
                 ArrayList<String> params=new ArrayList<String>();
@@ -526,5 +537,34 @@ public class TomoJ {
               System.out.print(" / " + angles[i]);
           } */
         return angles;
+    }
+
+    public static void exportAlignedImages(TiltSeries ts, String dir, String filename) {
+        String nameLC = filename.toLowerCase();
+        if (nameLC.endsWith(".sel")) {
+            IJ.runPlugIn(ts, "Sel_Writer", dir + filename);
+        } else {
+            ImageStack is = new ImageStack(ts.getWidth(), ts.getHeight());
+            for (int i = 0; i < ts.getStackSize(); i++) {
+                is.addSlice("" + ts.getTiltAngle(i), ts.getPixels(i));
+                IJ.showStatus("creating aligned stack " + (i + 1) + "/" + ts.getStackSize());
+            }
+            ImagePlus imp = new ImagePlus(filename, is);
+
+            if (nameLC.endsWith(".mrc")) {
+                MRC_Writer writer=new MRC_Writer();
+                String path=(dir==null)?filename:dir+filename;
+                writer.setup(dir+filename, imp);
+                writer.run(imp.getProcessor());
+                //IJ.runPlugIn(imp, "MRC_Writer", dir + filename);
+            } else if (nameLC.endsWith(".xmp") || nameLC.endsWith(".spi")) {
+                IJ.runPlugIn(imp, "Spider_Writer", dir + filename);
+            } else {
+                imp.show();
+                IJ.selectWindow(filename);
+                IJ.save(dir + filename);
+                imp.close();
+            }
+        }
     }
 }
