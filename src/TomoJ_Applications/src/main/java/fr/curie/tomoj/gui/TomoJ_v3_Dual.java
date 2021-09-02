@@ -4,6 +4,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import fr.curie.tomoj.align.AffineAlignment;
+import fr.curie.utils.align.AlignImages;
 import ij.*;
 import ij.gui.*;
 import ij.io.OpenDialog;
@@ -56,6 +57,8 @@ public class TomoJ_v3_Dual implements PlugIn {
     private JButton runButton;
     private JPanel applicationPanel;
     private JButton manualAlignmentButton;
+    private JSpinner spinnerCommon;
+    private JButton removeAlignmentButton;
     private JTabbedPane tabbedPane1;
 
     CustomStackWindowDual window;
@@ -81,8 +84,8 @@ public class TomoJ_v3_Dual implements PlugIn {
         alignZeroTiltImagesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                T12 = performPreAlignDual();
-                System.out.println(T12);
+                performPreAlignDual();
+                //System.out.println(T12);
 
                 //tsList.get(0).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
                 //tsList.get(1).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
@@ -91,7 +94,7 @@ public class TomoJ_v3_Dual implements PlugIn {
 
                 //loadLandmarks("Z:\\images_test\\Data_test_Dual\\", "K1_MTs_1a_points.txt", tp1, 1.0);
                 //loadLandmarks("Z:\\images_test\\Data_test_Dual\\", "K1_MTs_1b_points2.txt", tp2, 1.0);
-                if (stp == null) initSuperTomoJPoints();
+                //if (stp == null) initSuperTomoJPoints();
                 //CommandWorkflow.loadTransformsDual("Z:\\images_test\\Data_test_Dual\\", new String[]{"K1_MTs_1a_var_transf.csv", "K1_MTs_1b_var_transf.csv"}, stp, 1, false, true);
 
             }
@@ -159,6 +162,9 @@ public class TomoJ_v3_Dual implements PlugIn {
                         UserAction ua = new UserAction(currentAppli.name(), params,
                                 currentAppli.name(), false);
                         log.add(ua);
+                        if (currentAppli instanceof ReconstructionApplication) {
+                            IJ.selectWindow(((ReconstructionApplication) currentAppli).getReconstruction().getID());
+                        }
                     }
                 };
                 T.start();
@@ -205,6 +211,36 @@ public class TomoJ_v3_Dual implements PlugIn {
                 if (manualAlignZeroTilt == null) manualAlignZeroTilt = new AlignDualZeroTiltManual(tsList);
                 else manualAlignZeroTilt.initTiltSeries(tsList);
                 setApplication(manualAlignZeroTilt);
+                UserAction ua = new UserAction("zero tilt manual alignment",
+                        "",
+                        "resetAll", false);
+                currentDisplay.getLog().add(ua);
+            }
+        });
+        spinnerCommon.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+
+            }
+        });
+        removeAlignmentButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (TiltSeriesPanel tsp : tsList) {
+                    TiltSeries ts = tsp.getTiltSeries();
+                    ts.updatePoint();
+                    Roi toto = null;
+                    ts.setRoi(toto);
+                    ts.setAlignment(new AffineAlignment(ts));
+                    IJ.showStatus(ts.getTitle() + " reset of transforms finished");
+                    ts.combineTransforms(true);
+                    ts.setSlice(ts.getCurrentSlice());
+                    ts.updateAndDraw();
+                }
+                UserAction ua = new UserAction("reset all transforms",
+                        "",
+                        "resetAll", false);
+                currentDisplay.getLog().add(ua);
             }
         });
     }
@@ -235,15 +271,29 @@ public class TomoJ_v3_Dual implements PlugIn {
         return stp;
     }
 
-    AffineTransform performPreAlignDual() {
+    void performPreAlignDual() {
+
+        TiltSeries tsref = tsList.get(0).getTiltSeries();
+        tsref.setAlignmentRoi(tsref.getWidth(), tsref.getHeight());
+        float[] ref = tsref.getPixelsForAlignment(tsref.getZeroIndex());
+
+        for (int i = 1; i < tsList.size(); i++) {
+            TiltSeries tsmov = tsList.get(i).getTiltSeries();
+            tsmov.setAlignmentRoi(tsref.getWidth(), tsref.getHeight());
+            float[] mov = tsmov.getPixelsForAlignment(tsmov.getZeroIndex());
+
+            AffineTransform T = AlignImages.align2Images(ref, mov, tsref.getWidth(), tsref.getHeight());
+
+            ((AffineAlignment) tsmov.getAlignment()).setZeroTransform(T);
+        }
+
+/*
         TiltSeries ts1 = tsList.get(0).getTiltSeries();
         TiltSeries ts2 = tsList.get(1).getTiltSeries();
         ts1.setSlice(ts1.getZeroIndex() + 1);
         ts2.setSlice(ts2.getZeroIndex() + 1);
         AffineTransform zeroTbkp = new AffineTransform(ts2.getAlignment().getZeroTransform());
         System.out.println("zero T before prealign :" + zeroTbkp);
-
-
         final Align2ImagesDialog dialog = new Align2ImagesDialog(new ImagePlus("ts1", ts1.getProcessor().duplicate()), new ImagePlus("ts2", ts2.getProcessor().duplicate()));
         dialog.pack();
         dialog.setTitle("prealign");
@@ -274,6 +324,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         T.start();
 
         return T12;
+        */
 
 
     }
@@ -502,7 +553,7 @@ public class TomoJ_v3_Dual implements PlugIn {
             public void actionPerformed(ActionEvent e) {
                 TiltSeries ts = currentDisplay.getTiltSeries();
                 AnglesForTiltSeries.ask4Angles(ts);
-                ts.sortImages(true);
+                //ts.sortImages(true);
             }
         });
         tiltMenu.add(setTiltAngles);
@@ -904,7 +955,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         }
         System.out.println("get angles done");
         TiltSeries ts = new TiltSeries(imp, tiltangles);
-        ts.sortImages(true);
+        //ts.sortImages(true);
         System.out.println("create tilt series done");
         TomoJPoints tp = new TomoJPoints(ts);
         System.out.println("create points done");
@@ -995,28 +1046,33 @@ public class TomoJ_v3_Dual implements PlugIn {
         applicationPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panelroot.add(applicationPanel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
         panelroot.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         alignZeroTiltImagesButton = new JButton();
         alignZeroTiltImagesButton.setText("align zero tilt images");
-        panel2.add(alignZeroTiltImagesButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(alignZeroTiltImagesButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        panel2.add(spacer1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(spacer1, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         combineLandmarksButton = new JButton();
         combineLandmarksButton.setText("combine landmarks");
-        panel2.add(combineLandmarksButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(combineLandmarksButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         showOnlyCommonLandmarksCheckBox = new JCheckBox();
         showOnlyCommonLandmarksCheckBox.setText("show Only Common Landmarks");
-        panel2.add(showOnlyCommonLandmarksCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(showOnlyCommonLandmarksCheckBox, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         alignAllButton = new JButton();
         alignAllButton.setText("align all");
-        panel2.add(alignAllButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(alignAllButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         reconstructAllButton = new JButton();
         reconstructAllButton.setText("reconstruct all");
-        panel2.add(reconstructAllButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(reconstructAllButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         manualAlignmentButton = new JButton();
         manualAlignmentButton.setText("manual alignment");
-        panel2.add(manualAlignmentButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(manualAlignmentButton, new GridConstraints(1, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        spinnerCommon = new JSpinner();
+        panel2.add(spinnerCommon, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        removeAlignmentButton = new JButton();
+        removeAlignmentButton.setText("remove alignment");
+        panel2.add(removeAlignmentButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
