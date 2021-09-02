@@ -417,7 +417,7 @@ public abstract class ProjectorGPU extends Projector {
 //            eulers.set(currentOriProjIndex, ts.getEulerMatrix(index));
 //        }
         kernelusage = ONE_KERNEL_PROJ_DIFF;
-        eulers.set(currentOriProjIndex, ts.getAlignment().getEulerMatrix(index));
+        eulers.set(currentOriProjIndex, ts.getAlignment().getEulerMatrix(ts,index));
         if (weightingFilter != null) kernelusage = ONE_KERNEL_PROJ_DIFF;
         ImageProcessor proj = (kernelusage == ONE_KERNEL_PROJ_DIFF_WITH_ALIGNMENT) ? ts.getImageStack().getProcessor(index + 1) : new FloatProcessor(ts.getWidth(), ts.getHeight(), ts.getPixels(index));
         device.writeImage2D(oriProjsIndex.get(currentOriProjIndex), (float[]) proj.getPixels(), projectionWidth, projectionHeight);
