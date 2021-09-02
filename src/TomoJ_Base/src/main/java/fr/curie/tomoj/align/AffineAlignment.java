@@ -386,6 +386,13 @@ public class AffineAlignment implements Alignment {
         }
         return eulerMatrices[index];
     }
+    public DoubleMatrix2D getEulerMatrix(TiltSeries ts, int index) {
+        if (eulerMatrices[index] == null) {
+            double ta = (tiltAxisVertical) ? 0 : tiltaxis;
+            eulerMatrices[index] = MatrixUtils.eulerAngles2Matrix(ta, ts.getTiltAngle(index), -ta);
+        }
+        return eulerMatrices[index];
+    }
 
     public void setEulerMatrix(int index, DoubleMatrix2D eulerMatrix) {
         eulerMatrices[index] = eulerMatrix;
