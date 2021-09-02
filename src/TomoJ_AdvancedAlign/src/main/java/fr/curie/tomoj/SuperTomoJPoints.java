@@ -131,7 +131,7 @@ public class SuperTomoJPoints {
                 Point2D[] p = new Point2D[nImages];
                 if (tp2.getProperLandmarks() != null) {
                     if (tp2.isProperLandmark(i)) {
-                        System.arraycopy(lm2.get(i), 0, p, nImagesi.get(j), nImagesi.get(j));
+                        System.arraycopy(lm2.get(i), 0, p, nImagesi.get(j), nImagesi.get(j+1));
                         landmarks.add(p);
                     }
                 }
