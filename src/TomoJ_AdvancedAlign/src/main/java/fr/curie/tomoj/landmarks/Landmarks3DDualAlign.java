@@ -440,6 +440,8 @@ public class Landmarks3DDualAlign {
 
         stp.getTomoJPoints(0).setReprojectedLandmarks(bestPreviousAlignmentDeform.getReprojectedLandmarks(0));
         stp.getTomoJPoints(1).setReprojectedLandmarks(bestPreviousAlignmentDeform.getReprojectedLandmarks(1));
+        stp.getTomoJPoints(0).getTiltSeries().setTomoJPoints(stp.getTomoJPoints(0));
+        stp.getTomoJPoints(1).getTiltSeries().setTomoJPoints(stp.getTomoJPoints(1));
 
         bestPreviousAlignmentDeform.correctRjsPositionforTomogram(zheight);
         timeTotal.stop();
