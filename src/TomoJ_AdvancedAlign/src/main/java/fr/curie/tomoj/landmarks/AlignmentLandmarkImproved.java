@@ -31,8 +31,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static java.lang.Math.toRadians;
-
 /**
  * Created by cedric on 15/10/2014.
  */
@@ -382,6 +380,8 @@ public class AlignmentLandmarkImproved implements Alignment {
         double previousError = Double.MAX_VALUE;
         int consecutiveIncrease = 0;
         //outputLine("start loop");
+        int iteStartTilt=10;
+        int iteStartDeform=(options.isAllowTiltCorrection())?20:10;
         do {
             if (interrupt) return Double.MAX_VALUE;
             //compute Wj
@@ -425,8 +425,8 @@ public class AlignmentLandmarkImproved implements Alignment {
             }
             if (interrupt) return Double.MAX_VALUE;
             //if correct tilt
-            if(allowDeformation && options.isAllowTiltCorrection() && iteration > 10){
-                System.out.println("update theta");
+            if(options.isAllowTiltCorrection() && iteration > iteStartTilt){
+                //System.out.println("update theta");
                 updateRjs();
                 copyCurrentToPrevious();
                 compute_eijs();
@@ -434,7 +434,7 @@ public class AlignmentLandmarkImproved implements Alignment {
             }
             //if correction of deformation
             if (interrupt) return Double.MAX_VALUE;
-            if (allowDeformation && iteration > 10) {
+            if (allowDeformation && iteration > iteStartDeform) {
                 //stepTime.start();
                 computeDeformation(options.isDeformMagnification(),options.isDeformShrinkage(),options.isDeformScalingX(),options.isDeformDelta(),false);
                 //stepTime.stop(); timeDeform+=(stepTime.delay());
@@ -472,7 +472,7 @@ public class AlignmentLandmarkImproved implements Alignment {
             //stepTime.stop(); timeErrors+=stepTime.delay();
             if (verbose) System.out.println("error : " + currentError);
             //finish= (iteration>20||currentError>previousError);
-            finish = ((consecutiveIncrease > 2) || (iteration > 1000) || (Math.abs((currentError - previousError) / previousError) < 0.001)) && iteration > 20;
+            finish = ((consecutiveIncrease > 2) || (iteration > 1000) || (Math.abs((currentError - previousError) / previousError) < 0.001)) && iteration > 30;
             if (currentError < bestError) bestError = currentError;
 
             if (currentError < previousError) consecutiveIncrease = 0;
@@ -1591,7 +1591,7 @@ public class AlignmentLandmarkImproved implements Alignment {
                     update_thetai(ii);
                 }
             }));
-            if(ii==0)System.out.println("update thetais("+ii+") after : current:"+currentAi.get(i).getTheta()+" previous:"+previousAi.get(i).getTheta());
+            //if(ii==0)System.out.println("update thetais("+ii+") after : current:"+currentAi.get(i).getTheta()+" previous:"+previousAi.get(i).getTheta());
 
         }
         for (Future fut : futures) {
@@ -1602,6 +1602,11 @@ public class AlignmentLandmarkImproved implements Alignment {
             }
         } //**/
         //compute average
+        double avgthetai=0;
+        for(ProjectionMatrix tmp:currentAi){avgthetai+=tmp.theta;}
+        avgthetai/=currentAi.size();
+        //correct values
+        for(ProjectionMatrix tmp:currentAi){tmp.theta -= avgthetai;}
 
     }
 
@@ -1918,20 +1923,27 @@ public class AlignmentLandmarkImproved implements Alignment {
             System.out.println("update theta : Ai is null!!!!");
             return;
         }
+        double thetai_bkp=Ai.theta;
+        double current_thetai = Ai.theta;
+
+
         DoubleMatrix2D HXi=Ai.getXi().viewPart(0,0,2,3);
         DoubleMatrix2D HXiLXiR = Ai.getXiL().zMult(Ai.getXiR(),null).viewPart(0,0,2,3);
         DoubleMatrix2D HXiLPXiR = Ai.getXiL().zMult(P,null).zMult(Ai.getXiR(),null).viewPart(0,0,2,3);
 
 
-        double current_thetai = Ai.theta;
+
         double A= 0;
         DoubleMatrix2D HXirj = DoubleFactory2D.dense.make(2, 1);
         DoubleMatrix2D HXiLXiRrj = DoubleFactory2D.dense.make(2, 1);
         double B = 0;
         DoubleMatrix2D HXiLPXiRrj  = DoubleFactory2D.dense.make(2, 1);
         ArrayList<DoubleMatrix2D> tmp = null;
+        double K = 0;
+        DoubleMatrix2D pij_di  = DoubleFactory2D.dense.make(2, 1);
         for (int j = 0; j < nLandmarks; j++) {
             if (tp.getPoint(j, i) != null && Wj.get(j) != null) {
+                Point2D pij = tp.getCenteredPoint(j, i);
                 HXi.zMult(current_rj.get(j),HXirj);
                 HXiLXiR.zMult(current_rj.get(j),HXiLXiRrj);
                 HXiLPXiR.zMult(current_rj.get(j),HXiLPXiRrj);
@@ -1939,9 +1951,19 @@ public class AlignmentLandmarkImproved implements Alignment {
                 A+=tmp.get(0).getQuick(0,0);
                 tmp=MatrixUtils.scalarAndNorm2(HXirj,Wj.get(j),HXiLPXiRrj,tmp);
                 B+=tmp.get(0).getQuick(0,0);
+
+                pij_di.setQuick(0, 0, pij.getX());
+                pij_di.setQuick(0, 1, pij.getY());
+                pij_di.assign(current_di.get(i), DoubleFunctions.minus);
+                tmp=MatrixUtils.scalarAndNorm2(HXirj,Wj.get(j),pij_di,tmp);
+                K+=tmp.get(0).getQuick(0,0);
             }
         }
-        double K= A*Math.cos(Math.toRadians(current_thetai)) + B*Math.sin(Math.toRadians(current_thetai));
+        /*if(i==0 ){
+            current_thetai+=10;
+            System.out.println("add 10 to thetai "+Ai.theta+" --> "+current_thetai);
+        }*/
+        //double K= A*Math.cos(Math.toRadians(current_thetai)) + B*Math.sin(Math.toRadians(current_thetai));
         double num=Math.sqrt(A*A + B*B - (K*K));
         double denom=A*A + B*B;
         double x1= (A*K + B*num )/denom;
@@ -1951,15 +1973,15 @@ public class AlignmentLandmarkImproved implements Alignment {
 
         double theta1=Math.toDegrees(Math.atan2(y1,x1));
         double theta2=Math.toDegrees(Math.atan2(y2,x2));
-        if(i==0) System.out.println("update thetai ("+current_thetai+"): compute errors "+theta1+"  "+theta2);
+        //if(i==0) System.out.println("update thetai ("+current_thetai+", "+Ai.theta+"): compute errors "+theta1+"  "+theta2);
         if(Double.isNaN(theta1)||Double.isNaN(theta2)) return;
         double error1 = Math.abs(theta1 - current_thetai);
         double error2 = Math.abs(theta2 - current_thetai);
 
         if(error1<error2) {
-            currentAi.get(i).setTheta(theta1);
+            Ai.setTheta(theta1);
         }else{
-            currentAi.get(i).setTheta(theta2);
+            Ai.setTheta(theta2);
         }
     }
 
@@ -2471,256 +2493,6 @@ public class AlignmentLandmarkImproved implements Alignment {
    }
 
 
-
-
-    public class ProjectionMatrix {
-        double theta;
-        DoubleMatrix2D Ai;
-        public double psii;
-        DoubleMatrix2D Rthetauaxis;
-        double rot, tilt;
-        DoubleMatrix2D Di;
-        DoubleMatrix2D Ri;
-        public double mi, ti, si, deltai;
-        boolean computeAi = true;
-        DoubleMatrix2D RiDi;
-        DoubleMatrix2D RiDi_inv;
-        DoubleMatrix2D euler;
-        DoubleMatrix2D Xi;
-        DoubleMatrix2D XiL;
-        DoubleMatrix2D XiR;
-        DoubleMatrix1D axis;
-
-        /**
-         * @param theta tilt angle of image corresponding to this projection Matrix (image i)
-         */
-        ProjectionMatrix(double theta) {
-            this.theta = - theta;
-            mi = 1;
-            ti = 1;
-            si = 1;
-            deltai = 0;
-            //computeAi();
-            Ai = DoubleFactory2D.dense.make(2, 3);
-            Di = DoubleFactory2D.dense.make(3, 3);
-            Ri = DoubleFactory2D.dense.make(3, 3);
-            Rthetauaxis = DoubleFactory2D.dense.make(3, 3);
-        }
-
-        public ProjectionMatrix copy() {
-            ProjectionMatrix result = new ProjectionMatrix(this.theta);
-            result.copy(this);
-            return result;
-        }
-
-        public void copy(ProjectionMatrix other) {
-            theta=other.theta;
-            mi = other.mi;
-            ti = other.ti;
-            si = other.si;
-            deltai = other.deltai;
-            psii = other.psii;
-            Rthetauaxis.assign(other.Rthetauaxis);
-            axis= other.axis;
-            Ai.assign(other.Ai);
-            Di.assign(other.Di);
-            Ri.assign(other.Ri);
-        }
-
-        public void setUaxis(double uaxis_alpha, double uaxis_beta) {
-            rot = uaxis_alpha;
-            tilt = uaxis_beta;
-            axis = MatrixUtils.eulerDirection(toRadians(uaxis_alpha), toRadians(uaxis_beta));
-            //Rthetauaxis = MatrixUtils.rotation3DMatrix(-theta, axis);      //modified version
-            Rthetauaxis = MatrixUtils.rotation3DMatrix(theta, axis);
-            euler=null;
-            //System.out.println("axis ("+uaxis_alpha+", "+uaxis_beta+") : "+axis+"\ntheta: "+theta+"\nRthetauaxis: "+Rthetauaxis);
-        }
-
-        public double getTheta() {
-            return theta;
-        }
-
-        public void setTheta(double theta) {
-            this.theta = theta;
-            Rthetauaxis = MatrixUtils.rotation3DMatrix(theta, axis);
-            //Xi=null;
-            //computeAi=true;
-            euler=null;
-        }
-
-        public void clearAi() {
-            Xi=null;
-            XiR=null;
-            XiL=null;
-            computeAi = true;
-        }
-
-        public DoubleMatrix2D getAi() {
-            if (computeAi) computeAi();
-            return Ai;
-        }
-
-
-        public DoubleMatrix2D getRiDi(){
-            if(computeAi) computeAi();
-            if(RiDi==null){
-                computeRiDi();
-            }
-
-            return RiDi;
-        }
-
-        public void computeRiDi(){
-            if(computeAi) computeAi();
-            DoubleMatrix2D Ri = DoubleFactory2D.dense.make(3, 3);
-            DoubleMatrix2D Rpsi = MatrixUtils.rotation3DMatrixZ(psii);
-            Rpsi.zMult(Rthetauaxis, Ri);
-            RiDi = Ri.zMult(Di, null);
-
-        }
-
-        public void resetEuler(){
-            euler=null;
-        }
-        public DoubleMatrix2D getEuler(){
-            if(euler!=null) return euler;
-            //DoubleMatrix1D axis = MatrixUtils.eulerDirection(toRadians(rot), toRadians(tilt));
-            //DoubleMatrix2D Rthetauaxis = MatrixUtils.rotation3DMatrix(theta, axis);
-
-            DoubleMatrix2D Rz=MatrixUtils.rotation3DMatrixZ(rot-90);
-            //DoubleMatrix2D Rz_inv=new DenseDoubleAlgebra().inverse(Rz);
-
-            DoubleMatrix2D Ri = DoubleFactory2D.dense.make(3, 3);
-            DoubleMatrix2D Rpsi = MatrixUtils.rotation3DMatrixZ(psii);
-            Rpsi.zMult(Rthetauaxis, Ri);
-            //Ri=new DenseDoubleAlgebra().inverse(Ri);
-            euler=Rpsi.zMult(Rthetauaxis.zMult(getDi().zMult(Rz,null),null),null);
-            //euler=Rpsi.zMult(Rthetauaxis.zMult(getDi(),null),null);
-            //euler=Rthetauaxis.zMult(getDi(),null);
-            //euler=getRiDi();
-            //euler=new DenseDoubleAlgebra().inverse(euler);
-            return euler;
-            /*DoubleMatrix2D Rz=MatrixUtils.rotation3DMatrixZ(rot-90);
-            return euler.zMult(Rz,null);*/
-        }
-
-        public DoubleMatrix2D getEulerInverse(){
-            if(computeAi) computeAi();
-            if(RiDi_inv==null) RiDi_inv=new DenseDoubleAlgebra().inverse(Di);
-            return RiDi_inv;
-        }
-
-        synchronized public void computeAi() {
-            //if (Ai == null) Ai = DoubleFactory2D.dense.make(2, 3);
-            computeDi();
-            computeRi();
-            RiDi = Ri.zMult(Di, null);
-            Ai.assign(RiDi.viewPart(0, 0, 2, 3));
-            computeAi = false;
-            Xi=null;
-            XiL=null;
-            XiR=null;
-
-            //RiDi=null;
-            //RiDi_inv=null;
-        }
-
-
-        public void computeDi() {
-            if (Di == null) Di = DoubleFactory2D.dense.make(3, 3);
-            Di.assign(0);
-            Di.setQuick(0, 0, mi * si * Math.cos(Math.toRadians(deltai)));
-            Di.setQuick(1, 0, mi * si * Math.sin(Math.toRadians(deltai)));
-            Di.setQuick(1, 1, mi);
-            Di.setQuick(2, 2, mi * ti);
-            RiDi_inv=null;
-            RiDi=null;
-        }
-
-        public void computeRi() {
-            //System.out.println("computeRi");
-            if (Ri == null) Ri = DoubleFactory2D.dense.make(3, 3);
-            DoubleMatrix2D Rpsi = MatrixUtils.rotation3DMatrixZ(psii);
-            Rpsi.zMult(Rthetauaxis, Ri);
-            RiDi_inv=null;
-            RiDi=null;
-            //System.out.println("Rpsi="+Rpsi+" \nRThetaUxais="+Rthetauaxis+" \nRi="+Ri);
-        }
-
-        public void computeXi(){
-            if (Xi == null) {
-                Xi = DoubleFactory2D.dense.make(3, 3);
-                XiL = DoubleFactory2D.dense.make(3, 3);
-                XiR = DoubleFactory2D.dense.make(3, 3);
-            }
-            DoubleMatrix2D Rpsi = MatrixUtils.rotation3DMatrixZ(psii);
-            DoubleMatrix2D Rbeta=MatrixUtils.alignWithZ(axis);
-            Rpsi.zMult(Rbeta.viewDice(), XiL);
-            Rbeta.zMult(getDi(),XiR);
-            DoubleMatrix2D P = DoubleFactory2D.dense.make(3, 3);
-            P.setQuick(1, 0, 1);
-            P.setQuick(0, 1, -1);
-            P.setQuick(2, 2, 1);
-            DoubleMatrix2D HtH = DoubleFactory2D.dense.make(3, 3);
-            HtH.setQuick(0, 0, 1);
-            HtH.setQuick(1, 1, 1);
-            DoubleMatrix2D tmp = XiL.zMult(P,null).zMult(MatrixUtils.rotation3DMatrixZ(theta),null).zMult(HtH,null).zMult(XiR,null);
-            Xi.assign(tmp);
-        }
-
-        public DoubleMatrix2D getRpsi(){
-            return MatrixUtils.rotation3DMatrixZ(psii);
-        }
-
-        public DoubleMatrix2D getRthetauaxis(){
-            return Rthetauaxis;
-        }
-
-        public DoubleMatrix2D getRi() {
-            if (Ri == null) computeRi();
-            return Ri;
-        }
-
-        public DoubleMatrix2D getHRi() {
-            if (Ri == null) computeRi();
-            return Ri.viewPart(0, 0, 2, 3);
-
-        }
-
-        public DoubleMatrix2D getDi() {
-            if (Di == null) computeDi();
-            return Di;
-        }
-
-        public double getRot() {
-            return rot;
-        }
-
-        public double getTilt() {
-            return tilt;
-        }
-
-        public DoubleMatrix2D getXi() {
-            if(Xi==null) computeXi();
-            return Xi;
-        }
-
-        public DoubleMatrix2D getXiL() {
-            if(XiL==null) computeXi();
-            return XiL;
-        }
-
-        public DoubleMatrix2D getXiR() {
-            if(XiR==null) computeXi();
-            return XiR;
-        }
-
-        public String toString(){
-            return "theta="+theta+" psii="+psii+"\nmi="+mi+" ti="+ti+"\nsi="+si+" deltai="+deltai+"\nuaxis["+rot+", "+tilt+"]";
-        }
-    }
-
     @Override
     public AffineTransform[] getTransforms() {
         AffineTransform[] result = new AffineTransform[tp.getTiltSeries().getImageStackSize()];
@@ -2752,7 +2524,12 @@ public class AlignmentLandmarkImproved implements Alignment {
     @Override
     public DoubleMatrix2D getEulerMatrix(int index) {
         if(tp.getTiltSeries().getAlignMethodForReconstruction()==TiltSeries.ALIGN_PROJECTOR)return currentAi.get(index).getEuler();
-        return MatrixUtils.eulerAngles2Matrix(0, tp.getTiltSeries().getTiltAngle(index), 0);
+        return MatrixUtils.eulerAngles2Matrix(0, currentAi.get(index).getTheta(), 0);
+    }
+
+    public DoubleMatrix2D getEulerMatrix(TiltSeries ts, int index) {
+        if(ts.getAlignMethodForReconstruction()==TiltSeries.ALIGN_PROJECTOR)return currentAi.get(index).getEuler();
+        return MatrixUtils.eulerAngles2Matrix(0, currentAi.get(index).getTheta(), 0);
     }
 
     @Override
