@@ -17,7 +17,7 @@ public class AlignmentLandmarksOptions{
     private double k = 10;
     private boolean correctForHeight = true;
     private boolean allowShifts = true;
-    private boolean allowTiltCorrection=false;
+    private boolean allowTiltCorrection=true;
 
     public AlignmentLandmarksOptions(){}
 
