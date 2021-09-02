@@ -109,9 +109,10 @@ public class VoxelProjector3D extends Projector {
      * @param index index of projection in TiltSeries
      */
     public void addProjection(int index) {
-        //System.out.println("adding projection "+index);
+        //System.out.println("voxel projector adding projection "+index);
         oriProjs.add(new FloatProcessor(ts.getWidth(), ts.getHeight(), ts.getPixels(index)));
-        eulers.add(ts.getAlignment().getEulerMatrix(index));
+        eulers.add(ts.getAlignment().getEulerMatrix(ts,index));
+        if(oriProjs.get(oriProjs.size()-1).getPixels()==null) System.out.println("projection is null "+index);
 //        System.out.println("Euler (add project) :" + ts.getEulerMatrix(index)); // TEST
         //System.out.println("Iteration: " + currentIteration + 1); // TEST
     }
@@ -412,6 +413,7 @@ public class VoxelProjector3D extends Projector {
      */
     public static double difference(ImageProcessor exp, ImageProcessor th, ImageProcessor norm, ImageProcessor diff, double factor) {
         float[] exppixs = (float[]) exp.getPixels();
+        //System.out.println("voxel proctor3D expix "+((exppixs!=null)?""+exppixs.length:"null"));
         float[] thpixs = (float[]) th.getPixels();
         float[] npixs = (float[]) norm.getPixels();
         final float[] dpix = (float[]) diff.getPixels();
