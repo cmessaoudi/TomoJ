@@ -121,7 +121,7 @@
               <text value="Display combined image"/>
             </properties>
           </component>
-          <grid id="b1f46" binding="panelOptionDisplay" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="b1f46" binding="panelOptionDisplay" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="true"/>
@@ -149,9 +149,25 @@
               </component>
               <hspacer id="5883e">
                 <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
+              <component id="def03" class="javax.swing.JRadioButton" binding="firstRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="first"/>
+                </properties>
+              </component>
+              <component id="2f158" class="javax.swing.JRadioButton" binding="secondRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="second"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>
@@ -310,6 +326,8 @@
     <group name="buttonGroup1">
       <member id="40692"/>
       <member id="19757"/>
+      <member id="def03"/>
+      <member id="2f158"/>
     </group>
   </buttonGroups>
 </form>

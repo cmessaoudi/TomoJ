@@ -47,6 +47,8 @@ public class AlignDualZeroTiltManual implements Application {
     private JLabel labelReferenceTiltSeries;
     private JButton nextButton;
     private JLabel labelAligned;
+    private JRadioButton firstRadioButton;
+    private JRadioButton secondRadioButton;
 
 
     protected ArrayList<TiltSeriesPanel> tsList;
@@ -58,6 +60,7 @@ public class AlignDualZeroTiltManual implements Application {
     int roiWidth, roiHeigth;
 
     static private Double[] possibleIncrements = {0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0, 100.0};
+    static private Double[] possibleIncrementsAngle = {0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 45.0, 90.0};
 
     ArrayList<AffineTransform> originalTransforms;
     ArrayList<Double> tx;
@@ -88,15 +91,29 @@ public class AlignDualZeroTiltManual implements Application {
             tx.add(0.0);
             ty.add(0.0);
             rot.add(0.0);
-            Alignment a = tsList.get(ts).getTiltSeries().getAlignment();
-            if (!(a instanceof AffineAlignment)) {
-                a = new AffineAlignment(tsList.get(ts).getTiltSeries());
-                ((AffineAlignment) a).setZeroTransform(originalTransforms.get(ts));
-            }
-            alignments.add((AffineAlignment) a);
+
         }
+        checkAlignmentType();
         refIndex = 0;
         alignIndex = 1;
+    }
+
+    public void checkAlignmentType() {
+        for (int ts = 0; ts < tsList.size(); ts++) {
+            Alignment a = tsList.get(ts).getTiltSeries().getAlignment();
+            if (!(a instanceof AffineAlignment)) {
+                System.out.println("change alignment type to affine");
+                a = new AffineAlignment(tsList.get(ts).getTiltSeries());
+                ((AffineAlignment) a).setZeroTransform(originalTransforms.get(ts));
+                tsList.get(ts).getTiltSeries().setAlignment(a);
+            }
+            if (alignments.size() < tsList.size()) {
+                alignments.add((AffineAlignment) a);
+            } else {
+                alignments.set(ts, (AffineAlignment) a);
+            }
+
+        }
     }
 
     private void initValues() {
@@ -170,6 +187,7 @@ public class AlignDualZeroTiltManual implements Application {
 
         spinnerTranslationX.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
+                checkAlignmentType();
                 tx.set(alignIndex, ((SpinnerNumberModel) spinnerTranslationX.getModel()).getNumber().doubleValue());
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
                 tmp.translate(tx.get(alignIndex), ty.get(alignIndex));
@@ -183,6 +201,7 @@ public class AlignDualZeroTiltManual implements Application {
 
         spinnerTranslationY.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
+                checkAlignmentType();
                 ty.set(alignIndex, ((SpinnerNumberModel) spinnerTranslationY.getModel()).getNumber().doubleValue());
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
                 tmp.translate(tx.get(alignIndex), ty.get(alignIndex));
@@ -195,6 +214,7 @@ public class AlignDualZeroTiltManual implements Application {
         });
         spinnerRotationValue.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
+                checkAlignmentType();
                 rot.set(alignIndex, ((SpinnerNumberModel) spinnerRotationValue.getModel()).getNumber().doubleValue());
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
                 tmp.translate(tx.get(alignIndex), ty.get(alignIndex));
@@ -214,6 +234,7 @@ public class AlignDualZeroTiltManual implements Application {
 
         buttonTranslationLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                checkAlignmentType();
                 tx.set(alignIndex, tx.get(alignIndex) - translationIncrement);
                 spinnerTranslationX.setValue(tx.get(alignIndex));
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
@@ -227,6 +248,7 @@ public class AlignDualZeroTiltManual implements Application {
         });
         buttonTranslationRight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                checkAlignmentType();
                 tx.set(alignIndex, tx.get(alignIndex) + translationIncrement);
                 spinnerTranslationX.setValue(tx.get(alignIndex));
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
@@ -240,6 +262,7 @@ public class AlignDualZeroTiltManual implements Application {
         });
         buttonTranslationUp.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                checkAlignmentType();
                 ty.set(alignIndex, ty.get(alignIndex) - translationIncrement);
                 spinnerTranslationY.setValue(ty.get(alignIndex));
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
@@ -254,6 +277,7 @@ public class AlignDualZeroTiltManual implements Application {
 
         buttonTranslationDown.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                checkAlignmentType();
                 ty.set(alignIndex, ty.get(alignIndex) + translationIncrement);
                 spinnerTranslationY.setValue(ty.get(alignIndex));
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
@@ -274,6 +298,7 @@ public class AlignDualZeroTiltManual implements Application {
 
         buttonRotationLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                checkAlignmentType();
                 rot.set(alignIndex, rot.get(alignIndex) - rotationIncrement);
                 spinnerRotationValue.setValue(rot.get(alignIndex));
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
@@ -287,6 +312,7 @@ public class AlignDualZeroTiltManual implements Application {
         });
         buttonRotationRight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                checkAlignmentType();
                 rot.set(alignIndex, rot.get(alignIndex) + rotationIncrement);
                 spinnerRotationValue.setValue(rot.get(alignIndex));
                 AffineTransform tmp = new AffineTransform(originalTransforms.get(alignIndex));
@@ -316,6 +342,18 @@ public class AlignDualZeroTiltManual implements Application {
         });
 
         differenceRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setDisplayPreview(true);
+                updatePreview();
+            }
+        });
+        firstRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setDisplayPreview(true);
+                updatePreview();
+            }
+        });
+        secondRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 setDisplayPreview(true);
                 updatePreview();
@@ -423,14 +461,14 @@ public class AlignDualZeroTiltManual implements Application {
         ts2.setAlignmentRoi(roiWidth, roiHeigth);
 
         float[] mov = ts2.getPixelsForAlignment(ts2.getZeroIndex());
-        float[] ref = ts1.getPixelsForAlignment(ts2.getZeroIndex());
+        float[] ref = ts1.getPixelsForAlignment(ts1.getZeroIndex());
 
         ImageProcessor result;
         if (differenceRadioButton.isSelected()) {
             result = new FloatProcessor(roiWidth, roiHeigth, mov, null);
             result.copyBits(new FloatProcessor(roiWidth, roiHeigth, ref, null), 0, 0, Blitter.DIFFERENCE);
 
-        } else {
+        } else if (superimposedMagentaGreenRadioButton.isSelected()) {
             FloatProcessor fp1 = new FloatProcessor(roiWidth, roiHeigth, mov, null);
             fp1.setMinAndMax(tsList.get(refIndex).getTiltSeries().getProcessor().getMin(), tsList.get(refIndex).getTiltSeries().getProcessor().getMax());
             FloatProcessor fp2 = new FloatProcessor(roiWidth, roiHeigth, ref, null);
@@ -440,6 +478,10 @@ public class AlignDualZeroTiltManual implements Application {
             ByteProcessor rB = (ByteProcessor) fp2.convertToByte(true);
             result = new ColorProcessor(roiWidth, roiHeigth);
             ((ColorProcessor) result).setRGB((byte[]) mB.getPixels(), (byte[]) rB.getPixels(), (byte[]) mB.getPixels());
+        } else if (firstRadioButton.isSelected()) {
+            result = new FloatProcessor(roiWidth, roiHeigth, ref, null);
+        } else {
+            result = new FloatProcessor(roiWidth, roiHeigth, mov, null);
         }
         if (preview == null || roiWidth != preview.getWidth() || roiHeigth != preview.getHeight() || !preview.isVisible()) {
             if (preview != null) {
@@ -488,11 +530,11 @@ public class AlignDualZeroTiltManual implements Application {
     private void createUIComponents() {
         // TODO: place custom component creation code here
         spinnerTranslationIncrement = new JSpinner(new SpinnerListModel(possibleIncrements));
-        spinnerTranslationIncrement.setValue(possibleIncrements[possibleIncrements.length - 1]);
-        translationIncrement = possibleIncrements[possibleIncrements.length - 1];
-        spinnerRotationIncrement = new JSpinner(new SpinnerListModel(possibleIncrements));
-        spinnerRotationIncrement.setValue(possibleIncrements[2]);
-        rotationIncrement = possibleIncrements[2];
+        spinnerTranslationIncrement.setValue(possibleIncrements[possibleIncrements.length - 4]);
+        translationIncrement = possibleIncrements[possibleIncrements.length - 4];
+        spinnerRotationIncrement = new JSpinner(new SpinnerListModel(possibleIncrementsAngle));
+        rotationIncrement = possibleIncrementsAngle[possibleIncrementsAngle.length - 1];
+        spinnerRotationIncrement.setValue(rotationIncrement);
         spinnerTranslationX = new JSpinner(new SpinnerNumberModel(0.0, -512.0, 512.0, 1.0));
         spinnerTranslationY = new JSpinner(new SpinnerNumberModel(0.0, -512.0, 512.0, 1.0));
         spinnerRotationValue = new JSpinner(new SpinnerNumberModel(0, -360.0, 360.0, 0.5));
@@ -554,7 +596,7 @@ public class AlignDualZeroTiltManual implements Application {
         checkBoxDisplayCombined.setText("Display combined image");
         panel3.add(checkBoxDisplayCombined, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelOptionDisplay = new JPanel();
-        panelOptionDisplay.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panelOptionDisplay.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panelOptionDisplay, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, true));
         superimposedMagentaGreenRadioButton = new JRadioButton();
         superimposedMagentaGreenRadioButton.setSelected(true);
@@ -565,7 +607,13 @@ public class AlignDualZeroTiltManual implements Application {
         differenceRadioButton.setText("difference");
         panelOptionDisplay.add(differenceRadioButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
-        panelOptionDisplay.add(spacer3, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        panelOptionDisplay.add(spacer3, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        firstRadioButton = new JRadioButton();
+        firstRadioButton.setText("first");
+        panelOptionDisplay.add(firstRadioButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        secondRadioButton = new JRadioButton();
+        secondRadioButton.setText("second");
+        panelOptionDisplay.add(secondRadioButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cancelButton = new JButton();
         cancelButton.setText("Cancel");
         rootPanel.add(cancelButton, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -624,6 +672,8 @@ public class AlignDualZeroTiltManual implements Application {
         buttonGroup = new ButtonGroup();
         buttonGroup.add(superimposedMagentaGreenRadioButton);
         buttonGroup.add(differenceRadioButton);
+        buttonGroup.add(firstRadioButton);
+        buttonGroup.add(secondRadioButton);
     }
 
     /**
