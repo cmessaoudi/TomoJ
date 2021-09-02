@@ -40,6 +40,7 @@ public class AlignWithLandmarks implements Application {
     protected boolean newExhaustiveSearch = true;
     protected double newMahalanobisWeight = 0;
     protected boolean newShift = true;
+    protected boolean newTilt = true;
     protected boolean newMag = false;
     protected boolean newShrink = false;
     protected boolean newScaleX = false;
@@ -67,6 +68,7 @@ public class AlignWithLandmarks implements Application {
     private JSpinner spinnerNewCycleNumber;
     private JSpinner spinnerNewSelectionThreshold;
     private JCheckBox correctNewHeightCheckBox;
+    private JCheckBox tiltAngleCheckBox;
     protected Chrono time;
     String resultString;
 
@@ -84,6 +86,7 @@ public class AlignWithLandmarks implements Application {
         newExhaustiveSearch = exhaustiveSearchCheckBox.isSelected();
         newMahalanobisWeight = ((Number) spinnerNewMahalanobisWeight.getValue()).doubleValue();
         newShift = shiftsCheckBox.isSelected();
+        newTilt = tiltAngleCheckBox.isSelected();
         newMag = magnificationCheckBox.isSelected();
         newShrink = shrinkageCheckBox.isSelected();
         newScaleX = scaleXCheckBox.isSelected();
@@ -135,6 +138,11 @@ public class AlignWithLandmarks implements Application {
         shiftsCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 newShift = shiftsCheckBox.isSelected();
+            }
+        });
+        tiltAngleCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                newTilt = tiltAngleCheckBox.isSelected();
             }
         });
         magnificationCheckBox.addActionListener(new ActionListener() {
@@ -203,6 +211,7 @@ public class AlignWithLandmarks implements Application {
         options.setExhaustiveSearch(newExhaustiveSearch);
         options.setMahalanobisWeight(newMahalanobisWeight);
         options.setAllowShifts(newShift);
+        options.setAllowTiltCorrection(newTilt);
         options.setDeformShrinkage(newShrink);
         options.setDeformMagnification(newMag);
         options.setDeformScalingX(newScaleX);
@@ -256,6 +265,13 @@ public class AlignWithLandmarks implements Application {
         //String param = "maxInPlaneRotation=" + maxrot + " correctHeight=" + correctHeight;
         //ts.getTomoJPoints().setLandmarks3D(alignator);
         ts.setAlignment(oldAlgo ? alignator.getAlignmentOld() : alignator.getBestAlignment());
+        if (!oldAlgo && newTilt) {
+            double[] newangles = new double[ts.getImageStackSize()];
+            for (int i = 0; i < newangles.length; i++) {
+                newangles[i] = alignator.getBestAlignment().getCurrentAi().get(i).getTheta();
+            }
+            ts.setTiltAngles(newangles);
+        }
 
         return true;
     }
@@ -272,6 +288,8 @@ public class AlignWithLandmarks implements Application {
                 newShift = false;
             } else if (((String) parameters[index]).toLowerCase().equals("shrink")) {
                 newShrink = true;
+            } else if (((String) parameters[index]).toLowerCase().equals("tilt")) {
+                newTilt = true;
             } else if (((String) parameters[index]).toLowerCase().equals("magnification")) {
                 newMag = true;
             } else if (((String) parameters[index]).toLowerCase().equals("scalex")) {
@@ -282,6 +300,7 @@ public class AlignWithLandmarks implements Application {
                 newRotation = true;
             } else if (((String) parameters[index]).toLowerCase().equals("all")) {
                 newShift = true;
+                newTilt = true;
                 newMag = true;
                 newShrink = true;
                 newScaleX = true;
@@ -364,6 +383,7 @@ public class AlignWithLandmarks implements Application {
             params += "new algorithm:\nexhautive search: " + newExhaustiveSearch +
                     "\nmahalanobis weight: " + newMahalanobisWeight +
                     "\ncorrect \nshifts: " + newShift +
+                    "\nshift: " + newTilt +
                     "\nmagnification: " + newMag +
                     "\nshrinkage: " + newShrink +
                     "\nscale X:" + newScaleX +
@@ -453,24 +473,28 @@ public class AlignWithLandmarks implements Application {
         panel1.add(label6, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panel1.add(spinnerNewSelectionThreshold, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         panelDeform.add(panel2, new GridConstraints(3, 1, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         magnificationCheckBox = new JCheckBox();
         magnificationCheckBox.setSelected(true);
         magnificationCheckBox.setText("Magnification");
-        panel2.add(magnificationCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(magnificationCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         shrinkageCheckBox = new JCheckBox();
         shrinkageCheckBox.setSelected(true);
         shrinkageCheckBox.setText("Shrinkage");
-        panel2.add(shrinkageCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(shrinkageCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         scaleXCheckBox = new JCheckBox();
         scaleXCheckBox.setSelected(true);
         scaleXCheckBox.setText("Scale X");
-        panel2.add(scaleXCheckBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(scaleXCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         shearCheckBox = new JCheckBox();
         shearCheckBox.setSelected(true);
         shearCheckBox.setText("Shear");
-        panel2.add(shearCheckBox, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel2.add(shearCheckBox, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        tiltAngleCheckBox = new JCheckBox();
+        tiltAngleCheckBox.setSelected(true);
+        tiltAngleCheckBox.setText("Tilt angle");
+        panel2.add(tiltAngleCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         shiftsCheckBox = new JCheckBox();
         shiftsCheckBox.setSelected(true);
         shiftsCheckBox.setText("Shifts");
