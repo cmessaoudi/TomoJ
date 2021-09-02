@@ -547,6 +547,7 @@ public class TomoReconstruction2 extends ImagePlus {
 
     public ArrayList<Double> OSSART(TiltSeries ts, Projector projector, ReconstructionParameters params, int startY, int endY) {
         this.projector = projector;
+        ts.getAlignment().resetEulerMatrices();
 
         System.out.println("OS-SART : ");
         System.out.println("iterations : " + params.getNbIterations());
@@ -1279,6 +1280,7 @@ public class TomoReconstruction2 extends ImagePlus {
 //    }
 
     private double[] osartIterationDual(Projector projector1, final TiltSeries ts1, Projector projector2, final TiltSeries ts2, ReconstructionParameters params, int startY, int endY) {
+        System.out.println("ossart dual");
         double relaxationcoeff=params.getRelaxationCoefficient();
         int update=params.getUpdateNb();
 
@@ -1307,7 +1309,9 @@ public class TomoReconstruction2 extends ImagePlus {
 
         for (int t = 0; t < indexes1.length - 1; t += alternate) {
             // Two images from TS1
+            System.out.println("t: "+t);
             for (int i = 0; i < alternate; i++) {
+                System.out.println("i: "+i);
 
                 if (t + 1 >= indexes1.length) break; // Not so pretty...
 
