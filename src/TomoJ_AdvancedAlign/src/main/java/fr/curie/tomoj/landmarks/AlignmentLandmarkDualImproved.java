@@ -2678,7 +2678,7 @@ public class AlignmentLandmarkDualImproved implements Alignment {
             DoubleMatrix2D euler = currentAi.get(index).getEuler();
             euler = euler.zMult(MatrixUtils.rotation3DMatrixZ(currentAi.get(0).getRot() - currentAi.get(index).getRot()), null);
 
-            System.out.println("alignDual changing index for second tilt series:" + (currentAi.get(index).getRot() - currentAi.get(0).getRot()));
+            //System.out.println("alignDual changing index for second tilt series:" + (currentAi.get(index).getRot() - currentAi.get(0).getRot()));
             return euler;
         }else{
             currentAi.get(index).setTiltAxisVertical(true);
