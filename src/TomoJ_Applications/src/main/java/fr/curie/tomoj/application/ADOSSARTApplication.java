@@ -3,8 +3,10 @@ package fr.curie.tomoj.application;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import fr.curie.tomoj.TiltSeriesStack;
 import fr.curie.tomoj.gui.TiltSeriesPanel;
 import fr.curie.tomoj.tomography.ReconstructionParameters;
+import fr.curie.tomoj.tomography.ResolutionEstimation;
 import ij.Prefs;
 import fr.curie.tomoj.SuperTomoJPoints;
 import fr.curie.tomoj.tomography.TiltSeries;
@@ -43,6 +45,7 @@ public class ADOSSARTApplication extends ReconstructionApplication {
     protected boolean positivityConstraint = false;
     protected boolean saveErrorVolume = false;
     protected boolean saveErrorVolumeAll = false;
+
     //protected boolean computeOnGPU;
     String resultString = "iterative reconstruction";
     //ResolutionEstimation resolutionComputation;
@@ -65,7 +68,9 @@ public class ADOSSARTApplication extends ReconstructionApplication {
         saveErrorVolume = false;
         saveErrorVolumeAll = false;*/
         nbIteration = (int) Prefs.get("TOMOJ_IterationNumber.int", nbIteration);
+        nbIteration = 1;
         relaxationCoefficient = Prefs.get("TOMOJ_relaxationCoefficient.double", relaxationCoefficient);
+        relaxationCoefficient = 0.1;
         update = (int) Prefs.get("TOMOJ_updateOSART.int", update);
         alternate = (int) Prefs.get("TOMOJ_alternateADOSSART.int", alternate);
         longObjectCompensation = Prefs.get("TOMOJ_SampleType.bool", longObjectCompensation);
@@ -134,7 +139,7 @@ public class ADOSSARTApplication extends ReconstructionApplication {
     }
 
     public boolean run() {
-        tsList.get(0).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
+       /* tsList.get(0).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
         tsList.get(1).getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
         TiltSeries ts1 = tsList.get(0).getTiltSeries();
         TiltSeries ts2 = tsList.get(1).getTiltSeries();
@@ -154,7 +159,46 @@ public class ADOSSARTApplication extends ReconstructionApplication {
         params.setRelaxationCoefficient(relaxationCoefficient);
         params.setProjectionType(ReconstructionParameters.ALL_PROJECTIONS);
 
-        rec.ADOSSART(ts1, proj1, ts2, proj2, params, 0, ts1.getHeight());
+        rec.ADOSSART(ts1, proj1, ts2, proj2, params, 0, ts1.getHeight());*/
+
+        rec = new TomoReconstruction2(tsList.get(0).getTiltSeries().getWidth(), tsList.get(0).getTiltSeries().getHeight(), 256);
+        rec.show();
+
+        ArrayList<TiltSeries> tslisttmp = new ArrayList<>();
+        ArrayList<Projector> projs = new ArrayList<>();
+        for (int i = 0; i < tsList.size(); i++) {
+            TiltSeriesPanel tsp = tsList.get(i);
+            tsp.getTiltSeries().setAlignMethodForReconstruction(TiltSeries.ALIGN_PROJECTOR);
+            tslisttmp.add(tsp.getTiltSeries());
+            VoxelProjector3D pr = new VoxelProjector3D(tsp.getTiltSeries(), rec, null);
+
+            projs.add(pr);
+        }
+        TiltSeriesStack tss = new TiltSeriesStack(tslisttmp);
+        System.out.println("ADOSSART application tiltSeriesStack : " + tss.getTitle());
+        width = tss.getWidth();
+        height = tss.getHeight();
+        depth = 256;
+        centerx = (width - 1.0) / 2.0;
+        centery = (height - 1.0) / 2.0;
+        centerz = (depth - 1.0) / 2.0;
+        double[] modifiers = new double[]{(width - 1.0) / 2.0 - centerx, (height - 1.0) / 2.0 - centery, (depth - 1.0) / 2.0 - centerz};
+        ReconstructionParameters recParams = ReconstructionParameters.createOSSARTParameters(width, height, depth, nbIteration, relaxationCoefficient, update, modifiers);
+        recParams.setRescaleData(rescaleData);
+        recParams.setLongObjectCompensation(longObjectCompensation);
+        recParams.setPositivityConstraint(positivityConstraintCheckBox.isSelected());
+
+
+        //ProjectorStack ps = new ProjectorStack(projs);
+        //System.out.println("projectors: " + ps.getProjectors().size());
+
+        resolutionComputation = new ResolutionEstimation(tss, recParams);
+        resolutionComputation.setReconstructionSignal(rec);
+        resolutionComputation.doSignalReconstruction();
+        rec = resolutionComputation.getReconstructionSignal();
+        rec.show();
+
+
         return true;
     }
 
