@@ -1014,6 +1014,20 @@ public class alignmentLandmark implements Alignment {
         return eulerMatrices[index];
     }
 
+    public DoubleMatrix2D getEulerMatrix(TiltSeries ts, int index) {
+        if (eulerMatrices[index] == null) {
+            DoubleMatrix1D axis = eulerDirection(Math.toRadians(rotD), Math.toRadians(tiltD), 0);
+            int zeroindex = tp.getTiltSeries().getZeroIndex();
+            double zeroTiltAngle = tp.getTiltSeries().getTiltAngle(zeroindex);
+            DoubleMatrix2D Raxismin = rotation3DMatrix(zeroTiltAngle, axis);
+            //System.out.println("p not null at zero index("+zeroindex);
+            DoubleMatrix2D Rmin = rotation2DMatrix(90 - rotD + psiD.get(zeroindex));
+            DoubleMatrix2D RtiltYmin = rotation3DMatrixY(-zeroTiltAngle);
+            eulerMatrices[index] = RtiltYmin.zMult(Rmin.zMult(Raxismin, null), null);
+        }
+        return eulerMatrices[index];
+    }
+
     public void setEulerMatrix(int index, DoubleMatrix2D eulerMatrix) {
         eulerMatrices[index] = eulerMatrix;
     }

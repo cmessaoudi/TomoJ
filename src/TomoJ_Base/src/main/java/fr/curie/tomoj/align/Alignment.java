@@ -22,6 +22,7 @@ public interface Alignment {
     public void resetEulerMatrices();
 
     public DoubleMatrix2D getEulerMatrix(int index);
+    public DoubleMatrix2D getEulerMatrix(TiltSeries ts, int index);
 
     public void setEulerMatrix(int index, DoubleMatrix2D eulerMatrix);
     public void loadFromFile(String path, double binning,  boolean... options) throws IOException;
