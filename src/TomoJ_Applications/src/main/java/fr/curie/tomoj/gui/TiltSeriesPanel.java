@@ -116,6 +116,7 @@ public class TiltSeriesPanel {
         System.out.println("tiltSeriesPanel creation");
         System.out.flush();
         this.ts = ts;
+        gpuAvailable = (boolean) Prefs.get("TOMOJ_GPU.bool", false);
         $$$setupUI$$$();
         System.out.println("tiltSeriesPanel creation");
         System.out.flush();
