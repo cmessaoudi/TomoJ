@@ -32,7 +32,7 @@ public class ProjectionMatrix {
      * @param theta tilt angle of image corresponding to this projection Matrix (image i)
      */
     ProjectionMatrix(double theta) {
-        this.theta = -theta;
+        this.theta = theta;
         mi = 1;
         ti = 1;
         si = 1;
@@ -134,15 +134,15 @@ public class ProjectionMatrix {
 
     public DoubleMatrix2D getEuler() {
         if (euler != null) return euler;
-        //DoubleMatrix1D axis = MatrixUtils.eulerDirection(toRadians(rot), toRadians(tilt));
-        //DoubleMatrix2D Rthetauaxis = MatrixUtils.rotation3DMatrix(theta, axis);
-
-
+        DoubleMatrix1D axis = MatrixUtils.eulerDirection(toRadians(rot), toRadians(tilt));
+        DoubleMatrix2D Rthetauaxis = MatrixUtils.rotation3DMatrix(-theta, axis);
         //DoubleMatrix2D Rz_inv=new DenseDoubleAlgebra().inverse(Rz);
 
-        DoubleMatrix2D Ri = DoubleFactory2D.dense.make(3, 3);
+
+
+        //DoubleMatrix2D Ri = DoubleFactory2D.dense.make(3, 3);
         DoubleMatrix2D Rpsi = MatrixUtils.rotation3DMatrixZ(psii);
-        Rpsi.zMult(Rthetauaxis, Ri);
+        //Rpsi.zMult(Rthetauaxis, Ri);
         //Ri=new DenseDoubleAlgebra().inverse(Ri);
 
         if(setTiltAxisVertical) {
