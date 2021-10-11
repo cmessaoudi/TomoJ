@@ -10,6 +10,12 @@
         <module name="Utility" />
         <module name="Inpainting" />
       </profile>
+      <profile name="Annotation profile for EFTEM_TomoJ" enabled="true">
+        <sourceOutputDir name="../../../../tmp/compile/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../../../tmp/compile/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="EFTEM_TomoJ" />
+      </profile>
       <profile name="Annotation profile for TomoJ_v3" enabled="true">
         <sourceOutputDir name="../../../../../tmp/compile/generated-sources/annotations" />
         <sourceTestOutputDir name="../../../../../tmp/compile/generated-test-sources/test-annotations" />
