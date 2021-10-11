@@ -92,7 +92,8 @@ public class TomoJ {
                 "-center cx cy use of these center coordinates for alignment (instead of width/2 and height/2, real value)\n" +
                 "-settiltanglesregular realStartAngle realIncrement angle: set tilt angles with the starting angle and increment\n" +
                 "-loadAngles filepath: load the angles from a file\n" +
-                "-loadTransforms filepath binning: load transforms from a file\n" +
+                "-loadTransforms filepath binning: load transforms from a file (the transforms are from one image to the next)\n" +
+                "-loadfinaltransforms filepath binning: load transforms from a file\n" +
                 "-loadlandmarks file path binning: load landmarks from a file\n" +
                 "-savealignedimages: save the images after application of current alignment\n"+
                 "-xcorr options: correct shift using cross-correlation (see options below)\n" +
@@ -334,7 +335,7 @@ public class TomoJ {
                 String imgname = ts.getShortTitle();
                 System.out.println("saving in directory: " + savedir);
                 System.out.println("saving prefix: " + imgname);
-                CommandWorkflow.saveTransform(savedir, imgname + "_xcorr.txt", ts, false);
+                CommandWorkflow.saveTransform(savedir, imgname + "_xcorr.txt", ts, true);
                 storeAction(cc);
             }
             if (args[a].toLowerCase().startsWith("-generatelandmarks")) {
