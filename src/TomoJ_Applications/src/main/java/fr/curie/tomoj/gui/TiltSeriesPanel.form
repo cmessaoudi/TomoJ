@@ -472,7 +472,7 @@
                           </grid>
                         </children>
                       </grid>
-                      <grid id="4e0b2" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="4e0b2" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -511,6 +511,14 @@
                             </constraints>
                             <properties>
                               <text value="CS"/>
+                            </properties>
+                          </component>
+                          <component id="65d5e" class="javax.swing.JRadioButton" binding="bayesianRadioButton" default-binding="true">
+                            <constraints>
+                              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="Bayesian"/>
                             </properties>
                           </component>
                         </children>
@@ -618,6 +626,7 @@
       <member id="8cde0"/>
       <member id="96cea"/>
       <member id="5841"/>
+      <member id="65d5e"/>
     </group>
   </buttonGroups>
 </form>

@@ -74,6 +74,7 @@ public class TiltSeriesPanel {
     private JButton button1;
     private JCheckBox expertModeCheckBox;
     private JPanel volDimPanel;
+    private JRadioButton bayesianRadioButton;
 
     GridConstraints constraints;
 
@@ -110,6 +111,7 @@ public class TiltSeriesPanel {
     Application iterativeRec;
     Application tvm;
     Application compressedSensing;
+    Application bayesianRec;
 
 
     public TiltSeriesPanel(TiltSeries ts) {
@@ -177,6 +179,8 @@ public class TiltSeriesPanel {
             System.out.println("Fractional Spline Wavelet plugin is not installed : CS reconstruction unvailable!");
             CSRadioButton.setVisible(false);
         }
+        bayesianRec = new BayesianReconstructionApplication(ts);
+        System.out.println("bayesian OK");
 
         currentApplicationReconstruction = iterativeRec;
 
@@ -444,6 +448,20 @@ public class TiltSeriesPanel {
                 fscOnly = false;
             }
         });
+
+        bayesianRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setApplication(bayesianRec);
+                SSNRCheckBox.setSelected(false);
+                SSNRCheckBox.setEnabled(false);
+                VSSNRCheckBox.setEnabled(SSNRCheckBox.isEnabled() && SSNRCheckBox.isSelected());
+                FSCCheckBox.setSelected(false);
+                FSCCheckBox.setEnabled(false);
+                fscOnly = false;
+            }
+        });
+
         if (compressedSensing != null) {
             CSRadioButton.addActionListener(new ActionListener() {
                 @Override
@@ -707,6 +725,13 @@ public class TiltSeriesPanel {
             ((ReconstructionApplication) tvm).setComputeOnGPU(computeOnGpu, GPUDevice.getGPUDevices(), ((GPUDevicesTableModel) tableGPU.getModel()).getUse());
         ((ReconstructionApplication) tvm).setResolutionEstimation(ssnr, (ssnr) ? vssnr : false, fsc, fscOnly);
 
+        ((ReconstructionApplication) bayesianRec).setSize(width, height, depth);
+        ((ReconstructionApplication) bayesianRec).setRescaleData(rescaleData);
+        if (gpuAvailable)
+            ((ReconstructionApplication) bayesianRec).setComputeOnGPU(computeOnGpu, GPUDevice.getGPUDevices(), ((GPUDevicesTableModel) tableGPU.getModel()).getUse());
+        ((ReconstructionApplication) bayesianRec).setResolutionEstimation(ssnr, (ssnr) ? vssnr : false, fsc, fscOnly);
+
+
     }
 
     public Application getCurrentApplication() {
@@ -784,40 +809,42 @@ public class TiltSeriesPanel {
 
     private void createUIComponents() {
         tableGPU = new JTable();
-        try {
-            Class tmp = Class.forName("org.jocl.CLException");
-            if (tmp != null) {
-                //gpuAvailable = true;
-                System.out.println("opencl java files detected");
-                String javaLibraryPath = System.getProperty("java.library.path");
-                String systemLibraryPath = System.getProperty("sun.boot.library.path");
-                System.out.println("library path" + javaLibraryPath);
-                System.out.println("system path:" + systemLibraryPath);
-                if (IJ.isLinux()) {
-                    System.out.println("linux: checking that libOpenCL.so is the path");
+        if (gpuAvailable) {
+            try {
+                Class tmp = Class.forName("org.jocl.CLException");
+                if (tmp != null) {
+                    //gpuAvailable = true;
+                    System.out.println("opencl java files detected");
+                    String javaLibraryPath = System.getProperty("java.library.path");
+                    String systemLibraryPath = System.getProperty("sun.boot.library.path");
+                    System.out.println("library path" + javaLibraryPath);
+                    System.out.println("system path:" + systemLibraryPath);
+                    if (IJ.isLinux()) {
+                        System.out.println("linux: checking that libOpenCL.so is the path");
 
-                    Field field = ClassLoader.class.getDeclaredField("sys_paths");
-                    System.out.println(field.toGenericString());
+                        Field field = ClassLoader.class.getDeclaredField("sys_paths");
+                        System.out.println(field.toGenericString());
 
-                    String[] libdirs = systemLibraryPath.split(":");
-                    boolean openclExist = false;
-                    for (String name : libdirs) {
-                        File tmpfile = new File(name + "/libOpenCL.so");
+                        String[] libdirs = systemLibraryPath.split(":");
+                        boolean openclExist = false;
+                        for (String name : libdirs) {
+                            File tmpfile = new File(name + "/libOpenCL.so");
+                            openclExist = (tmpfile.exists() || openclExist);
+                        }
+                        File tmpfile = new File("/usr/lib/x86_64-linux-gnu/libOpenCL.so");
                         openclExist = (tmpfile.exists() || openclExist);
-                    }
-                    File tmpfile = new File("/usr/lib/x86_64-linux-gnu/libOpenCL.so");
-                    openclExist = (tmpfile.exists() || openclExist);
 
-                    System.out.println("opencl library found (libOpenCL.so):" + openclExist);
-                    gpuAvailable = openclExist;
+                        System.out.println("opencl library found (libOpenCL.so):" + openclExist);
+                        gpuAvailable = openclExist;
+                    }
+                } else {
+                    gpuAvailable = false;
+                    System.out.println("opencl library not found : reconstruction on GPU is unavailable!");
                 }
-            } else {
-                gpuAvailable = false;
+            } catch (Exception e) {
                 System.out.println("opencl library not found : reconstruction on GPU is unavailable!");
+                gpuAvailable = false;
             }
-        } catch (Exception e) {
-            System.out.println("opencl library not found : reconstruction on GPU is unavailable!");
-            gpuAvailable = false;
         }
         if (gpuAvailable) {
             try {
@@ -1021,7 +1048,7 @@ public class TiltSeriesPanel {
         autosaveFinalIterationCheckBox.setText("autosave final iteration");
         panel12.add(autosaveFinalIterationCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel13 = new JPanel();
-        panel13.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel13.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
         reconstructionPanel.add(panel13, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel13.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Reconstruction algorithm", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         WBPRadioButton = new JRadioButton();
@@ -1037,6 +1064,9 @@ public class TiltSeriesPanel {
         CSRadioButton = new JRadioButton();
         CSRadioButton.setText("CS");
         panel13.add(CSRadioButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        bayesianRadioButton = new JRadioButton();
+        bayesianRadioButton.setText("Bayesian");
+        panel13.add(bayesianRadioButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel14 = new JPanel();
         panel14.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         reconstructionPanel.add(panel14, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -1078,6 +1108,7 @@ public class TiltSeriesPanel {
         buttonGroup.add(iterativeRadioButton);
         buttonGroup.add(TVMRadioButton);
         buttonGroup.add(CSRadioButton);
+        buttonGroup.add(bayesianRadioButton);
     }
 
     /**
