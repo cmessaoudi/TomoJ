@@ -1,6 +1,7 @@
 package fr.curie.tomoj.application;
 
 import fr.curie.gpu.tomoj.tomography.ResolutionEstimationGPU;
+import fr.curie.tomoj.tomography.ReconstructionParameters;
 import fr.curie.tomoj.tomography.ResolutionEstimation;
 import fr.curie.tomoj.tomography.TomoReconstruction2;
 import fr.curie.gpu.utils.GPUDevice;
@@ -26,6 +27,7 @@ public class ReconstructionApplication implements Application{
     protected TomoReconstruction2 rec;
     protected ResolutionEstimation resolutionComputation;
     protected String resultString = "";
+    protected ReconstructionParameters recParams=null;
 
     public void setSize(int width,int height,int depth){
         this.width=width;
@@ -157,13 +159,14 @@ public class ReconstructionApplication implements Application{
     }
 
     public String getParametersValuesAsString() {
-         String text="Reconstruction \nwidth:"+width+", height:"+height+", depth"+depth;
+         String text="\nwidth:"+width+", height:"+height+", depth:"+depth;
          text+="\ncenter ("+centerx+", "+centery+", "+centerz+")";
          if(rescaleData)text +="\nrescale data to fit size";
         if(computeSSNR) text+="\ncompute SSNR";
         if(computeSSNR && computeVSSNR) text+="\ncompute VSSNR";
         if(computeFSC)text+="\ncompute FSC";
         if(computeOnGPU) text +="\ncompute on GPU";
+        //if(recParams!=null) text+= "\n"+recParams.getParametersAsString();
 
         return text;
     }
