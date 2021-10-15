@@ -75,6 +75,8 @@ public class CrossCorrelationParameters implements Application {
     public CrossCorrelationParameters(TiltSeries ts) {
         this.ts = ts;
         align = new SingleTiltAlign(ts);
+        //System.out.println("test constructor Xcorr appli " + ts.isShowInIJ());
+        //System.out.flush();
         $$$setupUI$$$();
     }
 
@@ -111,7 +113,7 @@ public class CrossCorrelationParameters implements Application {
         ((SpinnerNumberModel) spinnerCutMaxRadius.getModel()).setMinimum(new Integer(0));
         spinnerCutMaxRadius.setValue(new Integer(8 * radius));
         ((SpinnerNumberModel) spinnerBandpassDropDown.getModel()).setMinimum(new Integer(0));
-        spinnerBandpassDropDown.setValue(new Integer(3 * radius));
+        spinnerBandpassDropDown.setValue(new Integer(2 * radius));
 
         ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setMinimum(new Integer(2));
         ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).setValue(new Integer(2));
@@ -159,6 +161,7 @@ public class CrossCorrelationParameters implements Application {
                 spinnerMulticaleLevels.setEnabled(multiScale);
                 multiScaleLevels = ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).getNumber().intValue();
 
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -174,6 +177,7 @@ public class CrossCorrelationParameters implements Application {
                     roiX = ts.getWidth();
                     roiY = ts.getHeight();
                 }
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -186,6 +190,8 @@ public class CrossCorrelationParameters implements Application {
                 bandpassFilterMin = ((SpinnerNumberModel) spinnerCutMinRadius.getModel()).getNumber().intValue();
                 bandpassFilterMax = ((SpinnerNumberModel) spinnerCutMaxRadius.getModel()).getNumber().intValue();
                 bandpassFilterDecrease = ((SpinnerNumberModel) spinnerBandpassDropDown.getModel()).getNumber().intValue();
+
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -197,6 +203,7 @@ public class CrossCorrelationParameters implements Application {
                 } else {
                     downSampling = 1;
                 }
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -207,6 +214,7 @@ public class CrossCorrelationParameters implements Application {
                 if (variance) {
                     varianceRadius = ((SpinnerNumberModel) spinnerVariance.getModel()).getNumber().intValue();
                 }
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -214,6 +222,7 @@ public class CrossCorrelationParameters implements Application {
             public void actionPerformed(ActionEvent e) {
                 expandImage = expandImagesCheckBox.isSelected();
                 spinnerExpandTiltAxis.setEnabled(expandImage);
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -221,60 +230,83 @@ public class CrossCorrelationParameters implements Application {
         spinnerBandpassDropDown.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 bandpassFilterDecrease = ((SpinnerNumberModel) spinnerBandpassDropDown.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerCutMinRadius.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 bandpassFilterMin = ((SpinnerNumberModel) spinnerCutMinRadius.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerCutMaxRadius.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 bandpassFilterMax = ((SpinnerNumberModel) spinnerCutMaxRadius.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerVariance.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 varianceRadius = ((SpinnerNumberModel) spinnerVariance.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerMulticaleLevels.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 multiScaleLevels = ((SpinnerNumberModel) spinnerMulticaleLevels.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerExpandTiltAxis.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 tiltAxis = ((SpinnerNumberModel) spinnerExpandTiltAxis.getModel()).getNumber().doubleValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerRoiX.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 roiX = ((SpinnerNumberModel) spinnerRoiX.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerRoiY.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 roiY = ((SpinnerNumberModel) spinnerRoiY.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         comboBoxDownSampling.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 downSampling = (comboBoxDownSampling.getSelectedIndex() + 1) * 2;
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
+        loopUntilStabilizationCheckBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                loop = loopUntilStabilizationCheckBox.isSelected();
+            }
+        });
+
+        cumulativeReferenceCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cumulativeReference = cumulativeReferenceCheckBox.isSelected();
+            }
+        });
+
         rootPanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex++;
+                setDisplayPreview(true);
                 updatePreview();
                 ts.setSlice(previewIndex + 1);
             }
@@ -282,6 +314,7 @@ public class CrossCorrelationParameters implements Application {
         rootPanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex++;
+                setDisplayPreview(true);
                 updatePreview();
                 ts.setSlice(previewIndex + 1);
             }
@@ -289,6 +322,7 @@ public class CrossCorrelationParameters implements Application {
         rootPanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex++;
+                setDisplayPreview(true);
                 updatePreview();
                 ts.setSlice(previewIndex + 1);
             }
@@ -296,6 +330,7 @@ public class CrossCorrelationParameters implements Application {
         rootPanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex--;
+                setDisplayPreview(true);
                 updatePreview();
                 ts.setSlice(previewIndex + 1);
             }
@@ -303,6 +338,7 @@ public class CrossCorrelationParameters implements Application {
         rootPanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex--;
+                setDisplayPreview(true);
                 updatePreview();
                 ts.setSlice(previewIndex + 1);
             }
@@ -310,6 +346,7 @@ public class CrossCorrelationParameters implements Application {
         rootPanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex--;
+                setDisplayPreview(true);
                 updatePreview();
                 ts.setSlice(previewIndex + 1);
             }
@@ -326,7 +363,10 @@ public class CrossCorrelationParameters implements Application {
     }
 
     public void updatePreview() {
-        if (!displayPreview) return;
+        //System.out.println("display preview: "+displayPreview);
+        if (!displayPreview) {
+            return;
+        }
         int sx = (roi) ? roiX : ts.getWidth();
         int sy = (roi) ? roiY : ts.getHeight();
         sx /= downSampling;
@@ -351,6 +391,7 @@ public class CrossCorrelationParameters implements Application {
             if (preview != null) {
                 preview.hide();
             }
+            System.out.println("create preview");
             preview = new ImagePlus("what will be used", new FloatProcessor(sx, sy, toto, null));
             preview.show();
             preview.getWindow().setLocationRelativeTo(ts.getWindow());
@@ -392,9 +433,24 @@ public class CrossCorrelationParameters implements Application {
 
         //SingleTiltAlign align = new SingleTiltAlign(ts);
         OutputStreamCapturer capture = new OutputStreamCapturer();
-
+        System.out.println("alignment by cross-correlation");
+        if (ts.isShowInIJ()) IJ.log("###   alignment by cross-correlation   ###");
+        String param = "";
+        if (multiScale) param += "multiscale: " + multiScale + " (nb levels: " + multiScaleLevels + ")" + "\n";
+        if (roi) param += " roix=" + roiX + " roiy=" + roiY + "\n";
+        if (bandpassFilter)
+            param += "bandpass minimum:" + bandpassFilterMin + " bandpass maximum:" + bandpassFilterMax + " bandpass decrease=" + bandpassFilterDecrease + "\n";
+        if (downSampling > 0) param += "binning=" + downSampling + "\n";
+        if (variance) param += "variance=" + varianceRadius + "\n";
+        if (ts.isIntegerTranslation()) param += "intTranslation" + "\n";
+        if (expandImage) param += "expand" + "\n";
+        if (cumulativeReference) param += "cumulativeReference" + "\n";
+        if (loop) param += " loop";
+        System.out.println(param);
+        if (ts.isShowInIJ()) IJ.log(param);
         Chrono time = new Chrono();
         time.start();
+        //System.out.println("test 2 balles " + ts.isShowInIJ());
         if (!multiScale) multiScaleLevels = 1;
         for (int level = multiScaleLevels; level > 0; level--) {
             ts.setBinning(downSampling * (int) Math.pow(2, level - 1));
@@ -406,6 +462,7 @@ public class CrossCorrelationParameters implements Application {
                 align.computeCumulativeReferenceCrossCorrelation(expandImage);
             } else {
                 //ts.crossCorrelationDHT();
+                //System.out.println("test 2 balles " + ts.isShowInIJ());
                 align.crossCorrelationFFT(loop ? 25 : 1);
             }
         }
@@ -415,21 +472,9 @@ public class CrossCorrelationParameters implements Application {
         Alignment ali = ts.getAlignment();
         if (!(ali instanceof AffineAlignment)) ts.setAlignment(new AffineAlignment(ts));
         ((AffineAlignment) ts.getAlignment()).expandForAlignment(false);
-        String param = "";
-        Rectangle r = ts.getAlignmentRoi();
-        if (r.getWidth() > 0) param += " roix=" + r.getWidth() + " roiy=" + r.getHeight();
-        double[] bpp = ts.getBandpassParameters();
-        if (!Double.isNaN(bpp[0]))
-            param += " bandpasslowCut=" + bpp[0] + " bandpasslowKepp=" + bpp[1] + " bandpassHighKeep=" + bpp[2] + " bandpassHighCut=" + bpp[3];
-        int bin = ts.getBinningFactor();
-        if (bin > 0) param += " binning=" + bin;
-        int var = ts.getVarianceFilterSize();
-        if (var > 0) param += " variance=" + var;
-        if (ts.isIntegerTranslation()) param += " intTranslation";
-        if (expandImage) param += " expand";
-        if (cumulativeReference) param += "cumulativeReference";
-        if (loop) param += " loop";
-        System.out.println(param + "\n finished! in " + time.delayString());
+
+        System.out.println("alignment by cross-correlation finished! in " + time.delayString());
+        if (ts.isShowInIJ()) IJ.log("alignment by cross-correlation finished! in " + time.delayString() + "\n");
 //        UserAction ua = new UserAction("translation correction", param, "xcorr", false);
 //        ((CommandWorkflow) historyTree).addCommandToHistory(ua, true, true, false, null);
         //((CommandWorkflow) historyTree).autoSave(false, ua);

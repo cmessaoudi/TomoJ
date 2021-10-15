@@ -98,6 +98,7 @@ public class CriticalLandmarksGenerator implements Application {
         spinnerNbSeeds.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 nbSeeds = ((SpinnerNumberModel) spinnerNbSeeds.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -114,12 +115,16 @@ public class CriticalLandmarksGenerator implements Application {
         spinnerPatchSize.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 patchSize = ((SpinnerNumberModel) spinnerPatchSize.getModel()).getNumber().intValue();
-                updatePreview();
+                if (fiducialMarkers) {
+                    setDisplayPreview(true);
+                    updatePreview();
+                }
             }
         });
         localMinimaRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 localMinima = localMinimaRadioButton.isSelected();
+                setDisplayPreview(true);
                 updatePreview();
                 System.out.println("use local minima : " + localMinima);
             }
@@ -128,6 +133,7 @@ public class CriticalLandmarksGenerator implements Application {
         localMaximaRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 localMinima = localMinimaRadioButton.isSelected();
+                setDisplayPreview(true);
                 updatePreview();
                 System.out.println("use local minima : " + localMinima);
             }
@@ -139,12 +145,14 @@ public class CriticalLandmarksGenerator implements Application {
                 if (fiducialMarkersCheckBox.isSelected())
                     ((SpinnerNumberModel) spinnerCorrelationThreshold.getModel()).setValue(correlationThreshold / 2.0);
                 else ((SpinnerNumberModel) spinnerCorrelationThreshold.getModel()).setValue(correlationThreshold * 2.0);
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerThresholdFitGoldBead.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 thresholdFitGoldBead = ((SpinnerNumberModel) spinnerThresholdFitGoldBead.getModel()).getNumber().doubleValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -156,30 +164,35 @@ public class CriticalLandmarksGenerator implements Application {
         spinnerExtremaRadius.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 extremaNeighborhoodRadius = ((SpinnerNumberModel) spinnerExtremaRadius.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerPercentageToExcludeX.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 percentageToExcludeX = ((SpinnerNumberModel) spinnerPercentageToExcludeX.getModel()).getNumber().doubleValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerPercentageToExcludeY.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 percentageToExcludeY = ((SpinnerNumberModel) spinnerPercentageToExcludeY.getModel()).getNumber().doubleValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerFilterSmall.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 filterSmall = ((SpinnerNumberModel) spinnerFilterSmall.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
         spinnerFilterLarge.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 filterLarge = ((SpinnerNumberModel) spinnerFilterLarge.getModel()).getNumber().intValue();
+                setDisplayPreview(true);
                 updatePreview();
             }
         });
@@ -213,48 +226,56 @@ public class CriticalLandmarksGenerator implements Application {
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex++;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex++;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex++;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_2, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex--;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex--;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex--;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_1, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex -= 10;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         basePanel.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 previewIndex += 10;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -262,6 +283,7 @@ public class CriticalLandmarksGenerator implements Application {
             public void actionPerformed(ActionEvent e) {
                 previewIndex = (previewIndex <= ts.getZeroIndex()) ? 0 : ts.getZeroIndex();
                 //previewIndex -= ts.getImageStackSize()/2;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -269,6 +291,7 @@ public class CriticalLandmarksGenerator implements Application {
             public void actionPerformed(ActionEvent e) {
                 previewIndex = (previewIndex >= ts.getZeroIndex()) ? ts.getImageStackSize() - 1 : ts.getZeroIndex();
                 //previewIndex += ts.getImageStackSize()/2;
+                setDisplayPreview(true);
                 updatePreview();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -324,6 +347,9 @@ public class CriticalLandmarksGenerator implements Application {
         } else {
             System.out.println("affine alignment!");
         }
+        if (ts.isShowInIJ())
+            IJ.log("###   generate landmarks   ###\n" + getParametersValuesAsString() + "\ncreate seeds");
+        System.out.println(getParametersValuesAsString() + "\ncreate seeds");
 //        generator.setGoldBead(fiducialMarkers);
 //        generator.setCriticalSeed(nbSeeds);
 //        generator.setCriticalFilter(filterLarge, filterSmall);
@@ -394,6 +420,7 @@ public class CriticalLandmarksGenerator implements Application {
             }
             tp.addSetOfPoints(finalChain,true);
         } */
+        if (ts.isShowInIJ()) IJ.log("total number of seeds: " + seeds.size());
         chainsGenerator.generateLandmarkSetWithBackAndForthValidation(seeds, fiducialMarkers, chainLength, true, patchSize, correlationThreshold, fuseLandmarks, nbChainsKept);
 //        if(fiducialMarkers){
 //            System.out.println("final refinement of positions");
@@ -404,9 +431,102 @@ public class CriticalLandmarksGenerator implements Application {
         time.stop();
         resultString = capture.stop();
         resultString += "\ntotal time to compute : " + time.delayString();
+
+        //statistics
+        int[] nbLandmarksPerImage = chainsGenerator.getNumberOfLandmarksOnEachImage();
+        int[] commonNext = chainsGenerator.getNumberCommonWithNext();
+
+        ArrayList<Integer> stats1 = statsLandmarksChainsNb(nbLandmarksPerImage);
+        printStatsLandmarks(stats1);
+
+        ArrayList<Integer> stats2 = statsLandmarksChainsNb(commonNext);
+        printStatsLinks(stats2);
+
+        if (ts.isShowInIJ()) IJ.log("");
+
+
         tp.showAll(true);
 
         return true;
+    }
+
+    /**
+     * computes some statistics from the number of landmarks on each image
+     *
+     * @param landmarksnb
+     * @return an arrayList containing [average nb, min nb, min index, max nb, max index, nb of images with zero landmarks, index of images with zero landmarks....]
+     */
+    protected ArrayList<Integer> statsLandmarksChainsNb(int[] landmarksnb) {
+        ArrayList<Integer> zerosIndex = new ArrayList<>();
+        double meanLandmarksPerImage = 0;
+        int minLandmarks = Integer.MAX_VALUE;
+        int minIndex = 0;
+        int maxLandmarks = Integer.MIN_VALUE;
+        int maxIndex = 0;
+        int count = 0;
+        int nblandmarks = 0;
+        for (int i = 0; i < landmarksnb.length; i++) {
+            nblandmarks = landmarksnb[i];
+            meanLandmarksPerImage += nblandmarks;
+            if (nblandmarks < minLandmarks) {
+                minIndex = i;
+                minLandmarks = nblandmarks;
+            }
+            if (nblandmarks > maxLandmarks) {
+                maxIndex = i;
+                maxLandmarks = nblandmarks;
+            }
+            if (nblandmarks == 0) {
+                count++;
+                zerosIndex.add(i);
+            }
+        }
+        meanLandmarksPerImage /= landmarksnb.length;
+        ArrayList<Integer> result = new ArrayList<>();
+        result.add((int) meanLandmarksPerImage);
+        result.add(minLandmarks);
+        result.add(minIndex);
+        result.add(maxLandmarks);
+        result.add(maxIndex);
+        result.add(count);
+        result.addAll(zerosIndex);
+
+        return result;
+    }
+
+    protected void printStatsLandmarks(ArrayList<Integer> data) {
+        String tmp = "number of landmarks per image : " + data.get(0) + "\t [ " + data.get(1) + " (#" + data.get(2) + "), " + data.get(3) + " (#" + data.get(4) + ") ]";
+        System.out.println(tmp);
+        if (ts.isShowInIJ()) IJ.log(tmp);
+        if (data.get(5) > 0) {
+            tmp = "#############################\n" +
+                    "#                WARNING!!!                  #\n" +
+                    "# no landmarks on " + data.get(5) + " images          #\n";
+            for (int i = 6; i < data.size(); i++) {
+                tmp += "# image " + data.get(i) + "                                       #\n";
+            }
+            tmp += "#############################\n";
+            System.out.println(tmp);
+            if (ts.isShowInIJ()) IJ.log(tmp);
+        }
+    }
+
+    protected void printStatsLinks(ArrayList<Integer> data) {
+        String tmp = "links with next per image : " + data.get(0) + "\t [ " + data.get(1) + " (#" + data.get(2) + "), " + data.get(3) + " (#" + data.get(4) + ") ]";
+        System.out.println(tmp);
+        if (ts.isShowInIJ()) IJ.log(tmp);
+
+        if (data.get(5) > 0) {
+            tmp = "###################################\n" +
+                    "#                      WARNING!!!                        #\n" +
+                    "# missing links between " + data.get(5) + " images             #\n";
+            for (int i = 6; i < data.size(); i++) {
+                tmp += "# image " + data.get(i) + " and image " + (data.get(i) + 1) + "                            #\n";
+            }
+            tmp += "###################################\n";
+            System.out.println(tmp);
+            if (ts.isShowInIJ()) IJ.log(tmp);
+        }
     }
 
     public void setParameters(Object... parameters) {
@@ -557,9 +677,10 @@ public class CriticalLandmarksGenerator implements Application {
     public String getParametersValuesAsString() {
         String params = "local extrema landmarks generation:\n" +
                 "local " + ((localMinima) ? "minima " : "maxima ") + "\tneighborhood radius: " + extremaNeighborhoodRadius + "\n" +
-                "number of seeds: " + nbSeeds + "\tnumber of chains kept: " + nbChainsKept + "\n" +
-                "length of tracked chains: " + chainLength + ((fiducialMarkers) ? "fiducial markers" : "") + "\n" +
-                "patch size: " + patchSize + "\tcorrelation threshold: " + correlationThreshold + "\n" +
+                "fiducial markers" + fiducialMarkers + "\n" +
+                "number of seeds: " + nbSeeds + "\t number of chains kept: " + nbChainsKept + "\n" +
+                "length of tracked chains: " + chainLength + "\n" +
+                "patch size: " + patchSize + "\t correlation threshold: " + correlationThreshold + "\n" +
                 "filter size (small: " + filterSmall + ", large: " + filterLarge + ")\n" +
                 "excluded part of image (percentage): X: " + percentageToExcludeX + " , Y: " + percentageToExcludeY + "\n";
 
