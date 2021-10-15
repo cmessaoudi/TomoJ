@@ -791,7 +791,7 @@ public class TomoReconstruction2 extends ImagePlus {
         long totalTimeStartIteration = 0;
         Chrono timeEndIteration = new Chrono();
         Chrono timeStartIteration = new Chrono();
-        final int update = ts.getImageStackSize();
+        final int update = (params.getUpdateNb()>1)?params.getUpdateNb():ts.getImageStackSize();
         double factor = 1.0 / ts.getImageStackSize() * update;
 
         FileInfo fi = ts.getOriginalFileInfo();
