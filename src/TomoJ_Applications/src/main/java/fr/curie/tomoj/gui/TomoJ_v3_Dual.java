@@ -937,7 +937,7 @@ public class TomoJ_v3_Dual implements PlugIn {
                 gd.addPanel(panel);
                 //gd.addImage(new ImagePlus(getClass().getResource("/TomoJ_color_small75.png").getPath()));
                 //}catch (Exception ee){ee.printStackTrace();}
-                gd.addMessage("TomoJ version 2.6");
+                gd.addMessage("TomoJ version 2.8");
                 gd.hideCancelButton();
                 gd.showDialog();
 
