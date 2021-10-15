@@ -10,6 +10,7 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     public static final int TVM=3;
     public static final int BAYESIAN=4;
     public static final int COMPRESSED_SENSING=5;
+    public static final int BGART=6;
 
 
 
@@ -24,6 +25,10 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
     protected double tvmG=1;
     protected double tvmDt=0.1;
     protected int tvmIterations=5;
+
+    protected double bgartK=1;
+    protected boolean bgartMedian=true;
+    protected boolean bgartDarkBG=true;
 
     public AdvancedReconstructionParameters(int width, int height, int depth) {
         super(width,height,depth);
@@ -137,6 +142,18 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
         result.setUpdateNb(0);
         return result;
     }
+    public static ReconstructionParameters createBgARTParameters(int width,int height, int depth,int nbIterations,double relaxationCoefficient, int updateNb, double bgartK, boolean bgartMedian, boolean bgartDarkBG){
+        AdvancedReconstructionParameters result=new AdvancedReconstructionParameters(width, height, depth);
+        result.reconstructionType =BGART;
+        result.nbIterations=nbIterations;
+        result.weightingRadius=Double.NaN;
+        result.relaxationCoefficient=relaxationCoefficient;
+        result.setUpdateNb(updateNb);
+        result.bgartK=bgartK;
+        result.bgartMedian=bgartMedian;
+        result.bgartDarkBG=bgartDarkBG;
+        return result;
+    }
     public static ReconstructionParameters createCompressedSensingParameters(int width,int height, int depth,int nbIterations,double relaxationCoefficient, double waveletPercentageOfZeros,int waveletType, double waveletDegree, double waveletShift){
         AdvancedReconstructionParameters result=new AdvancedReconstructionParameters(width, height, depth);
         result.reconstructionType =COMPRESSED_SENSING;
@@ -194,7 +211,11 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
                 //errors = rec2.OSSART(ts,csproj,params.getNbIterations(), params.getRelaxationCoefficient(), ts.getImageStackSize(), params.getFscType(),0, rec2.getHeight());
                 if(fista) return new FistaProjector3D(csproj);
                 return csproj;
-                
+            case BGART:
+                BgARTVoxelProjector3D bgartproj = new BgARTVoxelProjector3D(ts, rec, null, bgartK, bgartDarkBG, bgartMedian);
+                if(isRescaleData()) bgartproj.setScale(ts.getWidth()/(double)rec.getWidth());
+                if(fista) return new FistaProjector3D(bgartproj);
+                return bgartproj;
         }
         return null;
     }
@@ -220,6 +241,9 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
             case COMPRESSED_SENSING:
                 result+="Compress sensing : NbIterations:"+nbIterations+", relaxation coefficient:"+relaxationCoefficient+", percentage of zeros:"+getWaveletPercentageOfZeros()+", wavelet ("+((waveletType== 3)?"BSPLINE":"ORTHOGONAL")+", degree:"+waveletDegree+", shift:"+waveletShift+")\n";
                 break;
+            case BGART:
+                result+="BgART : NbIterations:"+nbIterations+", relaxation coefficient:"+relaxationCoefficient+", update nb:"+updateNb+", K "+bgartK+", median:"+bgartMedian+", dark BG:"+bgartDarkBG+"\n";
+                break;
 
         }
         result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+", Fista:"+isFista()+"\n";
@@ -243,6 +267,12 @@ public class AdvancedReconstructionParameters extends ReconstructionParameters{
                 break;
             case TVM:
                 result+="_TVM_NbIterations"+nbIterations+"_regularizationWeight"+regularizationWeight;
+                break;
+            case COMPRESSED_SENSING:
+                result+="_CS_NbIterations"+nbIterations+"_regularizationWeight"+regularizationWeight;
+                break;
+            case BGART:
+                result+="_BgART_NbIterations"+nbIterations+"_rc"+relaxationCoefficient+"_upNb"+updateNb+"_K"+bgartK+((bgartMedian)?"_median":"")+((bgartDarkBG)?"_darkBG":"_lightBG");
                 break;
         }
         result+="_lObjComp"+isLongObjectCompensation()+"_rescale"+isRescaleData()+"_posConstraint"+isPositivityConstraint()+"_fista"+isFista();
