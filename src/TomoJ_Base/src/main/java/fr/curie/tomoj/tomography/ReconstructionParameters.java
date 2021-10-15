@@ -347,9 +347,29 @@ public class ReconstructionParameters {
 
         }
         result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+", Fista:"+isFista()+"\n";
+
         return result;
 
     }
+
+    public String getParametersAsString(){
+        String result= "";
+        switch (reconstructionType){
+            case OSSART:
+                result+="OSSART : NbIterations:"+nbIterations+", relaxationCoefficient:"+relaxationCoefficient+", updateNb:"+updateNb+"\n";
+                break;
+            case WBP:
+                result+="WBP : weighting radius:"+weightingRadius+", elongationCorrection:"+isElongationCorrection()+"\n";
+                break;
+            case BP:
+                result+="BP : elongationCorrection"+isElongationCorrection()+"\n";
+                break;
+
+        }
+        result+="longObjectCompensation:"+isLongObjectCompensation()+", rescale:"+isRescaleData()+", positivityConstraint:"+isPositivityConstraint()+", Fista:"+isFista()+"\n";
+        return result;
+    }
+
     public String asCompressedString(){
         String result= "W"+width+"_H"+height+"_T"+depth;
         switch (reconstructionType){
