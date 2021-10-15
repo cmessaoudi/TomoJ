@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import fr.curie.gpu.tomoj.tomography.ResolutionEstimationGPU;
 import fr.curie.plotj.PlotWindow2;
+import ij.IJ;
 import ij.Prefs;
 import ij.measure.ResultsTable;
 import fr.curie.tomoj.tomography.*;
@@ -52,7 +53,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
 
         String title = (rec != null) ? rec.getTitle() : ts.getTitle();
         UserAction ua;
-        final ReconstructionParameters recParams;
+        //final ReconstructionParameters recParams;
 
         if (weighting) {
             title += "WBP";
@@ -77,6 +78,8 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
         } else {
             resolutionComputation = new ResolutionEstimation(ts, recParams);
         }
+
+        if (ts.isShowInIJ()) IJ.log(getParametersValuesAsString());
 
         ExecutorService exec = Executors.newFixedThreadPool(Prefs.getThreads());
         final Chrono time = new Chrono();
@@ -150,6 +153,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
         //finalisation
         resultString = capture.stop();
         resultString += "\ntotal time to compute : " + time.delayString();
+        if (ts.isShowInIJ()) IJ.log("total time to compute : " + time.delayString());
         if (rec != null) {
             rec.show();
             rec.setTitle(ftitle);
@@ -199,12 +203,25 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
 
 
     public String getParametersValuesAsString() {
-        String text = super.getParametersValuesAsString();
-
+        String text = "###   reconstruction   ###";
         if (weighting) text += "\nWBP (weight:" + weightinDiameter + ")";
         else text += "\nBP";
         if (elongationCorrection) text += "\nelongation correction activated";
-
+        text += super.getParametersValuesAsString();
+        String type = "";
+        switch (ts.getAlignMethodForReconstruction()) {
+            case TiltSeries.ALIGN_AFFINE2D:
+                type = "Affine 2D";
+                break;
+            case TiltSeries.ALIGN_NONLINEAR:
+                type = "2D Non-linear";
+                break;
+            case TiltSeries.ALIGN_PROJECTOR:
+            default:
+                type = "3D projector";
+                break;
+        }
+        text += "\napply alignment as : " + type;
         return text;
     }
 

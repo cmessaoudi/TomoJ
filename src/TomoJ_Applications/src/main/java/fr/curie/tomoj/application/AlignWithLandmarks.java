@@ -224,6 +224,7 @@ public class AlignWithLandmarks implements Application {
         OutputStreamCapturer outputCapture = new OutputStreamCapturer();
         final Chrono time = new Chrono(1);
         time.start();
+        if (ts.isShowInIJ()) IJ.log("###   align with landmarks   ###");
 
 
         double score = (oldAlgo) ? alignator.align3DLandmarks(0, 5, true, oldRotation, oldCorrectHeight) : alignator.align3DLandmarksWithDeformation(options);

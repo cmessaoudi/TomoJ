@@ -8,6 +8,7 @@ import fr.curie.tomoj.tomography.*;
 import fr.curie.utils.Chrono;
 import fr.curie.utils.OutputStreamCapturer;
 import fr.curie.tomoj.application.ReconstructionApplication;
+import ij.IJ;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -128,11 +129,18 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
         } else {
             resolutionComputation = new ResolutionEstimation(ts, params);
         }
+        if (ts.isShowInIJ()) {
+            IJ.log(getParametersValuesAsString());
+        }
 
         resolutionComputation.doSignalReconstruction();
         rec = resolutionComputation.getReconstructionSignal();
         resultString = capture.stop();
         resultString += "\ntotal time to compute : " + time.delayString();
+
+        if (ts.isShowInIJ()) IJ.log("total time to compute : " + time.delayString());
+
+
         if (rec != null) {
             rec.show();
             String title = (rec != null) ? rec.getTitle() : ts.getTitle();
@@ -164,9 +172,27 @@ public class ReconstructionTVMApplication extends ReconstructionApplication {
     }
 
     public String getParametersValuesAsString() {
-        String text = super.getParametersValuesAsString();
-        text += "\nReconstruction " + nbiterations + " iterations, relaxation" + relaxationCoefficient;
-        text += "\nTVM (theta=" + theta + ", g=" + g + ", dt=" + dt + ", nbiterations=" + tvmiterations;
+        String text = "###   reconstruction   ###";
+        text += "\nTVM " + nbiterations + " iterations, relaxation" + relaxationCoefficient;
+        text += "\nTVM theta=" + theta + ", g=" + g + ", dt=" + dt + ", nbiterations=" + tvmiterations;
+
+        text += super.getParametersValuesAsString();
+        if (longObjectCompensation) text += "\nlong object compensation activated";
+        if (fista) text += "\nfista activated";
+        String type = "";
+        switch (ts.getAlignMethodForReconstruction()) {
+            case TiltSeries.ALIGN_AFFINE2D:
+                type = "Affine 2D";
+                break;
+            case TiltSeries.ALIGN_NONLINEAR:
+                type = "2D Non-linear";
+                break;
+            case TiltSeries.ALIGN_PROJECTOR:
+            default:
+                type = "3D projector";
+                break;
+        }
+        text += "\napply alignment as : " + type;
         return text;
     }
 

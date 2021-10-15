@@ -197,7 +197,6 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
 
         String title = (rec != null) ? rec.getTitle() : ts.getTitle();
         UserAction ua;
-        final ReconstructionParameters recParams;
         switch (reconstructionType) {
             case REC_ART:
                 title += (computeOnGPU) ? "OS-SART(ART)_GPU_" : "ART_";
@@ -237,6 +236,9 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         }
         if (rec != null) resolutionComputation.setReconstructionSignal(rec);
 
+        if (ts.isShowInIJ()) {
+            IJ.log(getParametersValuesAsString());
+        }
         ExecutorService exec = Executors.newFixedThreadPool(Prefs.getThreads());
         final Chrono time = new Chrono();
 
@@ -310,6 +312,8 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
         time.stop();
         resultString = capture.stop();
         resultString += "\ntotal time to compute : " + time.delayString();
+        if (ts.isShowInIJ()) IJ.log("total time to compute : " + time.delayString());
+
         if (rec != null) {
             rec.show();
             rec.setTitle(ftitle);
@@ -401,7 +405,7 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
     }
 
     public String getParametersValuesAsString() {
-        String text = super.getParametersValuesAsString();
+        String text = "###   reconstruction   ###";
         switch (reconstructionType) {
             case REC_ART:
                 text += "\nART " + nbIteration + " iterations, relaxation:" + relaxationCoefficient;
@@ -413,9 +417,24 @@ public class IterativeReconstructionApplication extends ReconstructionApplicatio
                 text += "\nSIRT " + nbIteration + " iterations";
                 break;
         }
+        text += super.getParametersValuesAsString();
         if (longObjectCompensation) text += "\nlong object compensation activated";
         if (positivityConstraint) text += "\npositivity constraint activated";
-
+        if (fista) text += "\nfista activated";
+        String type = "";
+        switch (ts.getAlignMethodForReconstruction()) {
+            case TiltSeries.ALIGN_AFFINE2D:
+                type = "Affine 2D";
+                break;
+            case TiltSeries.ALIGN_NONLINEAR:
+                type = "2D Non-linear";
+                break;
+            case TiltSeries.ALIGN_PROJECTOR:
+            default:
+                type = "3D projector";
+                break;
+        }
+        text += "\napply alignment as : " + type;
         return text;
     }
 

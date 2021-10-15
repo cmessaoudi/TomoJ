@@ -23,9 +23,11 @@ public class Landmarks3DAlign {
     alignmentLandmark bestPreviousAlignment = null;
     AlignmentLandmarkImproved bestPreviousAlignmentDeform = null;
     AlignmentLandmarkImproved currentWorkingAlignment = null;
+    boolean isShowInIJ=false;
 
     public Landmarks3DAlign(TomoJPoints tp) {
         this.tp = tp;
+        isShowInIJ = tp.getTiltSeries().isShowInIJ();
         //tp.setLandmarks3D(this);
     }
 
@@ -58,12 +60,14 @@ public class Landmarks3DAlign {
         final AtomicLong timeOptimize = new AtomicLong(0);
 
         System.out.println("options : " + options.toString());
+        if(isShowInIJ) IJ.log("alignment\noptions: "+options.toString());
         tp.removeEmptyChains();
         System.out.println("number of landmarks:" + tp.getNumberOfPoints());
+        if(isShowInIJ)IJ.log("starting number of landmarks:" + tp.getNumberOfPoints());
         final AlignmentLandmarkImproved align = new AlignmentLandmarkImproved(tp, options);
         completion = 0;
         int totalSteps = options.isExhaustiveSearch() ? 2 : 1;
-        totalSteps += (options.getNumberOfCycles() > 0) ? options.getNumberOfCycles() : 1;
+        totalSteps += (options.getNumberOfCycles() > 0) ? options.getNumberOfCycles() : 5;
         double completionStep = 1.0 / totalSteps;
         //System.out.println("align created");
         boolean creation = false;
@@ -128,6 +132,9 @@ public class Landmarks3DAlign {
                 completion += completionStep / (180 / options.getExhaustiveSearchIncrementRotation());
             }
             System.out.println("first search of rotation :\n" +
+                    "best rotation=" + IJ.d2s(bestRot, 3) + "\twith error=" + IJ.d2s(bestError, 4) +
+                    " (worst: " + IJ.d2s(worstRot, 3) + " with error: " + IJ.d2s(worstError, 4) + ")");
+            if(isShowInIJ)IJ.log("exhaustive search for tilt axis\n" +
                     "best rotation=" + IJ.d2s(bestRot, 3) + "\twith error=" + IJ.d2s(bestError, 4) +
                     " (worst: " + IJ.d2s(worstRot, 3) + " with error: " + IJ.d2s(worstError, 4) + ")");
             //System.out.println(bestPreviousAlignment);
@@ -228,6 +235,7 @@ public class Landmarks3DAlign {
         }
         //bestPreviousAlignment.printAlignment();
         System.out.println("before computeErrorForLandmarks :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
+        if(isShowInIJ) IJ.log("after first optimization :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
         bestPreviousAlignmentDeform.saveLandmarksErrors(savedir + tp.getTiltSeries().getTitle() + "_0_LandmarksErrors.txt");
         System.out.println("time to compute exhaustive search and first optimization : "+Chrono.timeString(timeOptimize.get()));
 
@@ -252,6 +260,8 @@ public class Landmarks3DAlign {
             nbOutliers = bestPreviousAlignmentDeform.removeOutliersMahalanobis();
             //nbOutliers=bestPreviousAlignmentDeform.removeOutLiers();
             System.out.println(nbOutliers + " landmarks removed (left : " + tp.getNumberOfPoints() + ")");
+            if(isShowInIJ)IJ.log(nbOutliers + " landmarks removed (left : " + tp.getNumberOfPoints() + ")");
+
             // bestPreviousAlignment.clear();
             if (completion < 0) return Double.MAX_VALUE;
             //bestPreviousAlignmentDeform.setUaxis(params[0],params[1]);
@@ -297,6 +307,7 @@ public class Landmarks3DAlign {
             timeStep.stop();
             timeOptimize.addAndGet(timeStep.delay());
             System.out.println("after removing outliers :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
+            if(isShowInIJ) IJ.log("after removing outliers :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
             //completion+=completionStep;
             completion += nbOutliers / (double) tp.getNumberOfPoints();
             cycle++;
@@ -377,6 +388,7 @@ public class Landmarks3DAlign {
         pw2.resetMinMax();
         pw2.setVisible(true);
 
+
         //rt.saveAs();
         completion = 1;
 
@@ -385,6 +397,14 @@ public class Landmarks3DAlign {
         timeTotal.stop();
         System.out.println("total time to compute : " + timeTotal.delayString());
         System.out.println("total time in optimize : " + Chrono.timeString(timeOptimize.get()));
+
+        if(isShowInIJ){
+            IJ.log("number of cycles of removing landmarks: " + cycle);
+            IJ.log("final :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + IJ.d2s(params[1]) + "\terror=" + IJ.d2s(fitness, 4));
+            IJ.log("average worst error is : " + errors2[0]);
+            IJ.log("average of average error is : " + errors2[1]);
+            IJ.log("total time to compute : " + timeTotal.delayString());
+        }
         return fitness;
 
     }

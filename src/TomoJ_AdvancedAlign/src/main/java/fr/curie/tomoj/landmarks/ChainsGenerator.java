@@ -5,6 +5,7 @@ import fr.curie.tomoj.align.AffineAlignment;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.Prefs;
+import ij.gui.PointRoi;
 import ij.measure.CurveFitter;
 import ij.process.FloatProcessor;
 import ij.process.FloatStatistics;
@@ -824,6 +825,10 @@ public class ChainsGenerator {
         nbThreads = Prefs.getThreads();
         exec = Executors.newFixedThreadPool(nbThreads);
         System.out.println("generate Landmark V3(back and forth) using " + nbThreads + " threads" + " / " + Runtime.getRuntime().availableProcessors());
+
+        if(ts.isShowInIJ()) IJ.log("generate Landmark V3(back and forth) using " + nbThreads + " threads" + " / " + Runtime.getRuntime().availableProcessors());
+
+
         final ArrayList<LandmarksChain> candidateChainList = new ArrayList<LandmarksChain>(1000);
         final Chrono time = new Chrono();
         Chrono totaltime = new Chrono();
@@ -914,15 +919,28 @@ public class ChainsGenerator {
                 System.out.println(tmp2.size()+" landmark chains found");
                 System.out.println("landmarks length : " + avglength + " (" + minLength + ", " + maxLength + ")");
                 System.out.println("landmarks correlation : " + avgScore + " (" + minScore + ", " + maxScore + ")");
+
+                if(ts.isShowInIJ()){
+                    IJ.log(tmp2.size()+" landmark chains found");
+                    IJ.log("landmarks length : " + avglength + " (" + minLength + ", " + maxLength + ")");
+                    IJ.log("landmarks correlation : " + avgScore + " (" + minScore + ", " + maxScore + ")");
+
+                }
+
                 //try to fuse landmarks
                 if (fuseLandmarks) {
                     if (completion < 0) return;
                     CommandWorkflow.saveLandmarks(IJ.getDirectory("current"),"Landmarks_before_fusion.txt",landmarks);
 
+
                     System.out.println("try to fuse landmarks : before " + landmarks.size() + " landmarks");
+                    if(ts.isShowInIJ()) IJ.log("try to fuse landmarks : before " + landmarks.size() + " landmarks");
+
                     IJ.showStatus("fuse landmarks");
                     landmarks = TomoJPoints.tryToFuseLandmarks(landmarks,2);
                     System.out.println("try to fuse landmarks : after " + landmarks.size() + " landmarks");
+                    if(ts.isShowInIJ()) IJ.log("try to fuse landmarks : after " + landmarks.size() + " landmarks");
+
                     tp.removeAllSetsOfPoints();
                     for(Point2D[] l:landmarks){
                         tp.addSetOfPointsSynchronized(l,true);
@@ -959,6 +977,7 @@ public class ChainsGenerator {
                 }
                 avglength /= landmarks.size();
                 System.out.println("landmarks created are seen on " + avglength + " images" + " (" + minLength + ", " + maxLength + ")");
+                if(ts.isShowInIJ()) IJ.log("landmarks created are seen on " + avglength + " images" + " (" + minLength + ", " + maxLength + ")");
             }
         }
 
@@ -966,6 +985,7 @@ public class ChainsGenerator {
         totaltime.stop();
         System.out.println("total computation time " + totaltime.delayString());
         IJ.showStatus("generate landmarks finished in " + totaltime.delayString());
+        if(ts.isShowInIJ())IJ.log("generate landmarks finished in " + totaltime.delayString());
     }
 
     protected ArrayList<LandmarksChain> validateChains(ArrayList<LandmarksChain> candidateChainList, boolean useCriticalPoints, int numberOfSamples, double corrTh, double seqLength) {
@@ -1304,6 +1324,35 @@ public class ChainsGenerator {
         }
         //new ImagePlus("average"+compt+"points", new FloatProcessor(sx, sx, sum, null)).show();
         return sum;
+    }
+
+    public int[] getNumberOfLandmarksOnEachImage(){
+        int[] result=new int[tp.getTiltSeries().getImageStackSize()];
+        for(int imgnb=0;imgnb<tp.getTiltSeries().getImageStackSize();imgnb++){
+            int count=0;
+            for (int i = 0; i < landmarks.size(); i++) {
+                if (tp.getPoint(i, imgnb) != null) {
+                    count++;
+                }
+            }
+            result[imgnb]=count;
+        }
+        return result;
+    }
+
+    public int[] getNumberCommonWithNext(){
+        int[] result=new int[tp.getTiltSeries().getImageStackSize()-1];
+        for(int imgnb=0;imgnb<tp.getTiltSeries().getImageStackSize()-1;imgnb++){
+            int count=0;
+            for (int i = 0; i < landmarks.size(); i++) {
+                Point2D pt = tp.getPoint(i, imgnb);
+                if (pt != null && tp.getPoint(i, imgnb+1) !=null) {
+                    count++;
+                }
+            }
+            result[imgnb]=count;
+        }
+        return result;
     }
 
 

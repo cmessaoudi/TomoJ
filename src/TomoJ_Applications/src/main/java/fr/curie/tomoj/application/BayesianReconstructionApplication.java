@@ -9,6 +9,7 @@ import fr.curie.tomoj.tomography.ResolutionEstimation;
 import fr.curie.tomoj.tomography.TiltSeries;
 import fr.curie.utils.Chrono;
 import fr.curie.utils.OutputStreamCapturer;
+import ij.IJ;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -53,6 +54,9 @@ public class BayesianReconstructionApplication extends ReconstructionApplication
         params.setFista(fista);
         System.out.println(getParametersValuesAsString());
         System.out.println("*******\n" + params.asString());
+        if (ts.isShowInIJ()) {
+            IJ.log(getParametersValuesAsString());
+        }
 
         if (computeOnGPU) {
             ResolutionEstimationGPU resolutionComputation = new ResolutionEstimationGPU(ts, params);
@@ -67,6 +71,8 @@ public class BayesianReconstructionApplication extends ReconstructionApplication
         rec = resolutionComputation.getReconstructionSignal();
         resultString = capture.stop();
         resultString += "\ntotal time to compute : " + time.delayString();
+        if (ts.isShowInIJ()) IJ.log("total time to compute : " + time.delayString());
+
         if (rec != null) {
             rec.show();
             String title = (rec != null) ? rec.getTitle() : ts.getTitle();
@@ -128,9 +134,26 @@ public class BayesianReconstructionApplication extends ReconstructionApplication
     }
 
     public String getParametersValuesAsString() {
-        String text = super.getParametersValuesAsString();
+        String text = "###   reconstruction   ###";
         text += "\nReconstruction " + nbiterations + " iterations, relaxation" + relaxationCoefficient;
         text += "\nBayesian weight=" + bayesianWeight;
+        text += super.getParametersValuesAsString();
+        if (longObjectCompensation) text += "\nlong object compensation activated";
+        if (fista) text += "\nfista activated";
+        String type = "";
+        switch (ts.getAlignMethodForReconstruction()) {
+            case TiltSeries.ALIGN_AFFINE2D:
+                type = "Affine 2D";
+                break;
+            case TiltSeries.ALIGN_NONLINEAR:
+                type = "2D Non-linear";
+                break;
+            case TiltSeries.ALIGN_PROJECTOR:
+            default:
+                type = "3D projector";
+                break;
+        }
+        text += "\napply alignment as : " + type;
         return text;
     }
 

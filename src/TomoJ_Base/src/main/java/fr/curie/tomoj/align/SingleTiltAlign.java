@@ -60,6 +60,7 @@ public class SingleTiltAlign {
 
 
     public void crossCorrelationFFT(int loop) {
+        System.out.println("test "+ts.isShowInIJ());
         boolean save = ts.iscombiningTransforms();
         int binning=ts.getBinningFactor();
         //combineTransforms(false);
@@ -81,6 +82,8 @@ public class SingleTiltAlign {
         // H1.fft2();
         boolean change = false;
         int nbloop = 0;
+        Chrono time=new Chrono();
+        time.start();
         do {
             float[] pixs = ts.getPixelsForAlignment(0);
             completion = 0;
@@ -201,14 +204,19 @@ public class SingleTiltAlign {
                 aa.addTransform(i,new AffineTransform(1,0,0,1,-posx[i + 1] * binning, -posy[i + 1] * binning));
                 //aa.addTranslation(i, -posx[i + 1] * binning, -posy[i + 1] * binning);
 
-                if (ts.isShowInIJ())
+                /*if (ts.isShowInIJ())
                     IJ.log("#" + i + " apply translation of (" + (posx[i + 1] * binning) + ", " + (posy[i + 1] * binning) + ")");
+             */
             }
+
             nbloop++;
         } while (change && nbloop < loop);
-
-        if (ts.isShowInIJ()) IJ.showStatus("correct translation finished");
-        System.out.println("correct translation finished");
+        time.stop();
+        if (ts.isShowInIJ()) {
+            IJ.showStatus("correct translation finished");
+            //IJ.log("correct translation finished in "+time.delayString());
+        }
+        System.out.println("correct translation finished in "+time.delayString());
         ts.combineTransforms(save);
     }
 
@@ -335,8 +343,8 @@ public class SingleTiltAlign {
         for (int i = 0; i < ts.getStackSize() - 1; i++) {
             aa.addTransform(i,new AffineTransform(1,0,0,1,-posx[i + 1] * binning, -posy[i + 1] * binning));
            // ts.addTranslation(i, -posx[i + 1] * binning, -posy[i + 1] * binning);
-            if (ts.isShowInIJ())
-                IJ.log("#" + i + " apply translation of (" + (posx[i + 1] * binning) + ", " + (posy[i + 1] * binning) + ")");
+            //if (ts.isShowInIJ())
+            //    IJ.log("#" + i + " apply translation of (" + (posx[i + 1] * binning) + ", " + (posy[i + 1] * binning) + ")");
         }
         if (ts.isShowInIJ()) IJ.showStatus("correct translation finished");
         System.out.println("correct translation finished");
