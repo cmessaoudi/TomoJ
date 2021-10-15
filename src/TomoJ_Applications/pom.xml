@@ -18,27 +18,27 @@
     
     <dependencies>
         <dependency>
-            <groupId>TomoJ</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.parent.version}</version>
             <artifactId>TomoJ_Base</artifactId>
-            <version>2.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>TomoJ</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.parent.version}</version>
             <artifactId>TomoJ_AdvancedAlign</artifactId>
-            <version>2.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>TomoJ</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.parent.version}</version>
             <artifactId>TomoJ_GPU</artifactId>
-            <version>2.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>TomoJ</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.parent.version}</version>
             <artifactId>TomoJ_AdvancedReconstruction</artifactId>
-            <version>2.7</version>
             <scope>compile</scope>
         </dependency>
         
@@ -51,16 +51,16 @@
             <!--optional>true</optional-->
         </dependency>
         <dependency>
-            <groupId>TomoJ</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.parent.version}</version>
             <artifactId>TomoJ_Features</artifactId>
-            <version>2.7</version>
             <scope>compile</scope>
             <!--optional>true</optional-->
         </dependency>
         <dependency>
-            <groupId>TomoJ</groupId>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.parent.version}</version>
             <artifactId>InputOutput</artifactId>
-            <version>2.7</version>
             <scope>compile</scope>
         </dependency>
 

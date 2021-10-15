@@ -44,27 +44,27 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
             <artifactId>Utility</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
             <artifactId>Filters</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>TomoJ</groupId>
             <artifactId>TomoJ_Base</artifactId>
-            <version>2.7</version>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>TomoJ</groupId>
             <artifactId>TomoJ_AdvancedAlign</artifactId>
-            <version>2.7</version>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>TomoJ</groupId>
             <artifactId>TomoJ_AdvancedReconstruction</artifactId>
-            <version>2.7</version>
+            <version>${project.parent.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
