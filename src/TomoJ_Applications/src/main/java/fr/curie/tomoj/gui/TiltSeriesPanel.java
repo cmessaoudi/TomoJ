@@ -75,6 +75,10 @@ public class TiltSeriesPanel {
     private JCheckBox expertModeCheckBox;
     private JPanel volDimPanel;
     private JRadioButton bayesianRadioButton;
+    private JRadioButton advancedReconstructionRadioButton;
+    private JPanel advancedRecPanel;
+    private JRadioButton bgARTRadioButton;
+    private JPanel classicRecPanel;
 
     GridConstraints constraints;
 
@@ -99,6 +103,7 @@ public class TiltSeriesPanel {
     Application currentApplication;
     Application currentApplicationAlign;
     Application currentApplicationReconstruction;
+    Application currentAdvancedApplicationReconstruction;
 
     Application preali;
     Application xcorr;
@@ -112,6 +117,7 @@ public class TiltSeriesPanel {
     Application tvm;
     Application compressedSensing;
     Application bayesianRec;
+    Application bgartRec;
 
 
     public TiltSeriesPanel(TiltSeries ts) {
@@ -141,6 +147,7 @@ public class TiltSeriesPanel {
         System.out.println("creating applications");
         preali = new CenterImagesApplication(ts);
         System.out.println("preali OK");
+        System.out.println("cross correlation start");
         xcorr = new CrossCorrelationParameters(ts);
         System.out.println("cross correlation OK");
         criticalLandmarks = new CriticalLandmarksGenerator(ts, ts.getTomoJPoints());
@@ -181,8 +188,12 @@ public class TiltSeriesPanel {
         }
         bayesianRec = new BayesianReconstructionApplication(ts);
         System.out.println("bayesian OK");
+        bgartRec = new ReconstructionBgARTApplication(ts);
+        System.out.println("BgART OK");
+
 
         currentApplicationReconstruction = iterativeRec;
+        currentAdvancedApplicationReconstruction = tvm;
 
         width = ts.getWidth();
         height = ts.getHeight();
@@ -200,6 +211,7 @@ public class TiltSeriesPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 currentApplication.setDisplayPreview(false);
+                //if (currentApplication == xcorr) System.out.println("##################\nxcorr!\n################");
                 final Chrono time = new Chrono(100);
                 final Thread T = new Thread() {
                     public void run() {
@@ -336,6 +348,8 @@ public class TiltSeriesPanel {
                 boolean selected = alignmentRadioButton.isSelected();
                 alignmentPanel.setVisible(selected);
                 reconstructionPanel.setVisible(!selected);
+                classicRecPanel.setVisible(!selected);
+                advancedRecPanel.setVisible(!selected);
                 setApplication(currentApplicationAlign);
 
 
@@ -347,7 +361,21 @@ public class TiltSeriesPanel {
                 boolean selected = reconstructionRadioButton.isSelected();
                 alignmentPanel.setVisible(!selected);
                 reconstructionPanel.setVisible(selected);
+                classicRecPanel.setVisible(selected);
+                advancedRecPanel.setVisible(!selected);
                 setApplication(currentApplicationReconstruction);
+
+            }
+        });
+        advancedReconstructionRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean selected = advancedReconstructionRadioButton.isSelected();
+                alignmentPanel.setVisible(!selected);
+                reconstructionPanel.setVisible(selected);
+                classicRecPanel.setVisible(!selected);
+                advancedRecPanel.setVisible(selected);
+                setApplication(currentAdvancedApplicationReconstruction);
 
             }
         });
@@ -462,6 +490,19 @@ public class TiltSeriesPanel {
             }
         });
 
+        bgARTRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setApplication(bgartRec);
+                SSNRCheckBox.setSelected(false);
+                SSNRCheckBox.setEnabled(false);
+                VSSNRCheckBox.setEnabled(SSNRCheckBox.isEnabled() && SSNRCheckBox.isSelected());
+                FSCCheckBox.setSelected(false);
+                FSCCheckBox.setEnabled(false);
+                fscOnly = false;
+            }
+        });
+
         if (compressedSensing != null) {
             CSRadioButton.addActionListener(new ActionListener() {
                 @Override
@@ -513,7 +554,7 @@ public class TiltSeriesPanel {
                 tiltAxisPanel.setVisible(expertModeCheckBox.isSelected());
                 volDimPanel.setVisible(expertModeCheckBox.isSelected());
                 updateCurrentReconstructionCheckBox.setVisible(expertModeCheckBox.isSelected());
-                autosaveFinalIterationCheckBox.setVisible(expertModeCheckBox.isSelected());
+                //autosaveFinalIterationCheckBox.setVisible(expertModeCheckBox.isSelected());
             }
         }));
 
@@ -731,6 +772,12 @@ public class TiltSeriesPanel {
             ((ReconstructionApplication) bayesianRec).setComputeOnGPU(computeOnGpu, GPUDevice.getGPUDevices(), ((GPUDevicesTableModel) tableGPU.getModel()).getUse());
         ((ReconstructionApplication) bayesianRec).setResolutionEstimation(ssnr, (ssnr) ? vssnr : false, fsc, fscOnly);
 
+        ((ReconstructionApplication) bgartRec).setSize(width, height, depth);
+        ((ReconstructionApplication) bgartRec).setRescaleData(rescaleData);
+        if (gpuAvailable)
+            ((ReconstructionApplication) bgartRec).setComputeOnGPU(computeOnGpu, GPUDevice.getGPUDevices(), ((GPUDevicesTableModel) tableGPU.getModel()).getUse());
+        ((ReconstructionApplication) bgartRec).setResolutionEstimation(ssnr, (ssnr) ? vssnr : false, fsc, fscOnly);
+
 
     }
 
@@ -757,8 +804,13 @@ public class TiltSeriesPanel {
         currentApplication = appli;
         currentApplication.setDisplayPreview(true);
 
-        if (appli instanceof ReconstructionApplication) currentApplicationReconstruction = appli;
-        else currentApplicationAlign = appli;
+        if (appli instanceof ReconstructionApplication) {
+            if (appli instanceof WBPReconstructionApplication || appli instanceof IterativeReconstructionApplication) {
+                currentApplicationReconstruction = appli;
+            } else {
+                currentAdvancedApplicationReconstruction = appli;
+            }
+        } else currentApplicationAlign = appli;
 
 
         JPanel appliP = currentApplication.getJPanel();
@@ -887,7 +939,7 @@ public class TiltSeriesPanel {
         panel1.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
         scrollPane1.setViewportView(panel1);
         applicationChoicePanel = new JPanel();
-        applicationChoicePanel.setLayout(new GridLayoutManager(3, 3, new Insets(0, 0, 0, 0), -1, -1));
+        applicationChoicePanel.setLayout(new GridLayoutManager(4, 4, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(applicationChoicePanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         alignmentRadioButton = new JRadioButton();
         alignmentRadioButton.setSelected(true);
@@ -898,7 +950,7 @@ public class TiltSeriesPanel {
         applicationChoicePanel.add(reconstructionRadioButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         alignmentPanel = new JPanel();
         alignmentPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        applicationChoicePanel.add(alignmentPanel, new GridConstraints(1, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        applicationChoicePanel.add(alignmentPanel, new GridConstraints(1, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(5, 3, new Insets(0, 0, 0, 0), -1, -1));
         alignmentPanel.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -948,7 +1000,7 @@ public class TiltSeriesPanel {
         reconstructionPanel = new JPanel();
         reconstructionPanel.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
         reconstructionPanel.setVisible(true);
-        applicationChoicePanel.add(reconstructionPanel, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        applicationChoicePanel.add(reconstructionPanel, new GridConstraints(2, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         reconstructionPanel.add(panel5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -1047,43 +1099,54 @@ public class TiltSeriesPanel {
         autosaveFinalIterationCheckBox.setEnabled(true);
         autosaveFinalIterationCheckBox.setText("autosave final iteration");
         panel12.add(autosaveFinalIterationCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel13 = new JPanel();
-        panel13.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 0), -1, -1));
-        reconstructionPanel.add(panel13, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel13.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Reconstruction algorithm", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        classicRecPanel = new JPanel();
+        classicRecPanel.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        reconstructionPanel.add(classicRecPanel, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        classicRecPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Reconstruction algorithm", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         WBPRadioButton = new JRadioButton();
         WBPRadioButton.setText("WBP");
-        panel13.add(WBPRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        classicRecPanel.add(WBPRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         iterativeRadioButton = new JRadioButton();
         iterativeRadioButton.setSelected(true);
         iterativeRadioButton.setText("Iterative");
-        panel13.add(iterativeRadioButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        TVMRadioButton = new JRadioButton();
-        TVMRadioButton.setText("TVM");
-        panel13.add(TVMRadioButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        CSRadioButton = new JRadioButton();
-        CSRadioButton.setText("CS");
-        panel13.add(CSRadioButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        bayesianRadioButton = new JRadioButton();
-        bayesianRadioButton.setText("Bayesian");
-        panel13.add(bayesianRadioButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel14 = new JPanel();
-        panel14.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        reconstructionPanel.add(panel14, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel14.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Resolution estimation", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        classicRecPanel.add(iterativeRadioButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel13 = new JPanel();
+        panel13.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        reconstructionPanel.add(panel13, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel13.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Resolution estimation", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         VSSNRCheckBox = new JCheckBox();
         VSSNRCheckBox.setEnabled(false);
         VSSNRCheckBox.setText("VSSNR");
-        panel14.add(VSSNRCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel13.add(VSSNRCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         SSNRCheckBox = new JCheckBox();
         SSNRCheckBox.setText("SSNR");
-        panel14.add(SSNRCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel13.add(SSNRCheckBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         FSCCheckBox = new JCheckBox();
         FSCCheckBox.setText("FSC");
-        panel14.add(FSCCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel13.add(FSCCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         expertModeCheckBox = new JCheckBox();
         expertModeCheckBox.setText("expert mode");
-        applicationChoicePanel.add(expertModeCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        applicationChoicePanel.add(expertModeCheckBox, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        advancedReconstructionRadioButton = new JRadioButton();
+        advancedReconstructionRadioButton.setText("Advanced reconstruction");
+        applicationChoicePanel.add(advancedReconstructionRadioButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        advancedRecPanel = new JPanel();
+        advancedRecPanel.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        applicationChoicePanel.add(advancedRecPanel, new GridConstraints(3, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        advancedRecPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Advanced reconstruction algorithm", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        TVMRadioButton = new JRadioButton();
+        TVMRadioButton.setSelected(true);
+        TVMRadioButton.setText("TVM");
+        advancedRecPanel.add(TVMRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        bayesianRadioButton = new JRadioButton();
+        bayesianRadioButton.setText("Bayesian");
+        advancedRecPanel.add(bayesianRadioButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        CSRadioButton = new JRadioButton();
+        CSRadioButton.setText("CS");
+        advancedRecPanel.add(CSRadioButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        bgARTRadioButton = new JRadioButton();
+        bgARTRadioButton.setText("BgART");
+        advancedRecPanel.add(bgARTRadioButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         runPanel = new JPanel();
         runPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(runPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -1103,12 +1166,16 @@ public class TiltSeriesPanel {
         buttonGroup = new ButtonGroup();
         buttonGroup.add(alignmentRadioButton);
         buttonGroup.add(reconstructionRadioButton);
+        buttonGroup.add(advancedReconstructionRadioButton);
         buttonGroup = new ButtonGroup();
         buttonGroup.add(WBPRadioButton);
         buttonGroup.add(iterativeRadioButton);
-        buttonGroup.add(TVMRadioButton);
+        buttonGroup = new ButtonGroup();
         buttonGroup.add(CSRadioButton);
+        buttonGroup.add(CSRadioButton);
+        buttonGroup.add(TVMRadioButton);
         buttonGroup.add(bayesianRadioButton);
+        buttonGroup.add(bgARTRadioButton);
     }
 
     /**
