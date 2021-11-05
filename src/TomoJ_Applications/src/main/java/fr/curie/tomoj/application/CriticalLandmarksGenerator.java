@@ -863,7 +863,7 @@ public class CriticalLandmarksGenerator implements Application {
                     previewCritical.updateAndDraw();
                     previewCritical.getWindow().toFront();
                 }
-                previewCritical.getWindow().toFront();
+                //previewCritical.getWindow().toFront();
                 previewCritical.setTitle(title + ((PointRoi) previewCritical.getRoi()).getNCoordinates() + " seed detected(" + ts.getTiltAngle(previewIndex) + ")");
             }
         }
