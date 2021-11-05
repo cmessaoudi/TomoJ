@@ -193,7 +193,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     private void initValues() {
         weighting = false;
         elongationCorrection = false;
-        weightinDiameter = 0.5;
+        weightinDiameter = 0.3;
 
         weightingCheckBox.setSelected(weighting);
         elongationCorrectionCheckBox.setSelected(elongationCorrection);
@@ -261,7 +261,7 @@ public class WBPReconstructionApplication extends ReconstructionApplication {
     }
 
     private void createUIComponents() {
-        spinnerWeighting = new JSpinner(new SpinnerNumberModel(0.5, 0.0001, 1, 0.01));
+        spinnerWeighting = new JSpinner(new SpinnerNumberModel(0.3, 0.0001, 0.5, 0.01));
     }
 
 
