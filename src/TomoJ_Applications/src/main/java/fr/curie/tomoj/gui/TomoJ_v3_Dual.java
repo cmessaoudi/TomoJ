@@ -995,7 +995,7 @@ public class TomoJ_v3_Dual implements PlugIn {
         String nameLC = path.toLowerCase();
         System.out.println("save as " + nameLC);
         if (nameLC.endsWith(".sel")) {
-            IJ.runPlugIn(ts, "Sel_Writer", path);
+            IJ.runPlugIn(ts, "fr.curie.InputOutput.Sel_Writer", path);
         } else {
             ImageStack is = new ImageStack(ts.getWidth(), ts.getHeight());
             for (int i = 0; i < ts.getStackSize(); i++) {
@@ -1005,9 +1005,9 @@ public class TomoJ_v3_Dual implements PlugIn {
             ImagePlus imp = new ImagePlus(path, is);
 
             if (nameLC.endsWith(".mrc")) {
-                IJ.runPlugIn(imp, "MRC_Writer", path);
+                IJ.runPlugIn(imp, "fr.curie.InputOutput.MRC_Writer", path);
             } else if (nameLC.endsWith(".xmp") || nameLC.endsWith(".spi")) {
-                IJ.runPlugIn(imp, "Spider_Writer", path);
+                IJ.runPlugIn(imp, "fr.curie.InputOutput.Spider_Writer", path);
             } else {
                 //imp.show();
                 //IJ.selectWindow(path);
