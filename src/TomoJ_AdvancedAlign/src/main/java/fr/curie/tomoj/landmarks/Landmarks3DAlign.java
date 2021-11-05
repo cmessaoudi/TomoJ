@@ -132,10 +132,10 @@ public class Landmarks3DAlign {
                 completion += completionStep / (180 / options.getExhaustiveSearchIncrementRotation());
             }
             System.out.println("first search of rotation :\n" +
-                    "best rotation=" + IJ.d2s(bestRot, 3) + "\twith error=" + IJ.d2s(bestError, 4) +
+                    "best rotation=" + IJ.d2s(bestRot, 3) + "\t with error=" + IJ.d2s(bestError, 4) +
                     " (worst: " + IJ.d2s(worstRot, 3) + " with error: " + IJ.d2s(worstError, 4) + ")");
             if(isShowInIJ)IJ.log("exhaustive search for tilt axis\n" +
-                    "best rotation=" + IJ.d2s(bestRot, 3) + "\twith error=" + IJ.d2s(bestError, 4) +
+                    "best rotation=" + IJ.d2s(bestRot, 3) + "\t with error=" + IJ.d2s(bestError, 4) +
                     " (worst: " + IJ.d2s(worstRot, 3) + " with error: " + IJ.d2s(worstError, 4) + ")");
             //System.out.println(bestPreviousAlignment);
             if (completion < 0) return Double.MAX_VALUE;
@@ -235,7 +235,7 @@ public class Landmarks3DAlign {
         }
         //bestPreviousAlignment.printAlignment();
         System.out.println("before computeErrorForLandmarks :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
-        if(isShowInIJ) IJ.log("after first optimization :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
+        if(isShowInIJ) IJ.log("after first optimization :\nbest rotation=" + IJ.d2s(params[0], 3) + "\t tilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\t error=" + IJ.d2s(fitness, 4));
         bestPreviousAlignmentDeform.saveLandmarksErrors(savedir + tp.getTiltSeries().getTitle() + "_0_LandmarksErrors.txt");
         System.out.println("time to compute exhaustive search and first optimization : "+Chrono.timeString(timeOptimize.get()));
 
@@ -306,8 +306,8 @@ public class Landmarks3DAlign {
             fitness = bestPreviousAlignmentDeform.optimize(true, true);
             timeStep.stop();
             timeOptimize.addAndGet(timeStep.delay());
-            System.out.println("after removing outliers :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
-            if(isShowInIJ) IJ.log("after removing outliers :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\terror=" + IJ.d2s(fitness, 4));
+            System.out.println("after removing outliers :\n best rotation=" + IJ.d2s(params[0], 3) + "\t tilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\t error=" + IJ.d2s(fitness, 4));
+            if(isShowInIJ) IJ.log("after removing outliers :\n best rotation=" + IJ.d2s(params[0], 3) + "\t tilt=" + (optimizeAngle ? IJ.d2s(params[1]) : 90) + "\t error=" + IJ.d2s(fitness, 4));
             //completion+=completionStep;
             completion += nbOutliers / (double) tp.getNumberOfPoints();
             cycle++;
@@ -360,10 +360,11 @@ public class Landmarks3DAlign {
         fitness = bestPreviousAlignmentDeform.optimize(true, true);
         timeStep.stop();
         timeOptimize.addAndGet(timeStep.delay());
-        System.out.println("final :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + IJ.d2s(params[1]) + "\terror=" + IJ.d2s(fitness, 4));
+        System.out.println("final :\nbest rotation=" + IJ.d2s(params[0], 3) + "\t tilt=" + IJ.d2s(params[1]) + "\t error=" + IJ.d2s(fitness, 4));
         double[] errors2 = bestPreviousAlignmentDeform.computeErrors();
         System.out.println("average worst error is : " + errors2[0]);
         System.out.println("average of average error is : " + errors2[1]);
+        System.out.println("final error is : " + fitness);
 
         if (tiltDebug) {
             System.out.println("end ");
@@ -400,9 +401,10 @@ public class Landmarks3DAlign {
 
         if(isShowInIJ){
             IJ.log("number of cycles of removing landmarks: " + cycle);
-            IJ.log("final :\nbest rotation=" + IJ.d2s(params[0], 3) + "\ttilt=" + IJ.d2s(params[1]) + "\terror=" + IJ.d2s(fitness, 4));
+            IJ.log("final :\nbest rotation=" + IJ.d2s(params[0], 3) + "\t tilt=" + IJ.d2s(params[1]) + "\t error=" + IJ.d2s(fitness, 4));
             IJ.log("average worst error is : " + errors2[0]);
             IJ.log("average of average error is : " + errors2[1]);
+            IJ.log("final error is : " + fitness);
             IJ.log("total time to compute : " + timeTotal.delayString());
         }
         return fitness;
