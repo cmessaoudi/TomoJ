@@ -140,6 +140,8 @@ public class TiltSeriesPanel {
         window = new CustomStackWindowTemp(ts, ts.getCanvas());
         System.out.println("custom windows done");
         reconstructionPanel.setVisible(false);
+        advancedRecPanel.setVisible(false);
+
         constraints = new GridConstraints();
         constraints.setFill(GridConstraints.FILL_BOTH);
         log = new ArrayList<UserAction>();
@@ -734,7 +736,7 @@ public class TiltSeriesPanel {
         tiltAxisPanel.setVisible(expertModeCheckBox.isSelected());
         volDimPanel.setVisible(expertModeCheckBox.isSelected());
         updateCurrentReconstructionCheckBox.setVisible(expertModeCheckBox.isSelected());
-        autosaveFinalIterationCheckBox.setVisible(expertModeCheckBox.isSelected());
+        autosaveFinalIterationCheckBox.setVisible(true);
 
 
     }
