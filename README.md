@@ -11,3 +11,5 @@ BMC Bioinformatics. 2009 Apr 27;10:124."Marker-free image registration of electr
 
 reconstruction part was described in:
 BMC Bioinformatics. 2007 Aug 6;8:288. "TomoJ: tomography software for three-dimensional reconstruction in transmission electron microscopy."Messaoudi C et al
+
+TomoJ is distributed under GPL v3 license
